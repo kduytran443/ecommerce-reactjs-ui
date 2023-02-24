@@ -1,4 +1,5 @@
-import { HOME_PAGE_URL, PERSONAL_PAGE_URL } from '~/constants';
+import { HOME_PAGE_URL, LOGIN_PAGE_URL, PERSONAL_PAGE_URL } from '~/constants';
+import LoginPage from '~/pages/LoginPage';
 import PersonalPage from '~/pages/PersonalPage';
 
 const { default: FullLayout } = require('~/layouts/FullLayout');
@@ -13,6 +14,11 @@ const publicRoutes = [
     {
         path: HOME_PAGE_URL,
         component: HomePage,
+        layout: FullLayout,
+    },
+    {
+        path: LOGIN_PAGE_URL,
+        component: LoginPage,
         layout: FullLayout,
     },
 ];
