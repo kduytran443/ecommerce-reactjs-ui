@@ -6,8 +6,8 @@ import { PERSONAL_PAGE_URL } from '~/constants';
 
 function Line({ title }) {
     return (
-        <div className="p-4 bg-red-600 shadow-md rounded flex flex-col md:flex-row justify-between">
-            <p className="text-2xl font-bold text-white uppercase text-center md:text-left">{title}</p>
+        <div className="p-4 bg-red-600 shadow-md sm:rounded flex flex-col md:flex-row justify-between">
+            <p className="text-2xl font-bold text-white uppercase text-center md:text-left tracking-widest">{title}</p>
             <Link to={PERSONAL_PAGE_URL}>
                 <div className="text-white hover:underline font-bold flex flex-row items-center justify-center">
                     <span>Xem tất cả</span>

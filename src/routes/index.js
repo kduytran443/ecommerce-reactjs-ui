@@ -1,4 +1,5 @@
-import { HOME_PAGE_URL, LOGIN_PAGE_URL, PERSONAL_PAGE_URL } from '~/constants';
+import { CATEGORY_PAGE_URL, HOME_PAGE_URL, LOGIN_PAGE_URL, PERSONAL_PAGE_URL } from '~/constants';
+import CategoryPage from '~/pages/CategoryPage';
 import LoginPage from '~/pages/LoginPage';
 import PersonalPage from '~/pages/PersonalPage';
 
@@ -19,6 +20,11 @@ const publicRoutes = [
     {
         path: LOGIN_PAGE_URL,
         component: LoginPage,
+        layout: FullLayout,
+    },
+    {
+        path: CATEGORY_PAGE_URL,
+        component: CategoryPage,
         layout: FullLayout,
     },
 ];

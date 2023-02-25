@@ -14,55 +14,100 @@ import ShareIcon from '@mui/icons-material/Share';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { useState } from 'react';
-import { Title } from '@mui/icons-material';
-
-const ExpandMore = styled((props) => {
-    const { expand, ...other } = props;
-    return <IconButton {...other} />;
-})(({ theme, expand }) => ({
-    transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
-    marginLeft: 'auto',
-    transition: theme.transitions.create('transform', {
-        duration: theme.transitions.duration.shortest,
-    }),
-}));
+import { SpaOutlined, Title } from '@mui/icons-material';
+import CustomizedSnackbars from '../CustomizedSnackbars';
+import { Link } from 'react-router-dom';
+import { HOME_PAGE_URL } from '~/constants';
+import { Button } from '@mui/material';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBriefcase, faHardDrive, faMemory, faMicrochip, faServer, faTv } from '@fortawesome/free-solid-svg-icons';
 
 export default function RecipeReviewCard() {
-    const [expanded, setExpanded] = useState(false);
     const [likedState, setLikedState] = useState(false);
-
-    const handleExpandClick = () => {
-        setExpanded(!expanded);
-    };
 
     return (
         <Card sx={{ width: '100%' }}>
-            <CardMedia
-                component="img"
-                height="194"
-                image="https://product.hstatic.net/1000026716/product/khung-lt-van-phong_8a50518369b445f9a7adf816ceb90d6a_large.png"
-                alt="Paella dish"
-            />
-            <CardContent>
-                <h3>Laptop MSI Modern 14 C11M 011VN</h3>
+            <Link to={HOME_PAGE_URL}>
+                <div className="group relative top-0 left-0 hover:shadow-md duration-200">
+                    <div className="absolute w-full h-full top-0 left-0 duration-200 opacity-0 group-hover:opacity-100">
+                        <div className="absolute top-0 left-0 bg-black w-full h-full opacity-30"></div>
+                        <div className="absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 text-white font-semibold">
+                            Bấm vào để xem chi tiết sản phẩm
+                        </div>
+                    </div>
+                    <CardMedia
+                        component="img"
+                        height="194"
+                        image="https://images.fpt.shop/unsafe/fit-in/240x215/filters:quality(90):fill(white)/fptshop.com.vn/Uploads/Originals/2022/8/4/637952089606431911_asus-vivobook-a1503-bac-dd.jpg"
+                        alt="Paella dish"
+                    />
+                </div>
+            </Link>
+            <CardContent style={{ paddingBottom: 0 }}>
+                <Link to={HOME_PAGE_URL}>
+                    <h3 className="font-bold text-base md:text-lg hover:text-blue-500">
+                        Laptop MSI Modern 14 C11M 011VN
+                    </h3>
+                </Link>
                 <Typography variant="body2" color="text.secondary">
                     <strike>22,990,000₫</strike>
                 </Typography>
-                <p className="text-xl font-bold pt-2 text-red-500">20,990,000₫</p>
+                <div className="flex flex-col md:flex-row items-center justify-between">
+                    <p className="text-lg md:text-xl font-bold text-red-500">20,691,000₫</p>
+                    <p className="text-blue-500">
+                        Giảm <b>10%</b>
+                    </p>
+                </div>
+                <ul className="bg-slate-100 rounded-lg p-2 flex flex-row flex-wrap mt-2 text-sm sm:text-base">
+                    <li className="mr-[8px]">
+                        <FontAwesomeIcon className="mr-2" icon={faTv} />
+                        <span>15.6 inch</span>
+                    </li>
+                    <li className="mr-[8px]">
+                        <FontAwesomeIcon className="mr-2" icon={faMicrochip} />
+                        <span>Core i5</span>
+                    </li>
+                    <li className="mr-[8px]">
+                        <FontAwesomeIcon className="mr-2" icon={faMemory} />
+                        <span>8 GB (1 thanh 8 GB)</span>
+                    </li>
+                    <li className="mr-[8px]">
+                        <FontAwesomeIcon className="mr-2" icon={faHardDrive} />
+                        <span>SSD 512 GB</span>
+                    </li>
+                    <li className="mr-[8px]">
+                        <FontAwesomeIcon className="mr-2" icon={faServer} />
+                        <span>NVIDIA GeForce GTX 1650 4GB</span>
+                    </li>
+                    <li className="mr-[8px]">
+                        <FontAwesomeIcon className="mr-2" icon={faBriefcase} />
+                        <span>2.3 kg</span>
+                    </li>
+                </ul>
             </CardContent>
-            <CardActions disableSpacing>
-                <IconButton
-                    onClick={(e) => {
-                        setLikedState(!likedState);
-                    }}
-                    aria-label="add to favorites"
-                    color={likedState ? 'error' : 'default'}
-                >
-                    <FavoriteIcon />
-                </IconButton>
-                <IconButton aria-label="share">
-                    <ShareIcon />
-                </IconButton>
+            <CardActions disableSpacing style={{ paddingTop: 0 }}>
+                <div className="flex flex-row justify-end items-end w-full">
+                    <CustomizedSnackbars
+                        openButton={
+                            <IconButton aria-label="share">
+                                <ShareIcon />
+                            </IconButton>
+                        }
+                        message={'Sao chép liên kết thành công'}
+                        actionAfterClick={() => {
+                            navigator.clipboard.writeText('Laptop MSI Modern 14 C11M 011VN');
+                        }}
+                    />
+                    <IconButton
+                        onClick={(e) => {
+                            setLikedState(!likedState);
+                        }}
+                        aria-label="add to favorites"
+                        color={likedState ? 'error' : 'default'}
+                    >
+                        <FavoriteIcon />
+                    </IconButton>
+                </div>
             </CardActions>
         </Card>
     );
