@@ -26,6 +26,13 @@ const publicRoutes = [
         path: CATEGORY_PAGE_URL,
         component: CategoryPage,
         layout: FullLayout,
+        routes: [
+            {
+                path: ':productCode',
+                component: LoginPage,
+                layout: FullLayout,
+            },
+        ],
     },
 ];
 

@@ -58,7 +58,7 @@ function HomePage() {
                                 }}
                                 className="w-full h-full duration-100 flex flex-col justify-center items-center rounded border border-slate-200 hover:bg-blue-400 bg-slate-100"
                             >
-                                <div className="bg-slate-100 p-4 rounded-full hover:bg-white">
+                                <div className="bg-slate-200 p-4 duration-300 rounded-full hover:bg-white">
                                     <img src={category.img} alt={category.name} />
                                 </div>
                                 <h3 className="font-semibold text-lg group-hover:text-white mt-2">{category.name}</h3>
@@ -72,8 +72,8 @@ function HomePage() {
                 <ul className="flex flex-row flex-wrap justify-center items-center">
                     {productListState.map((product) => {
                         return (
-                            <li className="py-2 px-0 sm:px-2 w-[50%] sm:w-[46%] md:w-[32%] lg:w-[20%]">
-                                <RecipeReviewCard />
+                            <li className="py-2 px-[2px] sm:px-2 w-[50%] md:w-[33%] lg:w-[25%] xl:w-[20%]">
+                                <RecipeReviewCard productCode={'/product/laptop-gaming-asus'} />
                             </li>
                         );
                     })}
@@ -85,13 +85,12 @@ function HomePage() {
                     {productListState.map((product) => {
                         return (
                             <li className="py-2 px-0 sm:px-2 w-[50%] sm:w-[46%] md:w-[32%] lg:w-[20%]">
-                                <RecipeReviewCard />
+                                <RecipeReviewCard productCode={'/product/laptop-gaming-asus'} />
                             </li>
                         );
                     })}
                 </ul>
             </div>
-            <Pagination count={10} color="primary" />
         </>
     );
 }

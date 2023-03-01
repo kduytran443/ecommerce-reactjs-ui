@@ -1,7 +1,7 @@
 import { ROLE_ADMIN } from '~/constants';
 
 const authorize = async () => {
-    return ROLE_ADMIN;
+    return null;
 };
 
 export { authorize };

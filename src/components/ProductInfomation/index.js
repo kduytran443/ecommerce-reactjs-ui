@@ -21,35 +21,14 @@ import { HOME_PAGE_URL } from '~/constants';
 import { Button } from '@mui/material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBriefcase, faHardDrive, faMemory, faMicrochip, faServer, faTv } from '@fortawesome/free-solid-svg-icons';
-import ProductStatistics from '../ProductStatistics';
 
-export default function RecipeReviewCard({ productCode = HOME_PAGE_URL }) {
+export default function ProductInfomation() {
     const [likedState, setLikedState] = useState(false);
 
     return (
-        <Card sx={{ width: '100%' }} className={'flex flex-col justify-between'}>
-            <Link to={productCode}>
-                <div className="group relative top-0 left-0 hover:shadow-md duration-200">
-                    <div className="absolute w-full h-full top-0 left-0 duration-200 opacity-0 group-hover:opacity-100">
-                        <div className="absolute top-0 left-0 bg-black w-full h-full opacity-30"></div>
-                        <div className="absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 text-white font-semibold">
-                            Bấm vào để xem chi tiết sản phẩm
-                        </div>
-                    </div>
-                    <CardMedia
-                        component="img"
-                        height="194"
-                        image="https://images.fpt.shop/unsafe/fit-in/240x215/filters:quality(90):fill(white)/fptshop.com.vn/Uploads/Originals/2022/8/4/637952089606431911_asus-vivobook-a1503-bac-dd.jpg"
-                        alt="Paella dish"
-                    />
-                </div>
-            </Link>
+        <Card sx={{ width: '100%' }}>
             <CardContent style={{ paddingBottom: 0 }}>
-                <Link to={productCode}>
-                    <h3 className="font-bold text-base md:text-lg hover:text-blue-500">
-                        Laptop MSI Modern 14 C11M 011VN
-                    </h3>
-                </Link>
+                <h3 className="font-bold text-base md:text-lg hover:text-blue-500">Laptop MSI Modern 14 C11M 011VN</h3>
                 <Typography variant="body2" color="text.secondary">
                     <strike>22,990,000₫</strike>
                 </Typography>
@@ -59,7 +38,32 @@ export default function RecipeReviewCard({ productCode = HOME_PAGE_URL }) {
                         Giảm <b>10%</b>
                     </p>
                 </div>
-                <ProductStatistics />
+                <ul className="bg-slate-100 rounded-lg p-2 flex flex-col mt-2 text-sm sm:text-base">
+                    <li className="mr-[8px]">
+                        <FontAwesomeIcon className="mr-2" icon={faTv} />
+                        <span>15.6 inch</span>
+                    </li>
+                    <li className="mr-[8px]">
+                        <FontAwesomeIcon className="mr-2" icon={faMicrochip} />
+                        <span>Core i5</span>
+                    </li>
+                    <li className="mr-[8px]">
+                        <FontAwesomeIcon className="mr-2" icon={faMemory} />
+                        <span>8 GB (1 thanh 8 GB)</span>
+                    </li>
+                    <li className="mr-[8px]">
+                        <FontAwesomeIcon className="mr-2" icon={faHardDrive} />
+                        <span>SSD 512 GB</span>
+                    </li>
+                    <li className="mr-[8px]">
+                        <FontAwesomeIcon className="mr-2" icon={faServer} />
+                        <span>NVIDIA GeForce GTX 1650 4GB</span>
+                    </li>
+                    <li className="mr-[8px]">
+                        <FontAwesomeIcon className="mr-2" icon={faBriefcase} />
+                        <span>2.3 kg</span>
+                    </li>
+                </ul>
             </CardContent>
             <CardActions disableSpacing style={{ paddingTop: 0 }}>
                 <div className="flex flex-row justify-end items-end w-full">

@@ -71,8 +71,11 @@ function CategoryPage() {
                 <ul className="flex flex-row flex-wrap justify-center items-center">
                     {productListState.map((product) => {
                         return (
-                            <li key={product.id} className="py-2 px-0 sm:px-2 w-[50%] sm:w-[46%] md:w-[32%] lg:w-[20%]">
-                                <RecipeReviewCard />
+                            <li
+                                key={product.id}
+                                className="py-2 px-[2px] sm:px-2 w-[50%] md:w-[33%] lg:w-[25%] xl:w-[20%]"
+                            >
+                                <RecipeReviewCard productCode={'/product/laptop-gaming-asus'} />
                             </li>
                         );
                     })}

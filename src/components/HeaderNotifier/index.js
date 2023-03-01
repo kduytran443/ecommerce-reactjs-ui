@@ -5,6 +5,8 @@ import HeaderAccountOptions from '../HeaderAccountOptions';
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import HeaderNotifierBox from '../HeaderNotifierBox';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import TemporaryDrawer from '../TemporaryDrawer';
+import Cart from '../Cart';
 
 function HeaderNotifier() {
     const [visible, setVisible] = useState(false);
@@ -12,28 +14,22 @@ function HeaderNotifier() {
     const hide = () => setVisible(false);
 
     return (
-        <Tippy
-            content="Tooltip"
-            visible={visible}
-            onClickOutside={hide}
-            render={(attrs) => (
-                <div className="box" tabIndex="-1" {...attrs}>
-                    <HeaderNotifierBox />
+        <TemporaryDrawer
+            button={
+                <div
+                    onClick={(e) => {
+                        setVisible(!visible);
+                    }}
+                    className={`cursor-pointer`}
+                >
+                    <Badge badgeContent={4} color="primary">
+                        <ShoppingCartIcon color="action" />
+                    </Badge>
                 </div>
-            )}
-            interactive
+            }
         >
-            <div
-                onClick={(e) => {
-                    setVisible(!visible);
-                }}
-                className={`cursor-pointer ${visible && ' outline outline-4 shadow-md outline-sky-500 rounded-full'}`}
-            >
-                <Badge badgeContent={4} color="primary">
-                    <ShoppingCartIcon color="action" />
-                </Badge>
-            </div>
-        </Tippy>
+            <Cart main={false} />
+        </TemporaryDrawer>
     );
 }
 
