@@ -13,7 +13,7 @@ function CommentCard({
 
     return (
         <div className="flex flex-col w-full p-6 my-2 rounded-lg border border-slate-200">
-            <div className="flex flex-col sm:flex-row justify-start items-center">
+            <div className="flex flex-row sm:flex-row justify-between items-center">
                 <div className="flex flex-row justify-center items-center mb-2 sm:mb-0">
                     <Avatar src={avatar} sx={{ width: '48px', height: '48px' }} />
                     <h3 className="text-lg font-bold ml-4">{fullname}</h3>

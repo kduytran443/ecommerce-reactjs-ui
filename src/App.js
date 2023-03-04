@@ -11,6 +11,8 @@ import LoginPage from './pages/LoginPage';
 import NotFoundPage from './pages/NotFoundPage';
 import PersonalPage from './pages/PersonalPage';
 import ProductPage from './pages/ProductPage';
+import SearchPage from './pages/SearchPage';
+import SignUpPage from './pages/SignUpPage';
 import { privateRoutes, publicRoutes } from './routes';
 import { authorize } from './services/useService';
 
@@ -37,6 +39,9 @@ function App() {
                         <Route path={'/product/:productCode'} element={<ProductPage />} />
                         <Route path={'/cart'} element={<CartPage />} />
                         <Route path={'/history'} element={<HistoryPage />} />
+                        <Route path={'/sign-up'} element={<SignUpPage />} />
+                        <Route path={'/search'} element={<SearchPage />} />
+                        <Route path={'/personal'} element={<PersonalPage />} />
                     </Routes>
 
                     {(isAuthenticatedState === ROLE_ADMIN || isAuthenticatedState === ROLE_USER) && (

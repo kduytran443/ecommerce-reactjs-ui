@@ -35,7 +35,10 @@ export default function ProductInfomation() {
                 <div className="flex flex-col md:flex-row items-center justify-between">
                     <p className="text-lg md:text-xl font-bold text-red-500">20,691,000₫</p>
                     <p className="text-blue-500">
-                        Giảm <b>10%</b>
+                        <p>
+                            Giảm <b>10%</b>
+                        </p>
+                        <p>(Còn hàng)</p>
                     </p>
                 </div>
                 <ul className="bg-slate-100 rounded-lg p-2 flex flex-col mt-2 text-sm sm:text-base">

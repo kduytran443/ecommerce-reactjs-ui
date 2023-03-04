@@ -1,6 +1,6 @@
-import { faCartShopping, faCashRegister } from '@fortawesome/free-solid-svg-icons';
+import { faCartShopping, faCashRegister, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Button, Checkbox } from '@mui/material';
+import { Button, Checkbox, IconButton } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import ComplexAccordion from '../ComplexAccordion';
@@ -63,6 +63,14 @@ function Cart({ main = false }) {
         }
     }, [selectedIdState]);
 
+    const deleteItem = (productId) => {
+        let array = [...cartDataState];
+        console.log(productId, array);
+        array = array.filter((item) => item.product.id !== productId);
+        console.log('filter', array);
+        setCartDataState(array);
+    };
+
     const checkAvailableId = (id) => {
         return selectedIdState.some((item) => item === id);
     };
@@ -105,6 +113,7 @@ function Cart({ main = false }) {
                     </div>
                 )}
             </div>
+            {cartDataState.length === 0 && <div className="ml-2 mt-4">Giỏ hàng trống</div>}
             <ul className="flex flex-col w-full flex-1 h-full overflow-y-auto relative">
                 {cartDataState.map((item, index) => {
                     return (
@@ -133,11 +142,6 @@ function Cart({ main = false }) {
                                 >
                                     <div>
                                         <div>
-                                            <Link to={`/product/${item.product.productCode}`}>
-                                                <span className="font-bold text-blue-500 hover:text-blue-600 underline">
-                                                    Xem sản phẩm
-                                                </span>
-                                            </Link>
                                             <p>
                                                 <b>Giá:</b> {VND.format(item.product.price)}
                                             </p>
@@ -151,6 +155,22 @@ function Cart({ main = false }) {
                                             </div>
                                         </div>
                                         <ProductStatistics mt={0} />
+                                        <div className="flex flex-row items-center justify-between mt-2">
+                                            <Link to={`/product/${item.product.productCode}`}>
+                                                <span className="font-bold text-blue-500 hover:text-blue-600 underline">
+                                                    Xem sản phẩm
+                                                </span>
+                                            </Link>
+                                            <IconButton
+                                                size="small"
+                                                onClick={(e) => {
+                                                    deleteItem(item.product.id);
+                                                }}
+                                                color="error"
+                                            >
+                                                <FontAwesomeIcon icon={faTrash} />
+                                            </IconButton>
+                                        </div>
                                     </div>
                                 </ComplexAccordion>
                             </div>
