@@ -8,9 +8,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMicrophone } from '@fortawesome/free-solid-svg-icons';
 import { faOptinMonster } from '@fortawesome/free-brands-svg-icons';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export default function CustomizedInputBase() {
     const [searchInputValueState, setSearchInputValueState] = useState('');
+    const navigate = useNavigate();
 
     const onSubmitInput = (value) => {
         setSearchInputValueState(value);
@@ -18,7 +20,13 @@ export default function CustomizedInputBase() {
 
     return (
         <Paper component="form" sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', width: 400 }}>
-            <IconButton sx={{ p: '10px' }} aria-label="menu">
+            <IconButton
+                onClick={(e) => {
+                    navigate('/search');
+                }}
+                sx={{ p: '10px' }}
+                aria-label="menu"
+            >
                 <TuneIcon />
             </IconButton>
             <InputBase

@@ -5,10 +5,14 @@ import AddressItem from '../AddressItem';
 
 function Address({ list = [] }) {
     return (
-        <div className="flex flex-col w-full">
+        <div className="flexflex-col w-full">
             <h2 className="font-bold text-xl ml-2">Địa chỉ</h2>
             {list.map((item) => {
-                return <AddressItem content={item.content} />;
+                return (
+                    <div className="my-2 hover:bg-slate-100">
+                        <AddressItem content={item.content} />
+                    </div>
+                );
             })}
         </div>
     );

@@ -9,6 +9,8 @@ import HistoryPage from './pages/HistoryPage';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import NotFoundPage from './pages/NotFoundPage';
+import OrderDetailsPage from './pages/OrderDetailsPage';
+import OrderPage from './pages/OrderPage';
 import PersonalPage from './pages/PersonalPage';
 import ProductPage from './pages/ProductPage';
 import SearchPage from './pages/SearchPage';
@@ -42,6 +44,8 @@ function App() {
                         <Route path={'/sign-up'} element={<SignUpPage />} />
                         <Route path={'/search'} element={<SearchPage />} />
                         <Route path={'/personal'} element={<PersonalPage />} />
+                        <Route path={'/order'} element={<OrderPage />} />
+                        <Route path={'/order-details/:orderId'} element={<OrderDetailsPage />} />
                     </Routes>
 
                     {(isAuthenticatedState === ROLE_ADMIN || isAuthenticatedState === ROLE_USER) && (

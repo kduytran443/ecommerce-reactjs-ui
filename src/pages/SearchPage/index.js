@@ -15,7 +15,7 @@ function SearchPage() {
         status: 1,
     });
     const [productListState, setProductListState] = useState(() => {
-        return [1, 2, 3, 4, 5, 1, 2, 3, 4, 5];
+        return [];
     });
     const [categoryListState, setCategoryListState] = useState([
         {
@@ -54,7 +54,8 @@ function SearchPage() {
     };
 
     return (
-        <div>
+        <div className="select-none">
+            <h1 className="font-bold text-3xl p-2">Tìm kiếm</h1>
             <SimpleAccordion title="Bộ lọc">
                 <div className="flex flex-col">
                     <div className="bg-slate-100 p-4 rounded-lg">

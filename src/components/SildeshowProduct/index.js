@@ -57,7 +57,7 @@ const properties = {
 
 const SildeshowProduct = () => {
     return (
-        <div className="slide-container md:rounded-lg md:overflow-hidden md:shadow-md">
+        <div className="slide-container md:rounded-lg md:overflow-hidden md:shadow-md select-none">
             <Slide autoplay={false} {...properties} transitionDuration={500}>
                 {slideImages.map((item, index) => (
                     <div key={index} className="hover:cursor-grab active:cursor-grabbing">

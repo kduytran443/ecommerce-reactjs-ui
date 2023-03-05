@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import HistoryIcon from '@mui/icons-material/History';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import Address from '~/components/Address';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
 function PersonalPage() {
     const navigate = useNavigate();
@@ -24,6 +26,9 @@ function PersonalPage() {
         ],
     });
 
+    const [visibleAddNewAddressState, setVisibleAddNewAddressState] = useState(false);
+    const [newAddressState, setNewAddressState] = useState('');
+
     return (
         <div className="w-full">
             <div className="flex flex-col items-center p-2">
@@ -41,6 +46,9 @@ function PersonalPage() {
             </div>
             <div className="my-6">
                 <Address list={personDataState.addressList} />
+                <div className="w-full mt-2 h-[62px] font-bold text-slate-500 text-2xl select-none hover:bg-slate-100 active:bg-slate-200 cursor-pointer border-2 border-dashed border-slate-300 flex flex-col items-center justify-center rounded-lg">
+                    <FontAwesomeIcon icon={faPlus} />
+                </div>
             </div>
             <ul className="flex flex-row w-full items-center flex-wrap">
                 <li className="p-4 pt-0 w-[50%] md:w-[160px]">
