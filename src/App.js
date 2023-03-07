@@ -2,7 +2,9 @@ import { Fragment, useEffect, useLayoutEffect, useState } from 'react';
 import { BrowserRouter as Router, Navigate, Route, Routes, useNavigate } from 'react-router-dom';
 import ScrollToTop from './components/ScrollToTop';
 import { HOME_PAGE_URL, PERSONAL_PAGE_URL, ROLE_ADMIN, ROLE_USER } from './constants';
+import AdminLayout from './layouts/AdminLayout';
 import FullLayout from './layouts/FullLayout';
+import AdminHomePage from './pages/AdminHomePage';
 import CartPage from './pages/CartPage';
 import CategoryPage from './pages/CategoryPage';
 import HistoryPage from './pages/HistoryPage';
@@ -31,29 +33,129 @@ function App() {
     return (
         <div className="pd-0 ">
             <ScrollToTop>
-                <FullLayout>
-                    <Routes>
-                        <Route path={HOME_PAGE_URL} element={<HomePage />} />
-                        <Route path={'/'} element={<HomePage />} />
-                        <Route path={'/login'} element={<LoginPage />} />
-                        <Route path="*" element={<NotFoundPage />} />
-                        <Route path={'/category/:categoryCode'} element={<CategoryPage />} />
-                        <Route path={'/product/:productCode'} element={<ProductPage />} />
-                        <Route path={'/cart'} element={<CartPage />} />
-                        <Route path={'/history'} element={<HistoryPage />} />
-                        <Route path={'/sign-up'} element={<SignUpPage />} />
-                        <Route path={'/search'} element={<SearchPage />} />
-                        <Route path={'/personal'} element={<PersonalPage />} />
-                        <Route path={'/order'} element={<OrderPage />} />
-                        <Route path={'/order-details/:orderId'} element={<OrderDetailsPage />} />
-                    </Routes>
+                <Routes>
+                    <Route
+                        path={HOME_PAGE_URL}
+                        element={
+                            <FullLayout>
+                                <HomePage />
+                            </FullLayout>
+                        }
+                    />
+                    <Route
+                        path={'/'}
+                        element={
+                            <FullLayout>
+                                <HomePage />
+                            </FullLayout>
+                        }
+                    />
+                    <Route
+                        path={'/login'}
+                        element={
+                            <FullLayout>
+                                <LoginPage />
+                            </FullLayout>
+                        }
+                    />
+                    <Route
+                        path="*"
+                        element={
+                            <FullLayout>
+                                <NotFoundPage />
+                            </FullLayout>
+                        }
+                    />
+                    <Route
+                        path={'/category/:categoryCode'}
+                        element={
+                            <FullLayout>
+                                <CategoryPage />
+                            </FullLayout>
+                        }
+                    />
+                    <Route
+                        path={'/product/:productCode'}
+                        element={
+                            <FullLayout>
+                                <ProductPage />
+                            </FullLayout>
+                        }
+                    />
+                    <Route
+                        path={'/cart'}
+                        element={
+                            <FullLayout>
+                                <CartPage />
+                            </FullLayout>
+                        }
+                    />
+                    <Route
+                        path={'/history'}
+                        element={
+                            <FullLayout>
+                                <HistoryPage />
+                            </FullLayout>
+                        }
+                    />
+                    <Route
+                        path={'/sign-up'}
+                        element={
+                            <FullLayout>
+                                <SignUpPage />
+                            </FullLayout>
+                        }
+                    />
+                    <Route
+                        path={'/search'}
+                        element={
+                            <FullLayout>
+                                <SearchPage />
+                            </FullLayout>
+                        }
+                    />
+                    <Route
+                        path={'/personal'}
+                        element={
+                            <FullLayout>
+                                <PersonalPage />
+                            </FullLayout>
+                        }
+                    />
+                    <Route
+                        path={'/order'}
+                        element={
+                            <FullLayout>
+                                <OrderPage />
+                            </FullLayout>
+                        }
+                    />
+                    <Route
+                        path={'/order-details/:orderId'}
+                        element={
+                            <FullLayout>
+                                <OrderDetailsPage />
+                            </FullLayout>
+                        }
+                    />
 
-                    {(isAuthenticatedState === ROLE_ADMIN || isAuthenticatedState === ROLE_USER) && (
-                        <Routes>
-                            <Route path={PERSONAL_PAGE_URL} element={<PersonalPage />} />
-                        </Routes>
-                    )}
-                </FullLayout>
+                    <Route
+                        path={'/admin'}
+                        element={
+                            <AdminLayout>
+                                <AdminHomePage />
+                            </AdminLayout>
+                        }
+                    />
+                    <Route
+                        path={'/admin/home'}
+                        element={
+                            <AdminLayout>
+                                <AdminHomePage />
+                            </AdminLayout>
+                        }
+                    />
+                </Routes>
             </ScrollToTop>
         </div>
     );

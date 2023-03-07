@@ -61,7 +61,7 @@ function ProductPage() {
     };
 
     return (
-        <div>
+        <div className="bg-white">
             <div className="flex flex-col md:flex-row md:items-stretch">
                 <div className="md:w-[50%] w-full ">
                     <SildeshowProduct />
@@ -72,7 +72,7 @@ function ProductPage() {
                         <div className="w-full p-4 flex flex-col md:flex-row">
                             <CustomizedSnackbars
                                 openButton={
-                                    <div className="flex flex-col justify-center items-center w-full mr-0 md:mr-2 p-4 bg-red-500 text-lg cursor-pointer hover:bg-red-600 hover:shadow-lg select-none rounded shadow-md active:bg-red-700 text-white font-semibold">
+                                    <div className="flex flex-col justify-center items-center w-full mr-0 md:mr-2 p-4 bg-red-500 text-lg cursor-pointer hover:bg-red-600 hover:shadow-lg select-none rounded shadow-md active:bg-red-700 shadow-red-400 text-white font-semibold">
                                         THÊM VÀO GIỎ HÀNG
                                     </div>
                                 }
@@ -81,7 +81,7 @@ function ProductPage() {
                             />
                             <OrderDialog
                                 openButton={
-                                    <div className="flex flex-col justify-center items-center w-full ml-0 mt-2 md:mt-0 md:ml-2 p-4 bg-blue-500 text-lg cursor-pointer hover:bg-blue-600 hover:shadow-lg select-none rounded shadow-md active:bg-blue-700 text-white font-semibold">
+                                    <div className="flex flex-col justify-center items-center w-full ml-0 mt-2 md:mt-0 md:ml-2 p-4 bg-blue-500 text-lg cursor-pointer hover:bg-blue-600 hover:shadow-lg select-none rounded shadow-md active:bg-blue-700 shadow-blue-400 text-white font-semibold">
                                         ĐẶT HÀNG
                                     </div>
                                 }
@@ -147,14 +147,14 @@ function ProductPage() {
                     </div>
                 </div>
             </div>
-            <div className="w-full my-4">
+            <div className="w-full p-4 my-4">
                 <ManufacturerReviewCard
                     code="asus"
                     name="Asus"
                     image="https://thumbs.dreamstime.com/b/glowing-asus-rog-logo-gaming-laptop-miercurea-ciuc-romania-august-155994881.jpg"
                 />
             </div>
-            <div className="flex md:flex-row flex-col-reverse mt-8">
+            <div className="flex md:flex-row flex-col-reverse mt-8 p-4">
                 <div className="w-full md:w-[70%]">
                     <h3 className="text-3xl font-bold mb-4">Thông tin sản phẩm</h3>
                     <div className="p-4 md:p-0">{parse(content)}</div>
