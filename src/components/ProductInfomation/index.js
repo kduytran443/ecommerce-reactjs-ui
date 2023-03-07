@@ -28,7 +28,9 @@ export default function ProductInfomation() {
     return (
         <Card sx={{ width: '100%' }}>
             <CardContent style={{ paddingBottom: 0 }}>
-                <h3 className="font-bold text-base md:text-lg hover:text-blue-500">Laptop MSI Modern 14 C11M 011VN</h3>
+                <h3 className="font-bold text-base md:text-lg hover:text-blue-500">
+                    Asus TUF Gaming F15 FX506LHB-HN188W
+                </h3>
                 <Typography variant="body2" color="text.secondary">
                     <strike>22,990,000₫</strike>
                 </Typography>

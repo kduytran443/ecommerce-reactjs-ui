@@ -28,10 +28,10 @@ const steps = [
     },
 ];
 
-export default function OrderStepper() {
+export default function OrderStepper({ status = 1 }) {
     return (
         <Box sx={{ width: '100%' }}>
-            <Stepper activeStep={1} alternativeLabel>
+            <Stepper activeStep={status} alternativeLabel>
                 {steps.map((label, index) => (
                     <Step key={index}>
                         <StepLabel StepIconComponent={label.icon}>{label.name}</StepLabel>

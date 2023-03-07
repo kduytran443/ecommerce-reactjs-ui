@@ -1,11 +1,12 @@
-import { Avatar, TextField } from '@mui/material';
-import { useState } from 'react';
+import { Avatar, IconButton, TextField } from '@mui/material';
+import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import HistoryIcon from '@mui/icons-material/History';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import Address from '~/components/Address';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faCamera, faCheck, faPaperPlane, faPen, faPlus, faX } from '@fortawesome/free-solid-svg-icons';
+import AddressDialog from '~/components/AddressDialog';
 
 function PersonalPage() {
     const navigate = useNavigate();
@@ -13,7 +14,7 @@ function PersonalPage() {
         id: 1,
         username: 'khanhduytran',
         fullname: 'Trần Khánh Duy',
-        avatar: 'https://cdn.ntvspor.net/c355da00164e4804a042cd039df66885.jpg?crop=241,0,883,642&w=800&h=800&mode=crop',
+        avatar: 'https://assets-global.website-files.com/62196607bf1b46c300301846/62196607bf1b4642e7301e28_5fb42ba3f6da8426682c53df_in%2520the%2520meeting%2520vs%2520at%2520the%2520meeting%2520grammar.jpeg',
         addressList: [
             {
                 id: 1,
@@ -27,28 +28,138 @@ function PersonalPage() {
     });
 
     const [visibleAddNewAddressState, setVisibleAddNewAddressState] = useState(false);
+
     const [newAddressState, setNewAddressState] = useState('');
+    const [visibleFullnameEditingState, setVisibleFullnameEditingState] = useState(false);
+
+    const avatarRef = useRef();
+
+    const uploadAvatar = (e) => {
+        const files = e.target.files;
+        for (let i = 0; i < files.length; i++) {
+            let file = e.target.files[i];
+            if (file) {
+                let reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => {
+                    setPersonDataState((pre) => {
+                        return { ...pre, avatar: reader.result };
+                    });
+                    avatarRef.current.value = '';
+                };
+                reader.onerror = (error) => {
+                    console.log('error uploading!');
+                };
+            }
+        }
+    };
+
+    const addAddress = () => {
+        if (newAddressState.trim()) {
+            let addressList = personDataState.addressList;
+            addressList.push({ content: newAddressState.trim() });
+            setPersonDataState((pre) => {
+                return { ...pre, addressList: addressList };
+            });
+        }
+    };
+
+    const changeFullname = () => {
+        //do some staff
+
+        setVisibleFullnameEditingState(false);
+    };
 
     return (
         <div className="w-full">
             <div className="flex flex-col items-center p-2">
-                <div>
-                    <Avatar
-                        className="shadow-md"
-                        src={personDataState.avatar}
-                        sx={{ width: '240px', height: '240px' }}
-                    />
+                <div className="group bg-slate-800 rounded-full cursor-pointer relative duration-200 hover:shadow-md">
+                    <div>
+                        <Avatar
+                            className="group-hover:opacity-80 duration-200"
+                            src={personDataState.avatar}
+                            sx={{ width: '240px', height: '240px' }}
+                        />
+                        <div
+                            onClick={(e) => {
+                                avatarRef.current.click();
+                            }}
+                            className="absolute bg-white rounded-full group-hover:opacity-100 opacity-0 duration-200 top-[50%] left-[50%] -translate-y-1/2 -translate-x-1/2"
+                        >
+                            <IconButton color="inherit" size="large">
+                                <FontAwesomeIcon icon={faCamera} />
+                            </IconButton>
+                        </div>
+                        <input type="file" onChange={uploadAvatar} style={{ display: 'none' }} ref={avatarRef} />
+                    </div>
                 </div>
                 <div className="mt-6 text-xl flex flex-col items-center">
-                    <div className="font-bold">{personDataState.fullname}</div>
+                    <div className="flex flex-row items-center">
+                        {visibleFullnameEditingState === false ? (
+                            <>
+                                <div className="font-bold">{personDataState.fullname}</div>
+                                <div className="ml-2">
+                                    <IconButton
+                                        onClick={(e) => {
+                                            setVisibleFullnameEditingState(true);
+                                        }}
+                                        size="small"
+                                    >
+                                        <FontAwesomeIcon icon={faPen} />
+                                    </IconButton>
+                                </div>
+                            </>
+                        ) : (
+                            <div className="flex flex-row items-center">
+                                <TextField label="Họ và tên" value={personDataState.fullname} />
+                                <div className="flex flex-row items-center">
+                                    <div className="ml-2">
+                                        <IconButton
+                                            size="small"
+                                            onClick={(e) => {
+                                                setVisibleFullnameEditingState(false);
+                                            }}
+                                            color="error"
+                                        >
+                                            <FontAwesomeIcon icon={faX} />
+                                        </IconButton>
+                                    </div>
+                                    <div className="ml-2">
+                                        <IconButton size="small" onClick={changeFullname} color="success">
+                                            <FontAwesomeIcon icon={faCheck} />
+                                        </IconButton>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                    </div>
                     <div className="text-gray-600">@{personDataState.username}</div>
                 </div>
             </div>
             <div className="my-6">
                 <Address list={personDataState.addressList} />
-                <div className="w-full mt-2 h-[62px] font-bold text-slate-500 text-2xl select-none hover:bg-slate-100 active:bg-slate-200 cursor-pointer border-2 border-dashed border-slate-300 flex flex-col items-center justify-center rounded-lg">
-                    <FontAwesomeIcon icon={faPlus} />
-                </div>
+                <AddressDialog
+                    openButton={
+                        <div className="w-full mt-2 h-[62px] font-bold text-slate-500 text-2xl select-none hover:bg-slate-100 active:bg-slate-200 cursor-pointer border-2 border-dashed border-slate-300 flex flex-col items-center justify-center rounded-lg">
+                            <FontAwesomeIcon icon={faPlus} />
+                        </div>
+                    }
+                >
+                    <div className="w-full flex flex-row items-center p-6">
+                        <TextField
+                            value={newAddressState}
+                            label="Địa chỉ"
+                            onInput={(e) => {
+                                setNewAddressState(e.target.value);
+                            }}
+                        />
+                        <div className="ml-2">
+                            <IconButton onClick={addAddress} color="primary">
+                                <FontAwesomeIcon icon={faPaperPlane} />
+                            </IconButton>
+                        </div>
+                    </div>
+                </AddressDialog>
             </div>
             <ul className="flex flex-row w-full items-center flex-wrap">
                 <li className="p-4 pt-0 w-[50%] md:w-[160px]">

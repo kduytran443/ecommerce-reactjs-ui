@@ -14,7 +14,7 @@ import AddIcon from '@mui/icons-material/Add';
 import Typography from '@mui/material/Typography';
 import { blue } from '@mui/material/colors';
 
-export default function OrderDialog({ openButton, children }) {
+export default function AddressDialog({ openButton, children }) {
     const [open, setOpen] = React.useState(false);
 
     const handleClickOpen = () => {
@@ -31,8 +31,14 @@ export default function OrderDialog({ openButton, children }) {
                 {openButton}
             </div>
             <Dialog className="w-full" onClose={handleClose} open={open}>
-                <DialogTitle>Đặt hàng</DialogTitle>
+                <DialogTitle>Thêm địa chỉ</DialogTitle>
                 <div className="w-full">{children}</div>
+                <div
+                    onClick={handleClose}
+                    className="w-full p-4 text-center bg-gray-600 font-bold text-base select-none cursor-pointer text-white"
+                >
+                    Hủy
+                </div>
             </Dialog>
         </div>
     );

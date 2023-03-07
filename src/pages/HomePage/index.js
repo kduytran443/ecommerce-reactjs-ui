@@ -8,7 +8,7 @@ import SildeshowIntroduction from '~/components/SildeshowIntroduction';
 
 function HomePage() {
     const [productListState, setProductListState] = useState(() => {
-        return [1, 2, 3, 4, 5, 1, 2, 3, 4, 5];
+        return [1, 2, 3, 4, 5, 1, 2, 3];
     });
     const [categoryListState, setCategoryListState] = useState([]);
     const navigate = useNavigate();
@@ -72,7 +72,7 @@ function HomePage() {
                 <ul className="flex flex-row flex-wrap justify-center items-center">
                     {productListState.map((product) => {
                         return (
-                            <li className="py-2 px-[2px] sm:px-2 w-[50%] md:w-[33%] lg:w-[25%] xl:w-[20%]">
+                            <li className="py-2 px-[2px] sm:px-2 w-[50%] md:w-[33%] lg:w-[25%]">
                                 <RecipeReviewCard productCode={'/product/laptop-gaming-asus'} />
                             </li>
                         );
@@ -84,7 +84,7 @@ function HomePage() {
                 <ul className="flex flex-row flex-wrap justify-center items-center">
                     {productListState.map((product) => {
                         return (
-                            <li className="py-2 px-0 sm:px-2 w-[50%] sm:w-[46%] md:w-[32%] lg:w-[20%]">
+                            <li className="py-2 px-[2px] sm:px-2 w-[50%] md:w-[33%] lg:w-[25%]">
                                 <RecipeReviewCard productCode={'/product/laptop-gaming-asus'} />
                             </li>
                         );

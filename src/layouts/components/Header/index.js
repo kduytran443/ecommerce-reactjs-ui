@@ -37,7 +37,7 @@ function Header() {
                         navigate(HOME_PAGE_URL);
                     }}
                 >
-                    <h1 className="font-black text-xl ">TMDT</h1>
+                    <div className="font-black text-2xl">TMĐT</div>
                 </div>
                 <div className="md:block hidden">
                     <CustomizedInputBase />

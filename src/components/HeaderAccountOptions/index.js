@@ -33,7 +33,7 @@ function HeaderAccountOptions() {
                     <List>
                         <ListItem disablePadding>
                             <ListItemButton>
-                                <ListItemText primary="Thoát" />
+                                <ListItemText primary="Đăng xuất" />
                             </ListItemButton>
                         </ListItem>
                     </List>

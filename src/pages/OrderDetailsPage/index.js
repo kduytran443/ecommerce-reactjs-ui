@@ -8,6 +8,8 @@ import OrderStepper from '~/components/OrderStepper';
 import ProductStatistics from '~/components/ProductStatistics';
 import InfoIcon from '@mui/icons-material/Info';
 import NumberInput from '~/components/NumberInput';
+import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
+import { PayPalButtons, PayPalScriptProvider } from '@paypal/react-paypal-js';
 
 const VND = new Intl.NumberFormat('vi-VN', {
     style: 'currency',
@@ -45,6 +47,7 @@ function OrderDetailsPage() {
             },
         ],
         total: 1900000,
+        status: 1,
     });
 
     return (
@@ -59,12 +62,24 @@ function OrderDetailsPage() {
                 </Button>
                 <div className="text-3xl font-bold my-2">Đơn hàng ngày {orderDataState.date}</div>
             </div>
-            <div className="w-full mb-12 border border-slate-200 pb-4 rounded-lg">
-                <h3 className="mt-4 ml-2 mb-6 text-gray-700 font-bold">
+            <div className="w-full mb-8 border border-slate-300 pb-4 rounded-lg">
+                <h3 className="mt-4 ml-6 mb-6 text-gray-700 font-bold">
                     <InfoIcon /> Trạng thái đơn hàng
                 </h3>
-                <OrderStepper />
+                <OrderStepper status={orderDataState.status} />
             </div>
+            {orderDataState && orderDataState.status === 1 && (
+                <div className="w-full mb-8 border border-slate-300 rounded-lg p-4">
+                    <h3 className="mt-4 ml-2 mb-6 text-gray-700 font-bold">
+                        <AccountBalanceWalletIcon /> Thanh toán
+                    </h3>
+                    <div className="w-full">
+                        <PayPalScriptProvider options={{ 'client-id': 'test' }}>
+                            <PayPalButtons style={{ layout: 'horizontal' }} />
+                        </PayPalScriptProvider>
+                    </div>
+                </div>
+            )}
             <div>
                 <div className="mb-2">
                     <b className="text-gray-700">
@@ -96,6 +111,16 @@ function OrderDetailsPage() {
                     </b>{' '}
                     Không.
                 </div>
+                <div className="mb-2">
+                    <b className="text-gray-700">
+                        <FontAwesomeIcon icon={faNoteSticky} /> Phí vận chuyển:
+                    </b>{' '}
+                    <span className="text-red-500">25,000đ</span>
+                </div>
+            </div>
+            <div className="text-xl my-6">
+                <b>Tổng tiền: </b>
+                <span className="text-green-500">2,900,00đ</span>
             </div>
             <div>
                 <h2 className="mt-4 font-bold text-xl">Danh sách sản phẩm:</h2>
