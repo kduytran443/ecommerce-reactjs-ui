@@ -15,7 +15,7 @@ function Header() {
     const [authenticatedState, setAuthenticatedState] = useState(true);
 
     return (
-        <header className="sticky z-50 top-0 w-full relative bg-white">
+        <header className="sticky z-50 top-0 w-full relative bg-white" style={{ zIndex: '50' }}>
             <div className="w-full py-2 h-header-height shadow border-slate-200 border-b-[1px] flex flex-row justify-between items-center px-4">
                 <div className="md:hidden block">
                     <MobileHeaderMenu />

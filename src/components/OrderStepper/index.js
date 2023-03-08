@@ -12,7 +12,7 @@ import DoneIcon from '@mui/icons-material/Done';
 
 const steps = [
     {
-        name: 'Đơn hàng đã xử lý',
+        name: 'Xử lý đơn hàng',
     },
     {
         name: 'Xác nhận thông tin thanh toán',

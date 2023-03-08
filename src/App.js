@@ -4,7 +4,11 @@ import ScrollToTop from './components/ScrollToTop';
 import { HOME_PAGE_URL, PERSONAL_PAGE_URL, ROLE_ADMIN, ROLE_USER } from './constants';
 import AdminLayout from './layouts/AdminLayout';
 import FullLayout from './layouts/FullLayout';
+import AdminCategoryDetailsPage from './pages/AdminCategoryDetailsPage';
+import AdminCategoryPage from './pages/AdminCategoryPage';
 import AdminHomePage from './pages/AdminHomePage';
+import AdminOrderDetailsPage from './pages/AdminOrderDetailsPage';
+import AdminOrderPage from './pages/AdminOrderPage';
 import CartPage from './pages/CartPage';
 import CategoryPage from './pages/CategoryPage';
 import HistoryPage from './pages/HistoryPage';
@@ -152,6 +156,38 @@ function App() {
                         element={
                             <AdminLayout>
                                 <AdminHomePage />
+                            </AdminLayout>
+                        }
+                    />
+                    <Route
+                        path={'/admin/order'}
+                        element={
+                            <AdminLayout>
+                                <AdminOrderPage />
+                            </AdminLayout>
+                        }
+                    />
+                    <Route
+                        path={'/admin/order-details/:orderId'}
+                        element={
+                            <AdminLayout>
+                                <AdminOrderDetailsPage />
+                            </AdminLayout>
+                        }
+                    />
+                    <Route
+                        path={'/admin/category'}
+                        element={
+                            <AdminLayout>
+                                <AdminCategoryPage />
+                            </AdminLayout>
+                        }
+                    />
+                    <Route
+                        path={'/admin/category/:categoryCode'}
+                        element={
+                            <AdminLayout>
+                                <AdminCategoryDetailsPage />
                             </AdminLayout>
                         }
                     />

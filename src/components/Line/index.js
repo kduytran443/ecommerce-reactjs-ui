@@ -6,7 +6,7 @@ import { CATEGORY_PAGE_URL, PERSONAL_PAGE_URL } from '~/constants';
 
 function Line({ title }) {
     return (
-        <div className="p-4 bg-red-600 shadow-md sm:rounded flex flex-col md:flex-row justify-between">
+        <div className="p-4 shadow shadow-red-300 bg-red-600 shadow-md sm:rounded flex flex-col md:flex-row justify-between">
             <p className="text-2xl font-bold text-white uppercase text-center md:text-left tracking-widest">{title}</p>
             <Link to={CATEGORY_PAGE_URL}>
                 <div className="text-white hover:underline font-bold flex flex-row items-center justify-center">

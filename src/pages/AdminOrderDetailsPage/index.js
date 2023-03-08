@@ -1,25 +1,34 @@
-import { faAddressCard, faArrowLeft, faClock, faNoteSticky, faPhone, faUser } from '@fortawesome/free-solid-svg-icons';
+import {
+    faAddressCard,
+    faArrowLeft,
+    faCheck,
+    faCheckCircle,
+    faClock,
+    faMoneyBill,
+    faMoneyBillTransfer,
+    faNoteSticky,
+    faPhone,
+    faRotateBack,
+    faTruck,
+    faUser,
+} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Button, IconButton } from '@mui/material';
-import { useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
-import ComplexAccordion from '~/components/ComplexAccordion';
+import { Button } from '@mui/material';
+import { Link, useNavigate } from 'react-router-dom';
 import OrderStepper from '~/components/OrderStepper';
-import ProductStatistics from '~/components/ProductStatistics';
 import InfoIcon from '@mui/icons-material/Info';
-import NumberInput from '~/components/NumberInput';
-import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
-import { PayPalButtons, PayPalScriptProvider } from '@paypal/react-paypal-js';
+import { useState } from 'react';
+import ProductStatistics from '~/components/ProductStatistics';
+import ComplexAccordion from '~/components/ComplexAccordion';
 
 const VND = new Intl.NumberFormat('vi-VN', {
     style: 'currency',
     currency: 'VND',
 });
 
-function OrderDetailsPage() {
-    const { orderId } = useParams();
-    let createdDate = new Date();
+function AdminOrderDetailsPage() {
     const navigate = useNavigate();
+    let createdDate = new Date();
 
     const [orderDataState, setOrderDataState] = useState({
         id: 1,
@@ -50,34 +59,107 @@ function OrderDetailsPage() {
         status: 1,
     });
 
+    const processOrder = () => {
+        setOrderDataState((pre) => {
+            return { ...pre, status: pre.status + 1 };
+        });
+    };
+
+    const confirmPayment = () => {
+        setOrderDataState((pre) => {
+            return { ...pre, status: pre.status + 1 };
+        });
+    };
+
+    const backProcess = () => {
+        setOrderDataState((pre) => {
+            return { ...pre, status: pre.status - 1 };
+        });
+    };
+
+    const confirmWaitingDone = () => {
+        setOrderDataState((pre) => {
+            return { ...pre, status: pre.status + 1 };
+        });
+    };
+
     return (
-        <div className="w-full p-4 bg-white rounded">
-            <div className="w-full mb-8">
+        <div className="w-full bg-white rounded p-4 shadow">
+            <div className="mb-6">
                 <Button
                     onClick={(e) => {
-                        navigate('/order');
+                        navigate('/admin/order');
                     }}
+                    startIcon={<FontAwesomeIcon icon={faArrowLeft} />}
                 >
-                    <FontAwesomeIcon className="mr-2" icon={faArrowLeft} /> Trở lại
+                    Quay lại
                 </Button>
-                <div className="text-3xl font-bold my-2">Đơn hàng ngày {orderDataState.date}</div>
             </div>
             <div className="w-full mb-8 border border-slate-300 pb-4 rounded-lg">
                 <h3 className="mt-4 ml-6 mb-6 text-gray-700 font-bold">
                     <InfoIcon /> Trạng thái đơn hàng
                 </h3>
-                <OrderStepper status={orderDataState.status} />
+                <OrderStepper status={orderDataState.status - 1} />
             </div>
-            {orderDataState && orderDataState.status === 1 && (
-                <div className="w-full mb-8 border border-slate-300 rounded-lg p-4">
-                    <h3 className="mt-4 ml-2 mb-6 text-gray-700 font-bold">
-                        <AccountBalanceWalletIcon /> Thanh toán
-                    </h3>
-                    <div className="w-full z-0" style={{ zIndex: '0' }}>
-                        <PayPalScriptProvider options={{ 'client-id': 'test' }}>
-                            <PayPalButtons style={{ layout: 'horizontal' }} />
-                        </PayPalScriptProvider>
-                    </div>
+            {orderDataState && (
+                <div className="w-full mb-8 flex flex-row items-center">
+                    {orderDataState.status > 1 && orderDataState.status < 5 && (
+                        <div className="w-[64px]">
+                            <div
+                                onClick={backProcess}
+                                className="w-full p-4 rounded-lg hover:bg-gray-600 active:bg-gray-700 text-center bg-gray-500 shadow-gray-300 shadow-lg cursor-pointer select-none text-white font-bold text-xl"
+                            >
+                                <FontAwesomeIcon icon={faRotateBack} />
+                            </div>
+                        </div>
+                    )}
+                    {orderDataState.status === 1 && (
+                        <div className="w-full">
+                            <div
+                                onClick={processOrder}
+                                className="w-full p-4 rounded-lg hover:bg-blue-600 active:bg-blue-700 text-center bg-blue-500 shadow-blue-300 shadow-lg cursor-pointer select-none text-white font-bold text-xl"
+                            >
+                                Xác nhận đã xử lý đơn hàng
+                            </div>
+                        </div>
+                    )}
+                    {orderDataState.status === 2 && (
+                        <div className="w-full">
+                            <div
+                                onClick={confirmPayment}
+                                className="w-full p-4 rounded-lg hover:bg-blue-600 active:bg-blue-700 text-center bg-blue-500 shadow-blue-300 shadow-lg cursor-pointer select-none text-white font-bold text-xl"
+                            >
+                                <FontAwesomeIcon icon={faMoneyBillTransfer} className="mr-2" /> Xác nhận thanh toán
+                            </div>
+                        </div>
+                    )}
+                    {orderDataState.status === 3 && (
+                        <div className="w-full">
+                            <div
+                                onClick={confirmWaitingDone}
+                                className="w-full p-4 rounded-lg hover:bg-blue-600 active:bg-blue-700 text-center bg-blue-500 shadow-blue-300 shadow-lg cursor-pointer select-none text-white font-bold text-xl"
+                            >
+                                <FontAwesomeIcon icon={faTruck} className="mr-2" /> Giao hàng
+                            </div>
+                        </div>
+                    )}
+                    {orderDataState.status === 4 && (
+                        <div className="w-full">
+                            <div
+                                onClick={confirmWaitingDone}
+                                className="w-full p-4 rounded-lg hover:bg-blue-600 active:bg-blue-700 text-center bg-blue-500 shadow-blue-300 shadow-lg cursor-pointer select-none text-white font-bold text-xl"
+                            >
+                                <FontAwesomeIcon icon={faCheckCircle} className="mr-2" /> Xác nhận đã giao
+                            </div>
+                        </div>
+                    )}
+                    {orderDataState.status === 5 && (
+                        <div className="w-full">
+                            <div className="w-full p-4 rounded-lg text-center bg-blue-500 shadow-blue-300 shadow-lg cursor-pointer select-none text-white font-bold text-xl">
+                                <FontAwesomeIcon icon={faCheck} className="mr-2" /> Đã hoàn thành
+                            </div>
+                        </div>
+                    )}
                 </div>
             )}
             <div>
@@ -180,4 +262,4 @@ function OrderDetailsPage() {
     );
 }
 
-export default OrderDetailsPage;
+export default AdminOrderDetailsPage;

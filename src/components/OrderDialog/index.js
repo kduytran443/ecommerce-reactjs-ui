@@ -14,7 +14,15 @@ import AddIcon from '@mui/icons-material/Add';
 import Typography from '@mui/material/Typography';
 import { blue } from '@mui/material/colors';
 
-export default function OrderDialog({ openButton, children }) {
+export default function SimpleDialog({
+    openButton,
+    children,
+    title,
+    agree = 'Đồng ý',
+    cancel = 'Hủy',
+    color = 'primary',
+    agreeAction = () => {},
+}) {
     const [open, setOpen] = React.useState(false);
 
     const handleClickOpen = () => {
@@ -26,13 +34,33 @@ export default function OrderDialog({ openButton, children }) {
     };
 
     return (
-        <div className="w-full">
-            <div className="w-full" onClick={handleClickOpen}>
-                {openButton}
-            </div>
+        <div>
+            <div onClick={handleClickOpen}>{openButton}</div>
             <Dialog className="w-full" onClose={handleClose} open={open}>
-                <DialogTitle>Đặt hàng</DialogTitle>
+                <DialogTitle>{title}</DialogTitle>
                 <div className="w-full">{children}</div>
+                <div className="p-4">
+                    <div className="flex flex-row items-center justify-end">
+                        <Button
+                            onClick={(e) => {
+                                handleClose();
+                            }}
+                            color="inherit"
+                        >
+                            {cancel}
+                        </Button>
+                        <Button
+                            onClick={(e) => {
+                                handleClose();
+                                agreeAction();
+                            }}
+                            color={color}
+                            variant="contained"
+                        >
+                            {agree}
+                        </Button>
+                    </div>
+                </div>
             </Dialog>
         </div>
     );

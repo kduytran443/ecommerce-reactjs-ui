@@ -29,16 +29,24 @@ function OrderPage() {
                             onClick={(e) => {
                                 navigate('/order-details/' + order.id);
                             }}
-                            className="w-full hover:bg-slate-100 flex flex-row items-center p-4 rounded-lg border border-slate-200 shadow cursor-pointer"
+                            className="w-full bg-white flex flex-row items-center p-4 rounded-lg shadow cursor-pointer"
                         >
                             <div className="mr-4">
-                                <IconButton color="primary">
-                                    <AssignmentIcon sx={{ width: '36px', height: '36px' }} />
-                                </IconButton>
+                                <div
+                                    className={
+                                        'relative aspect-ratio p-2 shadow-md rounded-xl flex flex-col justify-center items-center bg-blue-500 shadow-blue-300'
+                                    }
+                                >
+                                    <div className="group-hover:animate-bounce duration-200 text-white font-bold text-3xl">
+                                        <IconButton color="inherit">
+                                            <AssignmentIcon sx={{ width: '36px', height: '36px' }} />
+                                        </IconButton>
+                                    </div>
+                                </div>
                             </div>
                             <div className="w-full">
-                                <div className="text-xl font-semibold">Đơn hàng ngày {order.date}</div>
-                                <div>
+                                <div className="text-xl font-semibold mb-2">Đơn hàng ngày {order.date}</div>
+                                <div className="text-gray-600">
                                     <b>Sản phẩm:</b> {order.productList.join(', ')}.
                                 </div>
                             </div>

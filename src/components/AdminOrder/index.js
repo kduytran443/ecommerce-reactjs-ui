@@ -2,7 +2,7 @@ import { faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useNavigate } from 'react-router-dom';
 
-function AdminStatics({
+function AdminOrder({
     icon = <FontAwesomeIcon icon={faUser} />,
     color = 'slate',
     title = 'title',
@@ -13,13 +13,13 @@ function AdminStatics({
     const navigate = useNavigate();
 
     return (
-        <div
-            onClick={(e) => {
-                navigate(link);
-            }}
-            className="w-full flex flex-col shadow-lg p-6 bg-white rounded-lg cursor-pointer group"
-        >
-            <div className="w-full flex flex-row items-center justify-between ">
+        <div className="w-full flex flex-col shadow-lg p-6 bg-white rounded-lg group">
+            <div
+                onClick={(e) => {
+                    navigate(link);
+                }}
+                className="w-full cursor-pointer flex flex-row items-center justify-between "
+            >
                 <div
                     className={
                         'relative aspect-ratio w-[64px] p-4 absolute -top-[32px] shadow-md rounded-xl flex flex-col justify-center items-center ' +
@@ -38,4 +38,4 @@ function AdminStatics({
     );
 }
 
-export default AdminStatics;
+export default AdminOrder;
