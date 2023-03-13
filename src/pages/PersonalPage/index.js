@@ -1,31 +1,44 @@
 import { Avatar, IconButton, TextField } from '@mui/material';
-import { useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useRef, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import HistoryIcon from '@mui/icons-material/History';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import Address from '~/components/Address';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCamera, faCheck, faPaperPlane, faPen, faPlus, faX } from '@fortawesome/free-solid-svg-icons';
 import AddressDialog from '~/components/AddressDialog';
+import { useUser } from '~/stores/UserStore';
+import { userService } from '~/services/userService';
+import { addressService } from '~/services/addressService';
 
 function PersonalPage() {
+    const [userState, dispatchUserState] = useUser();
+
     const navigate = useNavigate();
-    const [personDataState, setPersonDataState] = useState({
-        id: 1,
-        username: 'khanhduytran',
-        fullname: 'Trần Khánh Duy',
-        avatar: 'https://assets-global.website-files.com/62196607bf1b46c300301846/62196607bf1b4642e7301e28_5fb42ba3f6da8426682c53df_in%2520the%2520meeting%2520vs%2520at%2520the%2520meeting%2520grammar.jpeg',
-        addressList: [
-            {
-                id: 1,
-                content: 'Trung tâm Ngoại ngữ – Khu 1 - ĐHCT, số 411 - đường 30/4, TPCT',
-            },
-            {
-                id: 2,
-                content: 'Khu II, Đ. 3/2, Xuân Khánh, Ninh Kiều, Cần Thơ',
-            },
-        ],
-    });
+    const [personDataState, setPersonDataState] = useState({});
+
+    const location = useLocation();
+
+    useEffect(() => {
+        userService.getUser().then((data) => {
+            if (data.status !== 500) {
+                setPersonDataState(data);
+            }
+        });
+    }, [location]);
+
+    const [addressListState, setAddressListState] = useState([]);
+    const loadAddress = () => {
+        addressService.getAddress().then((data) => {
+            if (data.status !== 500) {
+                setAddressListState(data);
+            }
+        });
+    };
+
+    useEffect(() => {
+        loadAddress();
+    }, [location]);
 
     const [visibleAddNewAddressState, setVisibleAddNewAddressState] = useState(false);
 
@@ -54,14 +67,35 @@ function PersonalPage() {
         }
     };
 
-    const addAddress = () => {
-        if (newAddressState.trim()) {
-            let addressList = personDataState.addressList;
-            addressList.push({ content: newAddressState.trim() });
-            setPersonDataState((pre) => {
-                return { ...pre, addressList: addressList };
-            });
-        }
+    const postAddress = () => {
+        const address = {
+            details: newAddressState,
+        };
+        addressService.postAddress(address).then((data) => {
+            if (data.status !== 500) {
+                setNewAddressState('');
+                loadAddress();
+            }
+        });
+    };
+
+    const editAddress = (address) => {
+        addressService.putAddress(address).then((data) => {
+            if (data.status !== 500) {
+                loadAddress();
+            }
+        });
+    };
+
+    const deleteAddress = (id) => {
+        const address = {
+            id: id,
+        };
+        addressService.deleteAddress(address).then((data) => {
+            if (data.status !== 500) {
+                loadAddress();
+            }
+        });
     };
 
     const changeFullname = () => {
@@ -137,7 +171,7 @@ function PersonalPage() {
                 </div>
             </div>
             <div className="my-6">
-                <Address list={personDataState.addressList} />
+                <Address list={addressListState} putAction={editAddress} deleteAction={deleteAddress} />
                 <AddressDialog
                     openButton={
                         <div className="w-full mt-2 h-[62px] font-bold text-slate-500 text-2xl select-none hover:bg-slate-100 active:bg-slate-200 cursor-pointer border-2 border-dashed border-slate-300 flex flex-col items-center justify-center rounded-lg">
@@ -153,11 +187,13 @@ function PersonalPage() {
                                 setNewAddressState(e.target.value);
                             }}
                         />
-                        <div className="ml-2">
-                            <IconButton onClick={addAddress} color="primary">
-                                <FontAwesomeIcon icon={faPaperPlane} />
-                            </IconButton>
-                        </div>
+                        {newAddressState.trim() && (
+                            <div className="ml-2">
+                                <IconButton onClick={postAddress} color="primary">
+                                    <FontAwesomeIcon icon={faPaperPlane} />
+                                </IconButton>
+                            </div>
+                        )}
                     </div>
                 </AddressDialog>
             </div>

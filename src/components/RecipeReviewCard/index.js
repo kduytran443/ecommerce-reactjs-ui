@@ -13,7 +13,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import ShareIcon from '@mui/icons-material/Share';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { SpaOutlined, Title } from '@mui/icons-material';
 import CustomizedSnackbars from '../CustomizedSnackbars';
 import { Link } from 'react-router-dom';
@@ -22,13 +22,44 @@ import { Button } from '@mui/material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBriefcase, faHardDrive, faMemory, faMicrochip, faServer, faTv } from '@fortawesome/free-solid-svg-icons';
 import ProductStatistics from '../ProductStatistics';
+import { VND } from '~/utils/VND';
 
-export default function RecipeReviewCard({ productCode = HOME_PAGE_URL }) {
+const formatter = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+
+    // These options are needed to round to whole numbers if that's what you want.
+    //minimumFractionDigits: 0, // (this suffices for whole numbers, but will print 2500.10 as $2,500.1)
+    maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
+});
+
+export default function RecipeReviewCard({
+    productCode = '',
+    name = 'Tên sản phẩm',
+    discounts = [],
+    price = 0,
+    image = 'https://images.fpt.shop/unsafe/fit-in/240x215/filters:quality(90):fill(white)/fptshop.com.vn/Uploads/Originals/2022/8/4/637952089606431911_asus-vivobook-a1503-bac-dd.jpg',
+}) {
+    const link = '/product/' + productCode;
     const [likedState, setLikedState] = useState(false);
+    const url = window.location.origin + link;
+
+    const [discountState, setDiscountState] = useState({});
+
+    useEffect(() => {
+        console.log('discounts', discounts);
+        if (discounts.length > 0) {
+            const max = discounts.reduce((prev, current) => {
+                return prev.discountPercent > current.discountPercent ? prev : current;
+            });
+            console.log('max ', max);
+            setDiscountState(max ? max : {});
+        }
+    }, [discounts]);
 
     return (
         <Card sx={{ width: '100%' }} className={'flex flex-col justify-between'}>
-            <Link to={productCode}>
+            <Link to={link}>
                 <div className="group relative top-0 left-0 hover:shadow-md duration-200">
                     <div className="absolute w-full h-full top-0 left-0 duration-200 opacity-0 group-hover:opacity-100">
                         <div className="absolute top-0 left-0 bg-black w-full h-full opacity-30"></div>
@@ -36,30 +67,24 @@ export default function RecipeReviewCard({ productCode = HOME_PAGE_URL }) {
                             Bấm vào để xem chi tiết sản phẩm
                         </div>
                     </div>
-                    <CardMedia
-                        component="img"
-                        height="194"
-                        image="https://images.fpt.shop/unsafe/fit-in/240x215/filters:quality(90):fill(white)/fptshop.com.vn/Uploads/Originals/2022/8/4/637952089606431911_asus-vivobook-a1503-bac-dd.jpg"
-                        alt="Paella dish"
-                    />
+                    <CardMedia component="img" height="194" image={image} alt="img" />
                 </div>
             </Link>
             <CardContent style={{ paddingBottom: 0 }}>
-                <Link to={productCode}>
-                    <h3 className="font-bold text-base md:text-lg hover:text-blue-500">
-                        Laptop MSI Modern 14 C11M 011VN
-                    </h3>
+                <Link to={link}>
+                    <h3 className="font-bold text-base md:text-lg hover:text-blue-500">{name}</h3>
                 </Link>
                 <Typography variant="body2" color="text.secondary">
-                    <strike>22,990,000₫</strike>
+                    {discountState.discountPercent > 0 && <strike>{formatter.format(price)}</strike>}
                 </Typography>
                 <div className="flex flex-col md:flex-row items-center justify-between">
-                    <p className="text-lg md:text-xl font-bold text-red-500">20,691,000₫</p>
+                    <p className="text-lg md:text-xl font-bold text-red-500">
+                        {formatter.format(price - price * (discountState.discountPercent / 100))}
+                    </p>
                     <p className="text-blue-500">
-                        Giảm <b>10%</b>
+                        Giảm <b>{discountState.discountPercent}%</b>
                     </p>
                 </div>
-                <ProductStatistics />
             </CardContent>
             <CardActions disableSpacing style={{ paddingTop: 0 }}>
                 <div className="flex flex-row justify-end items-end w-full">
@@ -71,7 +96,7 @@ export default function RecipeReviewCard({ productCode = HOME_PAGE_URL }) {
                         }
                         message={'Sao chép liên kết thành công'}
                         actionAfterClick={() => {
-                            navigator.clipboard.writeText('Laptop MSI Modern 14 C11M 011VN');
+                            navigator.clipboard.writeText(url);
                         }}
                     />
                     <IconButton

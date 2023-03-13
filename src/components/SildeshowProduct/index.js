@@ -1,7 +1,7 @@
 import { faArrowLeft, faArrowRight, faBackward } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Button, IconButton } from '@mui/material';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Slide } from 'react-slideshow-image';
 import 'react-slideshow-image/dist/styles.css';
 
@@ -20,10 +20,6 @@ const divStyle = {
 };
 
 const slideImages = [
-    {
-        url: 'https://youtu.be/2rNuSSukpDk',
-        type: 'youtube',
-    },
     {
         url: 'https://nguyencongpc.vn/photos/17/ASUS-TUF-Gaming-F15-FX506HC-HN002T-9.jpg',
         type: 'img',
@@ -55,34 +51,35 @@ const properties = {
     ),
 };
 
-const SildeshowProduct = () => {
+const SildeshowProduct = ({ dataList = [] }) => {
+    const [imageListState, setImageListState] = useState([]);
+
+    useEffect(() => {
+        if (dataList.length > 0) {
+            console.log(imageListState);
+            setImageListState(dataList);
+        }
+    }, [dataList]);
+
     return (
         <div className="slide-container md:rounded-lg md:overflow-hidden md:shadow-md select-none">
-            <Slide autoplay={false} {...properties} transitionDuration={500}>
-                {slideImages.map((item, index) => (
-                    <div key={index} className="hover:cursor-grab active:cursor-grabbing">
-                        <div
-                            style={{
-                                ...divStyle,
-                                backgroundImage: `url(${item.url})`,
-                                backgroundPosition: 'center',
-                                backgroundSize: 'contain',
-                                backgroundRepeat: 'no-repeat',
-                            }}
-                        >
-                            {item.type === 'youtube' && (
-                                <iframe
-                                    width="1584"
-                                    height="620"
-                                    src="https://www.youtube.com/embed/2rNuSSukpDk?rel=0&showinfo=0&controls=0"
-                                    title="Review"
-                                    frameborder="0"
-                                ></iframe>
-                            )}
+            {imageListState.length > 0 && (
+                <Slide autoplay={false} {...properties} transitionDuration={500}>
+                    {imageListState.map((item, index) => (
+                        <div key={index} className="hover:cursor-grab active:cursor-grabbing">
+                            <div
+                                style={{
+                                    ...divStyle,
+                                    backgroundImage: `url(${item.data})`,
+                                    backgroundPosition: 'center',
+                                    backgroundSize: 'contain',
+                                    backgroundRepeat: 'no-repeat',
+                                }}
+                            ></div>
                         </div>
-                    </div>
-                ))}
-            </Slide>
+                    ))}
+                </Slide>
+            )}
         </div>
     );
 };

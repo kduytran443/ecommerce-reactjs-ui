@@ -6,7 +6,7 @@ import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutli
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import SimpleDialog from '../OrderDialog';
 
-function Specification({ name }) {
+function Specification({ name, id, deleteAction = () => {}, editAction = () => {} }) {
     const [dataState, setDataState] = useState({
         name: name,
     });
@@ -23,6 +23,7 @@ function Specification({ name }) {
     };
 
     const submitEdit = () => {
+        editAction({ id: id, name: dataState.name });
         setVisibleEditing(false);
     };
 
@@ -30,16 +31,18 @@ function Specification({ name }) {
         <div className="w-full flex flex-row items-center">
             <div className="w-full">
                 {visibleEditing ? (
-                    <TextField label="Tên danh mục" className='w-full' value={dataState.name} onInput={onInput} />
+                    <TextField label="Tên danh mục" className="w-full" value={dataState.name} onInput={onInput} />
                 ) : (
                     <div>{dataState.name}</div>
                 )}
             </div>
             {visibleEditing ? (
                 <>
-                    <IconButton onClick={submitEdit} color="primary">
-                        <FontAwesomeIcon icon={faCheckCircle} />
-                    </IconButton>
+                    {dataState.name && dataState.name.trim() && (
+                        <IconButton onClick={submitEdit} color="primary">
+                            <FontAwesomeIcon icon={faCheckCircle} />
+                        </IconButton>
+                    )}
                     <IconButton onClick={cancel} color="error">
                         <FontAwesomeIcon icon={faXmarkCircle} />
                     </IconButton>
@@ -62,7 +65,7 @@ function Specification({ name }) {
                         }
                         title={'Xác nhận xóa?'}
                         agreeAction={() => {
-                            console.log('delete');
+                            deleteAction({ id: id });
                         }}
                         color="error"
                     >

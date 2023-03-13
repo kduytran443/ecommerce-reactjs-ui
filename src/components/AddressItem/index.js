@@ -1,11 +1,17 @@
 import { faCheck, faPen, faTrash, faX } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { IconButton, TextField } from '@mui/material';
-import { useState } from 'react';
+import { IconButton, Snackbar, TextField } from '@mui/material';
+import { useEffect, useState } from 'react';
+import { addressService } from '~/services/addressService';
+import SimpleDialog from '../SimpleDialog';
 
-function AddressItem({ content }) {
+function AddressItem({ content, id, putAction = () => {}, deleteAction = () => {} }) {
     const [addressState, setAddressState] = useState(content);
     const [edittingState, setEdittingState] = useState(false);
+
+    useEffect(() => {
+        setAddressState(content);
+    }, [content]);
 
     return (
         <div className="p-4 flex flex-row items-center rounded border border-slate-200 justify-between">
@@ -25,19 +31,27 @@ function AddressItem({ content }) {
             <div className="flex flex-row items-center">
                 {!edittingState ? (
                     <>
-                        <div className="mr-4">
+                        {addressState.trim() && (
+                            <div className="mr-4">
+                                <IconButton
+                                    onClick={(e) => {
+                                        setEdittingState(true);
+                                    }}
+                                    size="small"
+                                    color="primary"
+                                >
+                                    <FontAwesomeIcon icon={faPen} />
+                                </IconButton>
+                            </div>
+                        )}
+                        <div>
                             <IconButton
                                 onClick={(e) => {
-                                    setEdittingState(true);
+                                    deleteAction(id);
                                 }}
                                 size="small"
-                                color="primary"
+                                color="error"
                             >
-                                <FontAwesomeIcon icon={faPen} />
-                            </IconButton>
-                        </div>
-                        <div>
-                            <IconButton size="small" color="error">
                                 <FontAwesomeIcon icon={faTrash} />
                             </IconButton>
                         </div>
@@ -47,6 +61,10 @@ function AddressItem({ content }) {
                         <div className="ml-2">
                             <IconButton
                                 onClick={(e) => {
+                                    putAction({
+                                        id: id,
+                                        details: addressState,
+                                    });
                                     setEdittingState(false);
                                 }}
                                 size="small"

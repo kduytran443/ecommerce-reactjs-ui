@@ -1,6 +1,16 @@
-import { faAddressCard, faArrowLeft, faClock, faNoteSticky, faPhone, faUser } from '@fortawesome/free-solid-svg-icons';
+import {
+    faAddressCard,
+    faArrowLeft,
+    faCheckCircle,
+    faClock,
+    faMoneyBill1,
+    faNoteSticky,
+    faPhone,
+    faRotateBack,
+    faUser,
+} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Button, IconButton } from '@mui/material';
+import { Button, IconButton, TextField } from '@mui/material';
 import { useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import ComplexAccordion from '~/components/ComplexAccordion';
@@ -47,8 +57,17 @@ function OrderDetailsPage() {
             },
         ],
         total: 1900000,
-        status: 1,
+        status: 4,
     });
+
+    const confirmWaitingDone = () => {
+        setOrderDataState((pre) => {
+            return { ...pre, status: pre.status + 1 };
+        });
+    };
+
+    const [enableReturnGoods, setEnableReturnGoods] = useState(false);
+    const [returnGoodsReason, setReturnGoodsReason] = useState('');
 
     return (
         <div className="w-full p-4 bg-white rounded">
@@ -66,7 +85,7 @@ function OrderDetailsPage() {
                 <h3 className="mt-4 ml-6 mb-6 text-gray-700 font-bold">
                     <InfoIcon /> Trạng thái đơn hàng
                 </h3>
-                <OrderStepper status={orderDataState.status} />
+                <OrderStepper status={orderDataState.status - 1} />
             </div>
             {orderDataState && orderDataState.status === 1 && (
                 <div className="w-full mb-8 border border-slate-300 rounded-lg p-4">
@@ -80,6 +99,33 @@ function OrderDetailsPage() {
                     </div>
                 </div>
             )}
+            {orderDataState && orderDataState.status === 1 && (
+                <div className="w-full mb-8 border border-slate-300 rounded-lg p-4">
+                    <h3 className="mt-4 ml-2 mb-6 text-gray-700 font-bold">
+                        <AccountBalanceWalletIcon /> Thanh toán
+                    </h3>
+                </div>
+            )}
+
+            {orderDataState.status === 4 && (
+                <div className="w-full">
+                    <div
+                        onClick={confirmWaitingDone}
+                        className="w-full p-4 rounded-lg hover:bg-blue-600 active:bg-blue-700 text-center bg-blue-500 shadow-blue-300 shadow-lg cursor-pointer select-none text-white font-bold text-xl"
+                    >
+                        <FontAwesomeIcon icon={faCheckCircle} className="mr-2" /> Xác nhận đã giao
+                    </div>
+                </div>
+            )}
+            {orderDataState.status > 1 && (
+                <div>
+                    <h1 className="font-bold text-xl my-4">Thông tin thanh toán</h1>
+                    <div className="w-full p-8 rounded-lg border-2 text-lg border-slate-200">
+                        Thanh toán bằng thẻ paypal...
+                    </div>
+                </div>
+            )}
+
             <div>
                 <div className="mb-2">
                     <b className="text-gray-700">
@@ -175,6 +221,43 @@ function OrderDetailsPage() {
                         );
                     })}
                 </div>
+            </div>
+            <div className="w-full">
+                <div
+                    onClick={(e) => {
+                        setEnableReturnGoods(true);
+                    }}
+                    className="w-full mt-8 p-4 rounded-lg text-center bg-red-500 active:bg-red-700 hover:bg-red-600 shadow-red-300 shadow-md cursor-pointer select-none text-white font-bold text-xl"
+                >
+                    <FontAwesomeIcon icon={faRotateBack} className="mr-2" /> Yêu cầu đổi trả
+                </div>
+                {enableReturnGoods && (
+                    <div className="w-full p-4 rounded border border-slate-200 mt-6">
+                        <div className="w-full">
+                            <TextField
+                                className="w-full"
+                                value={returnGoodsReason}
+                                onInput={(e) => {
+                                    setReturnGoodsReason(e.target.value);
+                                }}
+                                label="Lý do"
+                            />
+                        </div>
+                        <div className="flex flex-col md:flex-row justify-center mt-4 items-center">
+                            <Button
+                                color="inherit"
+                                onClick={(e) => {
+                                    setEnableReturnGoods(false);
+                                }}
+                            >
+                                Hủy
+                            </Button>
+                            <Button color="error" variant="contained">
+                                Đổi trả
+                            </Button>
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     );

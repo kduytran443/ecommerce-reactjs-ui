@@ -5,6 +5,7 @@ import {
     faCheckCircle,
     faClock,
     faMoneyBill,
+    faMoneyBill1,
     faMoneyBillTransfer,
     faNoteSticky,
     faPhone,
@@ -56,7 +57,7 @@ function AdminOrderDetailsPage() {
             },
         ],
         total: 1900000,
-        status: 1,
+        status: 3,
     });
 
     const processOrder = () => {
@@ -113,7 +114,7 @@ function AdminOrderDetailsPage() {
                             </div>
                         </div>
                     )}
-                    {orderDataState.status === 1 && (
+                    {orderDataState.status === 2 && (
                         <div className="w-full">
                             <div
                                 onClick={processOrder}
@@ -123,7 +124,7 @@ function AdminOrderDetailsPage() {
                             </div>
                         </div>
                     )}
-                    {orderDataState.status === 2 && (
+                    {orderDataState.status === 1 && (
                         <div className="w-full">
                             <div
                                 onClick={confirmPayment}
@@ -143,23 +144,24 @@ function AdminOrderDetailsPage() {
                             </div>
                         </div>
                     )}
-                    {orderDataState.status === 4 && (
-                        <div className="w-full">
-                            <div
-                                onClick={confirmWaitingDone}
-                                className="w-full p-4 rounded-lg hover:bg-blue-600 active:bg-blue-700 text-center bg-blue-500 shadow-blue-300 shadow-lg cursor-pointer select-none text-white font-bold text-xl"
-                            >
-                                <FontAwesomeIcon icon={faCheckCircle} className="mr-2" /> Xác nhận đã giao
-                            </div>
-                        </div>
-                    )}
                     {orderDataState.status === 5 && (
                         <div className="w-full">
                             <div className="w-full p-4 rounded-lg text-center bg-blue-500 shadow-blue-300 shadow-lg cursor-pointer select-none text-white font-bold text-xl">
                                 <FontAwesomeIcon icon={faCheck} className="mr-2" /> Đã hoàn thành
                             </div>
+                            <div className="w-full mt-8 p-4 rounded-lg text-center bg-red-500 shadow-red-300 shadow-lg cursor-pointer select-none text-white font-bold text-xl">
+                                <FontAwesomeIcon icon={faMoneyBill1} className="mr-2" /> Xuất hóa đơn
+                            </div>
                         </div>
                     )}
+                </div>
+            )}
+            {orderDataState.status > 1 && (
+                <div>
+                    <h1 className="font-bold text-xl my-4">Thông tin thanh toán</h1>
+                    <div className="w-full p-8 rounded-lg border-2 text-lg border-slate-200">
+                        Thanh toán bằng thẻ paypal...
+                    </div>
                 </div>
             )}
             <div>

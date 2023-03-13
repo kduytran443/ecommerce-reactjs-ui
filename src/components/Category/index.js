@@ -9,10 +9,11 @@ import { useState } from 'react';
 function Category({
     image = 'https://images.fpt.shop/unsafe/fit-in/60x60/filters:quality(90):fill(transparent)/fptshop.com.vn/Uploads/images/2022/iconcate/icon-laptop.png',
     color = 'slate',
-    name = 'title',
+    name = 'Danh mục',
     data = 'data',
     code = 'admin',
     description = '',
+    link,
 }) {
     const navigate = useNavigate();
     const [categoryState, setCategoryState] = useState({
@@ -49,7 +50,7 @@ function Category({
         <div className="w-full flex flex-col shadow-lg p-6 bg-white rounded-lg group">
             <div
                 onClick={(e) => {
-                    navigate('/admin/category/' + categoryState.code);
+                    navigate(link);
                 }}
                 className="w-full cursor-pointer flex flex-row items-center justify-between "
             >

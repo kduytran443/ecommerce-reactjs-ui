@@ -6,9 +6,15 @@ import AdminLayout from './layouts/AdminLayout';
 import FullLayout from './layouts/FullLayout';
 import AdminCategoryDetailsPage from './pages/AdminCategoryDetailsPage';
 import AdminCategoryPage from './pages/AdminCategoryPage';
+import AdminViewOnlyProductPage from './pages/AdminViewOnlyProductPage';
+import AdminFavoriteProduct from './pages/AdminViewOnlyProductPage';
 import AdminHomePage from './pages/AdminHomePage';
+import AdminManufacturerDetailsPage from './pages/AdminManufacturerDetailsPage';
+import AdminManufacturerPage from './pages/AdminManufacturerPage';
 import AdminOrderDetailsPage from './pages/AdminOrderDetailsPage';
 import AdminOrderPage from './pages/AdminOrderPage';
+import AdminPostPage from './pages/AdminPostPage';
+import AdminProductPage from './pages/AdminProductPage';
 import CartPage from './pages/CartPage';
 import CategoryPage from './pages/CategoryPage';
 import HistoryPage from './pages/HistoryPage';
@@ -22,17 +28,26 @@ import ProductPage from './pages/ProductPage';
 import SearchPage from './pages/SearchPage';
 import SignUpPage from './pages/SignUpPage';
 import { privateRoutes, publicRoutes } from './routes';
-import { authorize } from './services/useService';
+import AdminUserPage from './pages/AdminUserPage';
+import { setUserInfo, useUser } from './stores/UserStore';
+import { getUserInfo } from './services/useService/useService';
+import AdminCategoryDetailsEditPage from './pages/AdminCategoryDetailsPage/AdminCategoryDetailsEditPage';
 
 function App() {
     const [isAuthenticatedState, setIsAuthenticatedState] = useState(null);
+    const [userState, dispatchUserState] = useUser();
 
     useEffect(() => {
-        const login = authorize().then((data) => data);
-        login.then((data) => {
-            setIsAuthenticatedState(data);
-        });
-    }, [isAuthenticatedState]);
+        const doFetch = async () => {
+            const getUser = getUserInfo();
+            getUser.then((data) => {
+                if (data && !data.error) {
+                    dispatchUserState(setUserInfo(data));
+                }
+            });
+        };
+        doFetch();
+    }, []);
 
     return (
         <div className="pd-0 ">
@@ -188,6 +203,62 @@ function App() {
                         element={
                             <AdminLayout>
                                 <AdminCategoryDetailsPage />
+                            </AdminLayout>
+                        }
+                    />
+                    <Route
+                        path={'/admin/category/edit/:categoryCode?'}
+                        element={
+                            <AdminLayout>
+                                <AdminCategoryDetailsEditPage />
+                            </AdminLayout>
+                        }
+                    />
+                    <Route
+                        path={'/admin/manufacturer'}
+                        element={
+                            <AdminLayout>
+                                <AdminManufacturerPage />
+                            </AdminLayout>
+                        }
+                    />
+                    <Route
+                        path={'/admin/manufacturer-details/:manufacturerCode?'}
+                        element={
+                            <AdminLayout>
+                                <AdminManufacturerDetailsPage />
+                            </AdminLayout>
+                        }
+                    />
+                    <Route
+                        path={'/admin/product/'}
+                        element={
+                            <AdminLayout>
+                                <AdminProductPage />
+                            </AdminLayout>
+                        }
+                    />
+                    <Route
+                        path={'/admin/post/'}
+                        element={
+                            <AdminLayout>
+                                <AdminPostPage />
+                            </AdminLayout>
+                        }
+                    />
+                    <Route
+                        path={'/admin/view-product/'}
+                        element={
+                            <AdminLayout>
+                                <AdminViewOnlyProductPage />
+                            </AdminLayout>
+                        }
+                    />
+                    <Route
+                        path={'/admin/user/'}
+                        element={
+                            <AdminLayout>
+                                <AdminUserPage />
                             </AdminLayout>
                         }
                     />

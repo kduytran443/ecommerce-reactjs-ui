@@ -31,7 +31,7 @@ function AdminHomePage() {
                 <div className="w-full md:w-[33%] p-4">
                     <AdminStatics
                         color="bg-orange-500 shadow-orange-400"
-                        data="2"
+                        data="2 yêu cầu"
                         title="Đổi trả hàng"
                         icon={<FontAwesomeIcon icon={faRetweet} />}
                         description="Yêu cầu đổi trả hàng"
@@ -40,7 +40,7 @@ function AdminHomePage() {
                 <div className="w-full md:w-[33%] p-4">
                     <AdminStatics
                         color="bg-lime-500 shadow-lime-400"
-                        data="3"
+                        data="3 danh mục"
                         title="Danh mục"
                         icon={<FontAwesomeIcon icon={faList} />}
                         description="Danh mục"
@@ -54,6 +54,7 @@ function AdminHomePage() {
                         title="Nhà cung cấp"
                         icon={<FontAwesomeIcon icon={faIndustry} />}
                         description="Nhà cung cấp"
+                        link="/admin/manufacturer"
                     />
                 </div>
                 <div className="w-full md:w-[33%] p-4">
@@ -63,6 +64,7 @@ function AdminHomePage() {
                         title="Sản phẩm"
                         icon={<FontAwesomeIcon icon={faLaptop} />}
                         description="Tổng sản phẩm"
+                        link="/admin/product"
                     />
                 </div>
                 <div className="w-full md:w-[33%] p-4">
@@ -72,6 +74,7 @@ function AdminHomePage() {
                         title="Thống kê hàng tồn"
                         icon={<FontAwesomeIcon icon={faWarehouse} />}
                         description="Thống kê hàng tồn"
+                        link="/admin/view-product"
                     />
                 </div>
                 <div className="w-full md:w-[33%] p-4">
@@ -90,6 +93,7 @@ function AdminHomePage() {
                         title="Người dùng"
                         icon={<FontAwesomeIcon icon={faUser} />}
                         description="Số người dùng đã đăng ký tài khoản"
+                        link="/admin/user"
                     />
                 </div>
                 <div className="w-full md:w-[33%] p-4">
@@ -99,6 +103,7 @@ function AdminHomePage() {
                         title="Sản phẩm yêu thích"
                         icon={<FontAwesomeIcon icon={faHeart} />}
                         description="Số sản phẩm được yêu thích bởi người dùng"
+                        link="/admin/view-product"
                     />
                 </div>
             </div>

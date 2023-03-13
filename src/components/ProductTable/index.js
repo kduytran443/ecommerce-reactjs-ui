@@ -1,7 +1,8 @@
-import { Avatar } from '@mui/material';
+import { Avatar, Button } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import SimpleDialog from '../OrderDialog';
 
 const columns = [
     { field: 'id', headerName: 'ID', width: 70 },
@@ -31,11 +32,6 @@ const columns = [
         },
     },
     {
-        field: 'stock',
-        headerName: 'Số hàng tồn',
-        width: 120,
-    },
-    {
         field: 'price',
         headerName: 'Giá',
         width: 120,
@@ -47,16 +43,24 @@ const columns = [
     },
     {
         field: 'code',
-        headerName: 'Chi tiết',
-        width: 120,
+        headerName: 'Thao tác',
+        width: 160,
         renderCell: (param) => {
             return (
                 <>
-                    <Link to={'/product/' + param.value}>
-                        <span className="underline font-bold select-none hover:text-blue-700 text-blue-600">
-                            Xem chi tiết
-                        </span>
+                    <Link to={'/admin/product/' + param.value}>
+                        <Button>Sửa</Button>
                     </Link>
+                    <SimpleDialog
+                        openButton={<Button color="error">Xóa</Button>}
+                        title="Xác nhận xóa"
+                        color="error"
+                        agreeAction={(e) => {
+                            console.log('xóa');
+                        }}
+                    >
+                        <div className="p-4 px-10 min-w-[260px]">Xóa sản phẩm?</div>
+                    </SimpleDialog>
                 </>
             );
         },
@@ -67,7 +71,7 @@ function ProductTable({ rows }) {
     const [rowsState, setRowsState] = useState(rows);
     return (
         <div style={{ height: 480, width: '100%' }}>
-            <DataGrid rows={rows} columns={columns} />
+            <DataGrid rows={rowsState} columns={columns} />
         </div>
     );
 }
