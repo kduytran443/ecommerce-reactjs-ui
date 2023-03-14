@@ -27,7 +27,7 @@ function HeaderAccountOptions({ username }) {
         fetch(`${API_BASE_URL}/api/logout`, options)
             .then((res) => res.json())
             .then((data) => {
-                setUserInfo({});
+                dispatchUserState(clearUserInfo({}));
                 navigate('/login');
             })
             .catch((error) => {

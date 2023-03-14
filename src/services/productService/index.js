@@ -27,7 +27,7 @@ export const productService = {
     async getProductByCode(code) {
         //classLessonId
         const config = getConfig();
-        const response = await fetch(`${API_BASE_URL}/${this.api}/${code}`, config);
+        const response = await fetch(`${API_BASE_URL}/public/${this.api}/${code}`, config);
         return response.json();
     },
 };

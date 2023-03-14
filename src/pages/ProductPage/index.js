@@ -19,7 +19,7 @@ import Line from '~/components/Line';
 import { TabContext, TabList } from '@mui/lab';
 import ManufacturerReviewCard from '~/components/ManufacturerReviewCard';
 import ReviewTable from '~/components/ReviewTable';
-import { useLocation, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { productService } from '~/services/productService';
 import { productImageService } from '~/services/productImageService';
 import { productInfoService } from '~/services/productInfoService';
@@ -29,6 +29,9 @@ import { deliveryFee } from '~/utils/deliveryFee';
 import { addressService } from '~/services/addressService';
 import { cartService } from '~/services/cartService';
 import { manufacturerService } from '~/services/manufacturerService';
+import { useUser } from '~/stores/UserStore';
+import { orderService } from '~/services/orderService';
+import { orderDetailsService } from '~/services/orderDetailsService';
 
 const content = `<div class="st-pd-content"><p style="text-align:justify; margin-bottom:11px"><b>Asus TUF Gaming F15 FX506LHB-HN188W là chiếc <a href="https://fptshop.com.vn/may-tinh-xach-tay/gaming-do-hoa">laptop gaming giá rẻ</a> với thiết kế tuyệt đẹp, phong cách chuẩn game thủ và cấu hình mạnh mẽ cho cả học tập, công việc cũng như chơi game. Bên cạnh đó là độ bền chuẩn quân đội đã làm nên tên tuổi của dòng TUF.</b></p>
 
@@ -46,6 +49,7 @@ const VND = new Intl.NumberFormat('vi-VN', {
 });
 function ProductPage() {
     const { productCode } = useParams();
+    const navigate = useNavigate();
     const [allTabsState, setAllTabsState] = useState([
         {
             id: 1,
@@ -131,7 +135,7 @@ function ProductPage() {
     const [addressListState, setAddressListState] = useState([]);
     const loadAddress = () => {
         addressService.getAddress().then((data) => {
-            if (data.status !== 500) {
+            if (data.length > 0 && data.status !== 500) {
                 setAddressListState(data);
             }
         });
@@ -158,7 +162,51 @@ function ProductPage() {
         });
     }, [location]);
 
-    const order = () => {};
+    const [totalDiscountPercent, setTotalDiscountPercent] = useState(0);
+
+    useEffect(() => {
+        if (productState.discounts && productState.discounts.length > 0) {
+            let total = 0;
+            console.log(productState.discounts);
+
+            productState.discounts.forEach((discount) => {
+                total += discount.discountPercent;
+            });
+            setTotalDiscountPercent(total);
+        }
+    }, [productState]);
+
+    //address, deliveryFee, note,
+    const order = () => {
+        if (selectedAddressIdState) {
+            const orderObj = {
+                address: { id: selectedAddressIdState },
+                note: 'Ghi chú',
+            };
+            orderService.postOrder(orderObj).then((orderData) => {
+                console.log('orderDetails orderDetails orderDetails', orderData);
+                if (orderData.status) {
+                    const orderDetails = {
+                        quantity: 1,
+                        discountPercent: totalDiscountPercent,
+                        orderId: orderData.id,
+                        productId: productState.id,
+                        price: productState.price,
+                    };
+                    console.log('orderDetails', orderDetails);
+                    orderDetailsService.postOrderDetails(orderDetails).then((orderDetailsData) => {
+                        navigate('/order-details/' + orderData.id);
+                    });
+                }
+            });
+        }
+    };
+
+    const navigateToLogin = () => {
+        navigate('/login');
+    };
+
+    const [userState, dispatchUserState] = useUser();
 
     return (
         <div className="bg-white">
@@ -177,7 +225,10 @@ function ProductPage() {
                         <div className="w-full p-4 flex flex-col">
                             <CustomizedSnackbars
                                 openButton={
-                                    <div className="flex flex-col justify-center items-center w-full mr-0 lg:mr-2 p-4 bg-red-500 text-lg cursor-pointer hover:bg-red-600 hover:shadow-lg select-none rounded shadow-md active:bg-red-700 shadow-red-400 text-white font-semibold">
+                                    <div
+                                        onClick={!userState.username && navigateToLogin}
+                                        className="flex flex-col justify-center items-center w-full mr-0 lg:mr-2 p-4 bg-red-500 text-lg cursor-pointer hover:bg-red-600 hover:shadow-lg select-none rounded shadow-md active:bg-red-700 shadow-red-400 text-white font-semibold"
+                                    >
                                         THÊM VÀO GIỎ HÀNG
                                     </div>
                                 }
@@ -193,8 +244,12 @@ function ProductPage() {
                             <OrderDialog
                                 agreeAction={order}
                                 agree="Đặt hàng"
+                                selectedAddress={selectedAddressIdState}
                                 openButton={
-                                    <div className="flex flex-col justify-center] items-center w-full mt-4 p-4 bg-blue-500 text-lg cursor-pointer hover:bg-blue-600 hover:shadow-lg select-none rounded shadow-md active:bg-blue-700 shadow-blue-400 text-white font-semibold">
+                                    <div
+                                        onClick={!userState.username && navigateToLogin}
+                                        className="flex flex-col justify-center] items-center w-full mt-4 p-4 bg-blue-500 text-lg cursor-pointer hover:bg-blue-600 hover:shadow-lg select-none rounded shadow-md active:bg-blue-700 shadow-blue-400 text-white font-semibold"
+                                    >
                                         ĐẶT HÀNG
                                     </div>
                                 }
@@ -221,16 +276,17 @@ function ProductPage() {
                                                 name="radio-buttons-group"
                                                 onChange={checkAddress}
                                             >
-                                                {addressListState.map((address, index) => {
-                                                    return (
-                                                        <FormControlLabel
-                                                            key={index}
-                                                            value={address.id}
-                                                            control={<Radio />}
-                                                            label={address.details}
-                                                        />
-                                                    );
-                                                })}
+                                                {addressListState &&
+                                                    addressListState.map((address, index) => {
+                                                        return (
+                                                            <FormControlLabel
+                                                                key={index}
+                                                                value={address.id}
+                                                                control={<Radio />}
+                                                                label={address.details}
+                                                            />
+                                                        );
+                                                    })}
                                             </RadioGroup>
                                         </FormControl>
                                     </div>

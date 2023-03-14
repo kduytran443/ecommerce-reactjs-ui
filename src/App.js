@@ -32,6 +32,7 @@ import AdminUserPage from './pages/AdminUserPage';
 import { setUserInfo, useUser } from './stores/UserStore';
 import { getUserInfo } from './services/useService/useService';
 import AdminCategoryDetailsEditPage from './pages/AdminCategoryDetailsPage/AdminCategoryDetailsEditPage';
+import { PayPalScriptProvider } from '@paypal/react-paypal-js';
 
 function App() {
     const [isAuthenticatedState, setIsAuthenticatedState] = useState(null);

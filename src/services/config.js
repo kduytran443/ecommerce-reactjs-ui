@@ -55,13 +55,15 @@ const getConfig = () => {
         };
     }
 
-    return {
+    const obj = {
         method: 'GET',
         headers: {
             Authorization: jwt,
             'Content-Type': 'application/json',
         },
     };
+
+    return obj;
 };
 
 export { getConfig, postConfig, deleteConfig, getUserJWT, putConfig };
