@@ -17,11 +17,17 @@ function HeaderAccountOptions({ username }) {
     const [userState, dispatchUserState] = useUser();
 
     const logout = () => {
-        const options = postConfig();
+        const options = {
+            method: 'POST',
+            body: JSON.stringify({}),
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        };
         fetch(`${API_BASE_URL}/api/logout`, options)
             .then((res) => res.json())
             .then((data) => {
-                dispatchUserState(clearUserInfo({}));
+                setUserInfo({});
                 navigate('/login');
             })
             .catch((error) => {

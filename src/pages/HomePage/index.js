@@ -68,7 +68,7 @@ function HomePage() {
                 <ul className="flex flex-row flex-wrap items-start">
                     {laptopListState.map((product) => {
                         return (
-                            <li className="py-2 px-[2px] sm:px-2 w-[50%] md:w-[33%] lg:w-[25%]">
+                            <li className="py-2 px-[2px] sm:px-2 w-full md:w-[33%] lg:w-[25%]">
                                 <RecipeReviewCard
                                     price={product.price}
                                     image={product.avatar}

@@ -72,12 +72,12 @@ export default function ProductInfomation({
                 <h3 className="font-bold text-base md:text-lg hover:text-blue-500">
                     Asus TUF Gaming F15 FX506LHB-HN188W
                 </h3>
-                <Typography variant="body2" color="text.secondary">
-                    {discountState.discountPercent > 0 && <strike>{formatter.format(price)}</strike>}
-                </Typography>
                 <div className="flex flex-col md:flex-row items-center justify-between">
-                    <p className="text-lg md:text-xl font-bold text-red-500">
+                    <p className="text-xl font-bold text-red-500">
                         {formatter.format(price - price * (discountState.discountPercent / 100))}
+                        <span className="text-gray-500 ml-4">
+                            {discountState.discountPercent > 0 && <strike>{formatter.format(price)}</strike>}
+                        </span>
                     </p>
                     <p className="text-blue-500">
                         Giảm <b>{discountState.discountPercent}%</b>

@@ -27,6 +27,8 @@ import SpecificationList from '~/components/SpecificationList';
 import { productSpecificationService } from '~/services/productSpecificationService';
 import { deliveryFee } from '~/utils/deliveryFee';
 import { addressService } from '~/services/addressService';
+import { cartService } from '~/services/cartService';
+import { manufacturerService } from '~/services/manufacturerService';
 
 const content = `<div class="st-pd-content"><p style="text-align:justify; margin-bottom:11px"><b>Asus TUF Gaming F15 FX506LHB-HN188W là chiếc <a href="https://fptshop.com.vn/may-tinh-xach-tay/gaming-do-hoa">laptop gaming giá rẻ</a> với thiết kế tuyệt đẹp, phong cách chuẩn game thủ và cấu hình mạnh mẽ cho cả học tập, công việc cũng như chơi game. Bên cạnh đó là độ bền chuẩn quân đội đã làm nên tên tuổi của dòng TUF.</b></p>
 
@@ -142,6 +144,20 @@ function ProductPage() {
         loadAddress();
     }, [location]);
 
+    const postCart = () => {
+        cartService.postCart({ productId: productState.id, quantity: 1 }).then((data) => {});
+    };
+
+    const [manufacturerState, setManufacturerState] = useState({});
+    useEffect(() => {
+        manufacturerService.getManufacturerByProductCode(productCode).then((data) => {
+            if (data.status !== 500) {
+                console.log(data);
+                setManufacturerState(data);
+            }
+        });
+    }, [location]);
+
     const order = () => {};
 
     return (
@@ -166,7 +182,13 @@ function ProductPage() {
                                     </div>
                                 }
                                 message={'Đã thêm vào giỏ hàng'}
-                                actionAfterClick={() => {}}
+                                actionAfterClick={
+                                    productState.id
+                                        ? () => {
+                                              postCart();
+                                          }
+                                        : () => {}
+                                }
                             />
                             <OrderDialog
                                 agreeAction={order}
@@ -238,11 +260,13 @@ function ProductPage() {
                 </div>
             </div>
             <div className="w-full p-4 my-4">
-                <ManufacturerReviewCard
-                    code="asus"
-                    name="Asus"
-                    image="https://thumbs.dreamstime.com/b/glowing-asus-rog-logo-gaming-laptop-miercurea-ciuc-romania-august-155994881.jpg"
-                />
+                {manufacturerState && (
+                    <ManufacturerReviewCard
+                        code={manufacturerState.code}
+                        name={manufacturerState.name}
+                        image={manufacturerState.logo}
+                    />
+                )}
             </div>
             <div className="flex md:flex-row flex-col-reverse mt-8 p-4">
                 {productInfoState && (

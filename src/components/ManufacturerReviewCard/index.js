@@ -11,7 +11,7 @@ function ManufacturerReviewCard({
     return (
         <div
             onClick={(e) => {
-                navigate('/manufacturer/' + code);
+                //navigate('/manufacturer/' + code);
             }}
             className="w-full select-none cursor-pointer hover:bg-slate-200 bg-slate-100 duration-100 flex flex-row items-center border border-slate-300 rounded-xl p-4"
         >

@@ -70,22 +70,24 @@ export default function RecipeReviewCard({
                     <CardMedia component="img" height="194" image={image} alt="img" />
                 </div>
             </Link>
-            <CardContent style={{ paddingBottom: 0 }}>
-                <Link to={link}>
-                    <h3 className="font-bold text-base md:text-lg hover:text-blue-500">{name}</h3>
-                </Link>
-                <Typography variant="body2" color="text.secondary">
-                    {discountState.discountPercent > 0 && <strike>{formatter.format(price)}</strike>}
-                </Typography>
-                <div className="flex flex-col md:flex-row items-center justify-between">
-                    <p className="text-lg md:text-xl font-bold text-red-500">
-                        {formatter.format(price - price * (discountState.discountPercent / 100))}
-                    </p>
-                    <p className="text-blue-500">
-                        Giảm <b>{discountState.discountPercent}%</b>
-                    </p>
-                </div>
-            </CardContent>
+            <div className="my-2">
+                <CardContent style={{ paddingBottom: 0 }}>
+                    <Link to={link}>
+                        <h3 className="font-bold text-base md:text-lg hover:text-blue-500">{name}</h3>
+                    </Link>
+                    <div className="flex flex-col md:flex-row items-center justify-between mt-2">
+                        <p className="text-xl font-bold text-red-500">
+                            {formatter.format(price - price * (discountState.discountPercent / 100))}
+                            <span className="text-gray-500 ml-4">
+                                {discountState.discountPercent > 0 && <strike>{formatter.format(price)}</strike>}
+                            </span>
+                        </p>
+                        <p className="text-blue-500">
+                            Giảm <b>{discountState.discountPercent}%</b>
+                        </p>
+                    </div>
+                </CardContent>
+            </div>
             <CardActions disableSpacing style={{ paddingTop: 0 }}>
                 <div className="flex flex-row justify-end items-end w-full">
                     <CustomizedSnackbars
