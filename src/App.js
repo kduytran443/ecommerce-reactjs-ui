@@ -34,6 +34,7 @@ import { getUserInfo } from './services/useService/useService';
 import AdminCategoryDetailsEditPage from './pages/AdminCategoryDetailsPage/AdminCategoryDetailsEditPage';
 import { PayPalScriptProvider } from '@paypal/react-paypal-js';
 import AdminProductCreatePage from './pages/AdminProductPage/AdminProductCreatePage';
+import AdminProductEditPage from './pages/AdminProductPage/AdminProductEditPage';
 
 function App() {
     const [isAuthenticatedState, setIsAuthenticatedState] = useState(null);
@@ -249,10 +250,10 @@ function App() {
                         }
                     />
                     <Route
-                        path={'/admin/product/update/:productId'}
+                        path={'/admin/product/edit/:productCode'}
                         element={
                             <AdminLayout>
-                                <AdminProductCreatePage />
+                                <AdminProductEditPage />
                             </AdminLayout>
                         }
                     />

@@ -13,4 +13,9 @@ export const productSpecificationService = {
         const response = await fetch(`${API_BASE_URL}/${this.api}`, config);
         return response.json();
     },
+    async putProductSpecification(specification) {
+        const config = putConfig(specification);
+        const response = await fetch(`${API_BASE_URL}/${this.api}`, config);
+        return response.json();
+    },
 };

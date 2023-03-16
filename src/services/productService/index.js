@@ -24,6 +24,11 @@ export const productService = {
         const response = await fetch(`${API_BASE_URL}/public/${this.api}${paramUrl}`, config);
         return response.json();
     },
+    async getAllProducts() {
+        const config = getConfig();
+        const response = await fetch(`${API_BASE_URL}/public/${this.api}/all`, config);
+        return response.json();
+    },
     async getProductByCode(code) {
         //classLessonId
         const config = getConfig();
@@ -32,6 +37,16 @@ export const productService = {
     },
     async postProduct(product) {
         const config = postConfig(product);
+        const response = await fetch(`${API_BASE_URL}/${this.api}`, config);
+        return response.json();
+    },
+    async putProduct(product) {
+        const config = putConfig(product);
+        const response = await fetch(`${API_BASE_URL}/${this.api}`, config);
+        return response.json();
+    },
+    async deleteProduct(product) {
+        const config = deleteConfig(product);
         const response = await fetch(`${API_BASE_URL}/${this.api}`, config);
         return response.json();
     },

@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Avatar, Button, FormControl, IconButton, InputLabel, MenuItem, Select, TextField } from '@mui/material';
 import { Box } from '@mui/system';
 import { useEffect, useRef, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import UploadImage from '~/components/UploadImage';
 import { categoryService } from '~/services/categoryService';
 import { manufacturerService } from '~/services/manufacturerService';
@@ -12,9 +12,10 @@ import { productService } from '~/services/productService';
 import { productSpecificationService } from '~/services/productSpecificationService';
 import { specificationService } from '~/services/specificationService';
 
-function AdminProductCreatePage() {
+function AdminProductEditPage() {
     const location = useLocation();
     const navigate = useNavigate();
+    const { productCode } = useParams();
 
     const [nameState, setNameState] = useState('');
     const [codeState, setCodeState] = useState('');
@@ -68,6 +69,8 @@ function AdminProductCreatePage() {
         }
     }, [selectedCategoryCode]);
 
+    const [idState, setIdState] = useState();
+
     const onInputSpecification = (id, value) => {
         const obj = { ...specificationsController };
         obj[id] = value;
@@ -77,6 +80,7 @@ function AdminProductCreatePage() {
 
     const submit = () => {
         const product = {
+            id: idState,
             name: nameState,
             code: codeState,
             year: yearState,
@@ -89,8 +93,9 @@ function AdminProductCreatePage() {
                 id: selectedManufacturer,
             },
         };
-        productService.postProduct(product).then((data) => {
+        productService.putProduct(product).then((data) => {
             if (data) {
+                console.log('Sửa thành công');
                 const keys = Object.keys(specificationsController);
                 keys.forEach((key) => {
                     const content = specificationsController[key];
@@ -100,32 +105,41 @@ function AdminProductCreatePage() {
                             specificationId: key,
                             content: content,
                         };
-                        console.log('objobj', obj);
-                        productSpecificationService.postProductSpecification(obj).then((data) => {});
+                        productSpecificationService.putProductSpecification(obj).then((data) => {});
                     }
                 });
+            }
+            navigate('/admin/product');
+        });
+    };
 
-                if (image1State) {
-                    productImageService
-                        .postProductImage({ data: image1State, productCode: data.code })
-                        .then((data) => {});
-                }
-                if (image2State) {
-                    productImageService
-                        .postProductImage({ data: image2State, productCode: data.code })
-                        .then((data) => {});
-                }
-                if (image3State) {
-                    productImageService
-                        .postProductImage({ data: image3State, productCode: data.code })
-                        .then((data) => {});
-                }
-                if (image4State) {
-                    productImageService
-                        .postProductImage({ data: image4State, productCode: data.code })
-                        .then((data) => {});
-                }
-                navigate('/admin/product');
+    useEffect(() => {
+        loadData();
+    }, [location]);
+
+    const loadData = () => {
+        productService.getProductByCode(productCode).then((data) => {
+            console.log('SẢN PHẨM', data);
+            if (data) {
+                setNameState(data.name);
+                setCodeState(data.code);
+                setYearState(data.year);
+                setWarrantyState(data.warrantyMonth);
+                setPriceState(data.price);
+                setAvatarState(data.avatar);
+                setSelectedCategoryCode(data.categoryCode);
+                setSelectedManufacturer(data.manufacturer.id);
+                setIdState(data.id);
+
+                productSpecificationService.getProductSpecificationByProductCode(productCode).then((data) => {
+                    if (data.length > 0) {
+                        let obj = {};
+                        data.forEach((item) => {
+                            obj[item.specificationId] = item.content;
+                        });
+                        setSpecificationsController(obj);
+                    }
+                });
             }
         });
     };
@@ -135,19 +149,19 @@ function AdminProductCreatePage() {
             <div className="mb-6">
                 <Button
                     onClick={(e) => {
-                        navigate('/admin/');
+                        navigate('/admin/product');
                     }}
                     startIcon={<FontAwesomeIcon icon={faArrowLeft} />}
                 >
                     Quay lại
                 </Button>
             </div>
-            <h1 className="text-3xl font-black mb-6">Thêm sản phẩm</h1>
+            <h1 className="text-3xl font-black mb-6">Sửa sản phẩm</h1>
             <div className="flex flex-col w-full">
                 <div className="w-full my-4">
+                    <div>Tên sản phẩm</div>
                     <TextField
                         className="w-full"
-                        label="Tên sản phẩm"
                         value={nameState}
                         onInput={(e) => {
                             setNameState(e.target.value);
@@ -155,9 +169,9 @@ function AdminProductCreatePage() {
                     />
                 </div>
                 <div className="w-full my-4">
+                    <div>Code sản phẩm</div>
                     <TextField
                         className="w-full"
-                        label="Code sản phẩm"
                         value={codeState}
                         onInput={(e) => {
                             setCodeState(e.target.value);
@@ -165,42 +179,44 @@ function AdminProductCreatePage() {
                     />
                 </div>
                 <div className="w-full my-4">
+                    <div>Năm sản xuất</div>
                     <TextField
                         className="w-full"
-                        label="Năm sản xuất"
                         value={yearState}
                         onInput={(e) => {
                             setYearState(e.target.value);
                         }}
                     />
                 </div>
-                <div className="my-4">
-                    <Box sx={{ minWidth: 120 }}>
-                        <FormControl fullWidth>
-                            <InputLabel id="demo-simple-select-label">Nhà sản xuất</InputLabel>
-                            <Select
-                                labelId="demo-simple-select-label"
-                                id="demo-simple-select"
-                                value={selectedManufacturer}
-                                defaultValue={selectedManufacturer}
-                                label="Chủ đề"
-                                onChange={(e) => {
-                                    setSelectedManufacturer(e.target.value);
-                                }}
-                            >
-                                {manufacturers.map((item) => (
-                                    <MenuItem key={item.id} value={item.id}>
-                                        {item.name}
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
-                    </Box>
-                </div>
+                {selectedManufacturer && (
+                    <div className="my-4">
+                        <Box sx={{ minWidth: 120 }}>
+                            <FormControl fullWidth>
+                                <InputLabel id="demo-simple-select-label">Nhà sản xuất</InputLabel>
+                                <Select
+                                    labelId="demo-simple-select-label"
+                                    id="demo-simple-select"
+                                    value={selectedManufacturer}
+                                    defaultValue={selectedManufacturer}
+                                    label="Chủ đề"
+                                    onChange={(e) => {
+                                        setSelectedManufacturer(e.target.value);
+                                    }}
+                                >
+                                    {manufacturers.map((item) => (
+                                        <MenuItem key={item.id} value={item.id}>
+                                            {item.name}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </Box>
+                    </div>
+                )}
                 <div className="w-full my-4">
+                    <div>Giá</div>
                     <TextField
                         className="w-full"
-                        label="Giá"
                         value={priceState}
                         onInput={(e) => {
                             if (!isNaN(e.target.value) && !e.target.value.includes(' ')) {
@@ -210,9 +226,9 @@ function AdminProductCreatePage() {
                     />
                 </div>
                 <div className="w-full my-4">
+                    <div>Tháng bảo hành</div>
                     <TextField
                         className="w-full"
-                        label="Tháng bảo hành"
                         value={warrantyState}
                         onInput={(e) => {
                             if (!isNaN(e.target.value) && !e.target.value.includes(' ')) {
@@ -222,29 +238,32 @@ function AdminProductCreatePage() {
                     />
                 </div>
 
-                <div className="my-4">
-                    <Box sx={{ minWidth: 120 }}>
-                        <FormControl fullWidth>
-                            <InputLabel id="demo-simple-select-label">Danh mục</InputLabel>
-                            <Select
-                                labelId="demo-simple-select-label"
-                                id="demo-simple-select"
-                                value={selectedCategoryCode}
-                                defaultValue={selectedCategoryCode}
-                                label="Chủ đề"
-                                onChange={(e) => {
-                                    setSelectedCategoryCode(e.target.value);
-                                }}
-                            >
-                                {categoryListState.map((item) => (
-                                    <MenuItem key={item.code} value={item.code}>
-                                        {item.name}
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
-                    </Box>
-                </div>
+                {selectedCategoryCode && (
+                    <div className="my-4">
+                        <Box sx={{ minWidth: 120 }}>
+                            <FormControl fullWidth>
+                                <InputLabel id="demo-simple-select-label">Danh mục</InputLabel>
+                                <Select
+                                    disabled
+                                    labelId="demo-simple-select-label"
+                                    id="demo-simple-select"
+                                    value={selectedCategoryCode}
+                                    defaultValue={selectedCategoryCode}
+                                    label="Chủ đề"
+                                    onChange={(e) => {
+                                        setSelectedCategoryCode(e.target.value);
+                                    }}
+                                >
+                                    {categoryListState.map((item) => (
+                                        <MenuItem key={item.code} value={item.code}>
+                                            {item.name}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </Box>
+                    </div>
+                )}
                 <div>
                     {specificationListState.map((item) => {
                         return (
@@ -263,70 +282,20 @@ function AdminProductCreatePage() {
                         );
                     })}
                 </div>
-                <div className="w-full my-4">
-                    <TextField
-                        className="w-full"
-                        label="Nội dung"
-                        value={contentState}
-                        multiline
-                        rows={6}
-                        onInput={(e) => {
-                            setContentState(e.target.value);
-                        }}
-                    />
-                </div>
                 <div></div>
                 <div>
                     <div>Hình đại diện</div>
                     <UploadImage image={avatarState} callback={uploadAvatar} />
-                </div>
-                <div className="flex mt-8 flex-row items-center flex-wrap">
-                    <div>
-                        <div>Hình 1</div>
-                        <UploadImage
-                            image={image1State}
-                            callback={(data) => {
-                                setImage1State(data);
-                            }}
-                        />
-                    </div>
-                    <div>
-                        <div>Hình 2</div>
-                        <UploadImage
-                            image={image2State}
-                            callback={(data) => {
-                                setImage2State(data);
-                            }}
-                        />
-                    </div>
-                    <div>
-                        <div>Hình 3</div>
-                        <UploadImage
-                            image={image3State}
-                            callback={(data) => {
-                                setImage3State(data);
-                            }}
-                        />
-                    </div>
-                    <div>
-                        <div>Hình 4</div>
-                        <UploadImage
-                            image={image4State}
-                            callback={(data) => {
-                                setImage4State(data);
-                            }}
-                        />
-                    </div>
                 </div>
             </div>
             <div
                 onClick={submit}
                 className="w-full mt-8 p-4 rounded-lg hover:bg-blue-600 active:bg-blue-700 text-center bg-blue-500 shadow-blue-300 shadow-lg cursor-pointer select-none text-white font-bold text-xl"
             >
-                <FontAwesomeIcon icon={faAdd} className="mr-2" /> Thêm
+                <FontAwesomeIcon icon={faAdd} className="mr-2" /> Sửa
             </div>
         </div>
     );
 }
 
-export default AdminProductCreatePage;
+export default AdminProductEditPage;

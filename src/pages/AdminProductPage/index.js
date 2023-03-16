@@ -1,31 +1,53 @@
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Avatar, Button } from '@mui/material';
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import ProductTable from '~/components/ProductTable';
+import { productService } from '~/services/productService';
 
 function AdminProductPage() {
-    const [productListState, setProductListState] = useState([
-        {
-            id: 1,
-            image: 'https://laptopaz.vn/media/product/2324_laptopaz_asus_tuf_f15_fx506lh_hn188w_1.jpg',
-            name: 'Laptop Asus TUF Gaming F15 FX506LHB',
-            stock: '6',
-            price: '20.990.000đ',
-            code: 'laptop-asus-tuf-gaming-f15-fx506lhb',
-            manufacturer: 'Asus',
-            discount: '10%',
-        },
-    ]);
+    const [productListState, setProductListState] = useState([]);
     const navigate = useNavigate();
+
+    const loadData = () => {
+        productService.getAllProducts().then((data) => {
+            if (data.length > 0) {
+                const arr = data.map((data) => {
+                    let discount = 0;
+                    let date = new Date();
+                    data.discounts.forEach((item) => {
+                        if (item.endTime < date.getTime()) {
+                            discount += item.discountPercent;
+                        }
+                    });
+                    return {
+                        id: data.id,
+                        name: data.name,
+                        image: data.avatar,
+                        stock: 0,
+                        price: data.price,
+                        code: data.code,
+                        manufacturer: data.manufacturer.name,
+                        discount: discount,
+                    };
+                });
+                console.log(arr);
+                setProductListState(arr);
+            }
+        });
+    };
+    const location = useLocation();
+    useEffect(() => {
+        loadData();
+    }, [location]);
 
     return (
         <div className="p-6 bg-white rounded">
             <div className="mb-6">
                 <Button
                     onClick={(e) => {
-                        navigate('/admin/');
+                        navigate('/admin/product');
                     }}
                     startIcon={<FontAwesomeIcon icon={faArrowLeft} />}
                 >
@@ -40,7 +62,7 @@ function AdminProductPage() {
             >
                 Thêm sản phẩm
             </Button>
-            <ProductTable rows={productListState} />
+            {productListState.length > 0 && <ProductTable reload={loadData} rows={productListState} />}
         </div>
     );
 }
