@@ -48,18 +48,21 @@ export default function ProductInfomation({
     warrantyMonth,
 }) {
     const [likedState, setLikedState] = useState(false);
-    const [discountState, setDiscountState] = useState({});
+    const [discountState, setDiscountState] = useState(0);
     const link = '/product/' + productCode;
     const url = window.location.origin + link;
 
     useEffect(() => {
         if (discounts.length > 0) {
-            const max = discounts.reduce((prev, current) => {
-                return prev.discountPercent > current.discountPercent ? prev : current;
+            let total = 0;
+            discounts.forEach((discount) => {
+                total += discount.discountPercent;
             });
-            setDiscountState(max ? max : {});
+            setDiscountState(total);
         }
     }, [discounts]);
+
+    console.log('discountState', discountState);
 
     return (
         <Card sx={{ width: '100%' }}>
@@ -74,14 +77,18 @@ export default function ProductInfomation({
                 </h3>
                 <div className="flex flex-col md:flex-row items-center justify-between">
                     <p className="text-xl font-bold text-red-500">
-                        {formatter.format(price - price * (discountState.discountPercent / 100))}
+                        {discountState > 0
+                            ? formatter.format(price - price * (discountState / 100))
+                            : formatter.format(price)}
                         <span className="text-gray-500 ml-4">
-                            {discountState.discountPercent > 0 && <strike>{formatter.format(price)}</strike>}
+                            {discountState > 0 && <strike>{formatter.format(price)}</strike>}
                         </span>
                     </p>
-                    <p className="text-blue-500">
-                        Giảm <b>{discountState.discountPercent}%</b>
-                    </p>
+                    {discountState > 0 && (
+                        <p className="text-blue-500">
+                            Giảm <b>{discountState}%</b>
+                        </p>
+                    )}
                 </div>
 
                 <ul className="bg-slate-100 rounded-lg p-2 text-gray-600 flex flex-col mt-2 text-sm sm:text-base">

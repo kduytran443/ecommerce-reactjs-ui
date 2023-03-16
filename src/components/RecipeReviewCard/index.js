@@ -44,16 +44,15 @@ export default function RecipeReviewCard({
     const [likedState, setLikedState] = useState(false);
     const url = window.location.origin + link;
 
-    const [discountState, setDiscountState] = useState({});
+    const [discountState, setDiscountState] = useState(0);
 
     useEffect(() => {
-        console.log('discounts', discounts);
         if (discounts.length > 0) {
-            const max = discounts.reduce((prev, current) => {
-                return prev.discountPercent > current.discountPercent ? prev : current;
+            let total = 0;
+            discounts.forEach((discount) => {
+                total += discount.discountPercent;
             });
-            console.log('max ', max);
-            setDiscountState(max ? max : {});
+            setDiscountState(total);
         }
     }, [discounts]);
 
@@ -77,14 +76,16 @@ export default function RecipeReviewCard({
                     </Link>
                     <div className="flex flex-col md:flex-row items-center justify-between mt-2">
                         <p className="text-xl font-bold text-red-500">
-                            {formatter.format(price - price * (discountState.discountPercent / 100))}
+                            {formatter.format(price - price * (discountState / 100))}
                             <span className="text-gray-500 ml-4">
-                                {discountState.discountPercent > 0 && <strike>{formatter.format(price)}</strike>}
+                                {discountState > 0 && <strike>{formatter.format(price)}</strike>}
                             </span>
                         </p>
-                        <p className="text-blue-500">
-                            Giảm <b>{discountState.discountPercent}%</b>
-                        </p>
+                        {discountState > 0 && (
+                            <p className="text-blue-500">
+                                Giảm <b>{discountState}%</b>
+                            </p>
+                        )}
                     </div>
                 </CardContent>
             </div>

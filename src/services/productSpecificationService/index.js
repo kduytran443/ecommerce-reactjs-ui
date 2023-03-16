@@ -8,4 +8,9 @@ export const productSpecificationService = {
         const response = await fetch(`${API_BASE_URL}/public/${this.api}/${productCode}`, config);
         return response.json();
     },
+    async postProductSpecification(specification) {
+        const config = postConfig(specification);
+        const response = await fetch(`${API_BASE_URL}/${this.api}`, config);
+        return response.json();
+    },
 };

@@ -3,10 +3,10 @@ import { API_BASE_URL } from '~/constants';
 
 export const specificationService = {
     api: 'api/specification',
-    async getSpecificationByCode(code) {
+    async getSpecificationByCode(categoryCode) {
         //classLessonId
         const config = getConfig();
-        const response = await fetch(`${API_BASE_URL}/public/${this.api}/${code}`, config);
+        const response = await fetch(`${API_BASE_URL}/public/${this.api}/${categoryCode}`, config);
         return response.json();
     },
 

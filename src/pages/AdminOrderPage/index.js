@@ -1,32 +1,25 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import AdminOrder from '~/components/AdminOrder';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import { faArrowLeft, faCheck, faTasks } from '@fortawesome/free-solid-svg-icons';
-import { Button, Pagination } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { Button, IconButton, Pagination } from '@mui/material';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { orderService } from '~/services/orderService';
+import { renderToDate, renderToTime } from '~/utils/renderTime';
 
 function AdminOrderPage() {
-    const [orderListState, setOrderListState] = useState([
-        {
-            id: 1,
-            status: 'Đang cần xử lý',
-            price: 16000000,
-            date: 'Ngày 3/8/2023 lúc 10:00',
-        },
-        {
-            id: 2,
-            status: 'Đang giao',
-            price: 10000000,
-            date: 'Ngày 2/8/2023 lúc 10:00',
-        },
-        {
-            id: 3,
-            status: 'Cần xác nhận thông tin thanh toán',
-            price: 16000000,
-            date: 'Ngày 1/8/2023 lúc 10:00',
-        },
-    ]);
+    const [orderListState, setOrderListState] = useState([]);
+
+    const location = useLocation();
+
+    useEffect(() => {
+        orderService.getOrders().then((data) => {
+            if (data) {
+                setOrderListState(data);
+            }
+        });
+    }, [location]);
 
     const navigate = useNavigate();
 
@@ -42,33 +35,49 @@ function AdminOrderPage() {
                     Quay lại
                 </Button>
             </div>
-            <div className="w-full flex flex-col md:flex-row mt-4 items-center flex-wrap">
-                {orderListState.map((item, index) => {
-                    return (
-                        <div className="w-full md:w-[33%] p-4">
-                            <AdminOrder
-                                color="bg-red-500 shadow-red-400"
-                                data={'Đơn hàng mã số ' + item.id}
-                                title={item.price}
-                                icon={<FontAwesomeIcon icon={faTasks} />}
-                                link={'/admin/order-details/' + item.id}
-                                description={
-                                    <div>
-                                        <p>
-                                            <b>{item.status}</b>
-                                        </p>
-                                        <p>{item.date}</p>
-                                        <p>Sản phẩm: Tay cầm xbox, laptop asus...</p>
+            <ul className="w-full flex flex-col flex-wrap p-2 md:p-0 mt-6">
+                {orderListState.length > 0 &&
+                    orderListState.map((order) => {
+                        return (
+                            <li
+                                onClick={(e) => {
+                                    navigate('/admin/order-details/' + order.id);
+                                }}
+                                className="w-ful my-4 hover:bg-blue-100 duration-100 bg-white flex flex-row items-start p-4 rounded-lg shadow cursor-pointer"
+                            >
+                                <div className="mr-4">
+                                    <div
+                                        className={
+                                            'relative aspect-ratio p-2 shadow-md rounded-xl flex flex-col justify-center items-center bg-blue-500 shadow-blue-300'
+                                        }
+                                    >
+                                        <div className="group-hover:animate-bounce duration-200 text-white font-bold text-3xl">
+                                            <IconButton color="inherit">
+                                                <AssignmentIcon sx={{ width: '36px', height: '36px' }} />
+                                            </IconButton>
+                                        </div>
                                     </div>
-                                }
-                            />
-                        </div>
-                    );
-                })}
-            </div>
-            <div className="mt-6">
-                <Pagination count={10} color="primary" />
-            </div>
+                                </div>
+                                <div className="w-full text-gray-600">
+                                    <div className="text-xl font-semibold mb-2">
+                                        Đơn hàng lúc {renderToTime(order.date)}
+                                    </div>
+                                    <div>
+                                        <b>Ngày giao hàng dự kiến:</b> {renderToDate(order.expectedTime)}
+                                    </div>
+                                    <div className="mt-2">
+                                        <b>Trạng thái: </b>
+                                        {order.status}
+                                    </div>
+                                    <div className="mt-2">
+                                        <b>Ghi chú: </b>
+                                        {order.note}
+                                    </div>
+                                </div>
+                            </li>
+                        );
+                    })}
+            </ul>
         </div>
     );
 }

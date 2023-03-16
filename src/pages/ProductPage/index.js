@@ -98,16 +98,6 @@ function ProductPage() {
         });
     }, [location]);
 
-    const [productInfoState, setProductInfoState] = useState('');
-
-    useEffect(() => {
-        productInfoService.getProductInfoByCode(productCode).then((data) => {
-            if (data.status !== 500) {
-                setProductInfoState(data);
-            }
-        });
-    }, [location]);
-
     const [productSpecificationListState, setProductSpecificationListState] = useState([]);
     useEffect(() => {
         productSpecificationService.getProductSpecificationByProductCode(productCode).then((data) => {
@@ -201,7 +191,7 @@ function ProductPage() {
             });
         }
     };
-
+    console.log('total', totalDiscountPercent);
     const navigateToLogin = () => {
         navigate('/login');
     };
@@ -325,10 +315,12 @@ function ProductPage() {
                 )}
             </div>
             <div className="flex md:flex-row flex-col-reverse mt-8 p-4">
-                {productInfoState && (
+                {productState && (
                     <div className="w-full md:w-[70%]">
-                        <h3 className="text-3xl font-bold mb-4">Thông tin sản phẩm</h3>
-                        <div className="p-4 md:p-0">{parse(productInfoState.content)}</div>
+                        <div className="w-full p-4">
+                            <h3 className="text-2xl font-bold mb-4">Thông số kỹ thuật</h3>
+                            <SpecificationList list={productSpecificationListState} />
+                        </div>
                     </div>
                 )}
                 <div className="w-full md:flex-1">
@@ -336,10 +328,6 @@ function ProductPage() {
                         <ReviewTable>
                             <div className="w-full flex flex-col items-center"></div>
                         </ReviewTable>
-                    </div>
-                    <div className="w-full p-4">
-                        <h3 className="text-2xl font-bold mb-4">Thông số kỹ thuật</h3>
-                        <SpecificationList list={productSpecificationListState} />
                     </div>
                 </div>
             </div>

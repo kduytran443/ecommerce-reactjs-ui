@@ -29,6 +29,8 @@ import { useUser } from '~/stores/UserStore';
 import { userService } from '~/services/userService';
 import PaypalCheckout from '~/components/PaypalCheckout';
 import { paymentService } from '~/services/paymentService';
+import { API_BASE_URL } from '~/constants';
+import OrderSocket from '~/components/OrderDetailsSocket';
 
 const VND = new Intl.NumberFormat('vi-VN', {
     style: 'currency',
@@ -147,6 +149,7 @@ function OrderDetailsPage() {
     const loadOrder = () => {
         orderService.getOrderById(orderId).then((data) => {
             if (data.id) {
+                console.log('LOAD ORDER');
                 setOrderDataState(data);
             }
         });
@@ -213,6 +216,11 @@ function OrderDetailsPage() {
 
     return (
         <div className="w-full p-4 bg-white rounded">
+            {orderDataState && (
+                <OrderSocket loadOrder={loadOrder} orderId={orderId}>
+                    <Button>Thông báo</Button>
+                </OrderSocket>
+            )}
             <div className="w-full mb-8">
                 <Button
                     onClick={(e) => {

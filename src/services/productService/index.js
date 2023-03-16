@@ -30,4 +30,9 @@ export const productService = {
         const response = await fetch(`${API_BASE_URL}/public/${this.api}/${code}`, config);
         return response.json();
     },
+    async postProduct(product) {
+        const config = postConfig(product);
+        const response = await fetch(`${API_BASE_URL}/${this.api}`, config);
+        return response.json();
+    },
 };

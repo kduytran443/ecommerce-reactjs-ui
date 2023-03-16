@@ -36,4 +36,9 @@ export const orderService = {
         const response = await fetch(`${API_BASE_URL}/${this.api}`, config);
         return response.json();
     },
+    async updateOrderStatus(orderId, status) {
+        const config = putConfig();
+        const response = await fetch(`${API_BASE_URL}/${this.api}/${orderId}?status=${status}`, config);
+        return response.json();
+    },
 };

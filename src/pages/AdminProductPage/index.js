@@ -33,6 +33,13 @@ function AdminProductPage() {
                 </Button>
             </div>
             <h1 className="text-3xl font-black mb-6">Sản phẩm</h1>
+            <Button
+                onClick={(e) => {
+                    navigate('create');
+                }}
+            >
+                Thêm sản phẩm
+            </Button>
             <ProductTable rows={productListState} />
         </div>
     );

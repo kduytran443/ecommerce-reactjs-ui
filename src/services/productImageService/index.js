@@ -9,4 +9,9 @@ export const productImageService = {
         const response = await fetch(`${API_BASE_URL}/public/${this.api}/${code}`, config);
         return response.json();
     },
+    async postProductImage(productImage) {
+        const config = postConfig(productImage);
+        const response = await fetch(`${API_BASE_URL}/${this.api}`, config);
+        return response.json();
+    },
 };

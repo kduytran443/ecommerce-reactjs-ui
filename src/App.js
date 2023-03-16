@@ -33,6 +33,7 @@ import { setUserInfo, useUser } from './stores/UserStore';
 import { getUserInfo } from './services/useService/useService';
 import AdminCategoryDetailsEditPage from './pages/AdminCategoryDetailsPage/AdminCategoryDetailsEditPage';
 import { PayPalScriptProvider } from '@paypal/react-paypal-js';
+import AdminProductCreatePage from './pages/AdminProductPage/AdminProductCreatePage';
 
 function App() {
     const [isAuthenticatedState, setIsAuthenticatedState] = useState(null);
@@ -236,6 +237,22 @@ function App() {
                         element={
                             <AdminLayout>
                                 <AdminProductPage />
+                            </AdminLayout>
+                        }
+                    />
+                    <Route
+                        path={'/admin/product/create'}
+                        element={
+                            <AdminLayout>
+                                <AdminProductCreatePage />
+                            </AdminLayout>
+                        }
+                    />
+                    <Route
+                        path={'/admin/product/update/:productId'}
+                        element={
+                            <AdminLayout>
+                                <AdminProductCreatePage />
                             </AdminLayout>
                         }
                     />

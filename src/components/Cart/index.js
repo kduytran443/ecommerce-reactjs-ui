@@ -39,16 +39,17 @@ function Cart({ main = false }) {
         }
     }, [selectedIdState]);
 
+    console.log('cartDataState', cartDataState);
+
     const loadCart = () => {
         cartService.getCarts().then((data) => {
             if (data.status !== 500) {
                 const cartList = data.map((item, index) => {
-                    let discount = null;
-                    if (item.product.discounts) {
-                        const max = item.product.discounts.reduce((prev, current) => {
-                            return prev.discountPercent > current.discountPercent ? prev : current;
+                    let discount = 0;
+                    if (item.product.discounts && item.product.discounts.length > 0) {
+                        item.product.discounts.forEach((discountItem) => {
+                            discount += discountItem.discountPercent;
                         });
-                        discount = max.discountPercent;
                     }
 
                     const obj = {
