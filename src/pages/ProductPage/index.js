@@ -287,7 +287,7 @@ function ProductPage() {
                                             </div>
                                             <b>Tổng tiền:</b>
                                             <p className="text-lg md:text-xl font-bold text-red-500">
-                                                {totalPrice - deliveryFee}$
+                                                {totalPrice + deliveryFee}$
                                             </p>
                                         </div>
                                         <div>
@@ -316,20 +316,13 @@ function ProductPage() {
             </div>
             <div className="flex md:flex-row flex-col-reverse mt-8 p-4">
                 {productState && (
-                    <div className="w-full md:w-[70%]">
+                    <div className="w-full md:w-[100%]">
                         <div className="w-full p-4">
                             <h3 className="text-2xl font-bold mb-4">Thông số kỹ thuật</h3>
                             <SpecificationList list={productSpecificationListState} />
                         </div>
                     </div>
                 )}
-                <div className="w-full md:flex-1">
-                    <div className="w-full p-4">
-                        <ReviewTable>
-                            <div className="w-full flex flex-col items-center"></div>
-                        </ReviewTable>
-                    </div>
-                </div>
             </div>
             <div className="mt-10 w-full">
                 <Box sx={{ width: '100%', typography: 'body1' }}>
@@ -411,6 +404,13 @@ function ProductPage() {
 export default ProductPage;
 
 /*
+                <div className="w-full md:flex-1">
+                    <div className="w-full p-4">
+                        <ReviewTable>
+                            <div className="w-full flex flex-col items-center"></div>
+                        </ReviewTable>
+                    </div>
+                </div>
 
                                 <p className="mb-2 font-semibold text-lg">Viết đánh giá của bạn</p>
                                 <div className="w-full">

@@ -14,8 +14,8 @@ function SimpleFooter() {
                         <b className="text-lg">Nền tảng mua sắm</b>
                     </div>
                     <p className="text-gray-300">
-                        <p>Điện thoại: 0919.639.671</p>
-                        <p>Email: duyb1906443@student.ctu.edu.vn</p>
+                        <p>Điện thoại: 0919.639.671 (Nhóm trưởng)</p>
+                        <p>Email: nhom14@student.ctu.edu.vn</p>
                         <p>Địa chỉ: Khu II, Đ. 3/2, Xuân Khánh, Ninh Kiều, Cần Thơ</p>
                     </p>
                 </div>

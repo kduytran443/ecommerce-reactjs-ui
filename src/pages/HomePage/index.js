@@ -12,9 +12,6 @@ import { categoryService } from '~/services/categoryService';
 import { productService } from '~/services/productService';
 
 function HomePage() {
-    const [productListState, setProductListState] = useState(() => {
-        return [1, 2, 3, 4, 5, 1, 2, 3];
-    });
     const [categoryListState, setCategoryListState] = useState([]);
     const navigate = useNavigate();
     const location = useLocation();

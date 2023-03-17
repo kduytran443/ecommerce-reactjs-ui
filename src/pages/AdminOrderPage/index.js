@@ -78,6 +78,7 @@ function AdminOrderPage() {
                         );
                     })}
             </ul>
+            {orderListState.length === 0 && <div className="mt-12 text-3xl">Không có đơn hàng nào</div>}
         </div>
     );
 }

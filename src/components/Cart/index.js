@@ -236,7 +236,7 @@ function Cart({ main = false }) {
                         <p>
                             Phí vận chuyển: <span className="text-red-600">{deliveryFeeState}</span> USD
                         </p>
-                        Tổng giá: <span className="text-blue-600">{totalPriceState - deliveryFeeState}</span> USD
+                        Tổng giá: <span className="text-blue-600">{totalPriceState + deliveryFeeState}</span> USD
                     </div>
                     <div className="w-full p-4 mt-8 rounded-lg hover:bg-red-600 active:bg-red-700 text-center bg-red-500 shadow-gray-300 shadow-lg cursor-pointer select-none text-white font-bold text-xl">
                         <FontAwesomeIcon icon={faCheck} /> Thanh toán

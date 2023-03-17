@@ -31,7 +31,7 @@ function ManufacturerTable({ rows, getId = () => {}, reload = () => {} }) {
                 );
             },
         },
-        { field: 'name', headerName: 'Tên nhà cung cấp', width: 320 },
+        { field: 'name', headerName: 'Tên nhà sản xuất', width: 320 },
         {
             field: 'code',
             headerName: 'Thao tác',

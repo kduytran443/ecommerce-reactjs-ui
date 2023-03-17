@@ -37,17 +37,19 @@ const VND = new Intl.NumberFormat('vi-VN', {
     currency: 'VND',
 });
 
+/*
+
+nienluanctu2023user_b@gmail.com
+nienluanctu2023user_a@gmail.com
+
+*/
+
 function OrderDetailsPage() {
     const { orderId } = useParams();
     let createdDate = new Date();
     const navigate = useNavigate();
 
-    const [orderDataState, setOrderDataState] = useState({
-        id: 1,
-        date: `${createdDate.getDate()}/${createdDate.getMonth() + 1}/${createdDate.getFullYear()}`,
-        total: 1900000,
-        status: 4,
-    });
+    const [orderDataState, setOrderDataState] = useState({});
 
     const confirmWaitingDone = () => {
         setOrderDataState((pre) => {
@@ -216,11 +218,6 @@ function OrderDetailsPage() {
 
     return (
         <div className="w-full p-4 bg-white rounded">
-            {orderDataState && (
-                <OrderSocket loadOrder={loadOrder} orderId={orderId}>
-                    <Button>Thông báo</Button>
-                </OrderSocket>
-            )}
             <div className="w-full mb-8">
                 <Button
                     onClick={(e) => {
@@ -238,19 +235,21 @@ function OrderDetailsPage() {
                 <OrderStepper status={orderDataState.status - 1} />
             </div>
             {orderDataState && orderDataState.status === 1 && (
-                <div className="w-full mb-8 border border-slate-300 rounded-lg p-4">
-                    <h3 className="mt-4 ml-2 mb-6 text-gray-700 font-bold">
-                        <AccountBalanceWalletIcon /> Thanh toán
-                    </h3>
-                    <PaypalCheckout
-                        successAction={paySuccessfully}
-                        username={userDataState.username}
-                        email={userDataState.email}
-                        phoneNumber={userDataState.phoneNumber}
-                        totalPrice={totalPriceState}
-                        orderDataId={orderId}
-                    />
-                </div>
+                <>
+                    <div className="w-full mb-8 border border-slate-300 rounded-lg p-4">
+                        <h3 className="mt-4 ml-2 mb-6 text-gray-700 font-bold">
+                            <AccountBalanceWalletIcon /> Thanh toán
+                        </h3>
+                        <PaypalCheckout
+                            successAction={paySuccessfully}
+                            username={userDataState.username}
+                            email={userDataState.email}
+                            phoneNumber={userDataState.phoneNumber}
+                            totalPrice={totalPriceState}
+                            orderDataId={orderId}
+                        />
+                    </div>
+                </>
             )}
 
             {orderDataState.status === 4 && (
@@ -263,6 +262,9 @@ function OrderDetailsPage() {
                     </div>
                 </div>
             )}
+            <OrderSocket loadOrder={loadOrder} orderId={orderId}>
+                <Button>Xác nhận thanh toán</Button>
+            </OrderSocket>
             {orderDataState.status > 1 && paymentDataState && (
                 <div>
                     <h1 className="font-bold text-xl my-4">Thông tin thanh toán</h1>

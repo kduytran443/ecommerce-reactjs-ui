@@ -50,7 +50,7 @@ function Category({
         <div className="w-full flex flex-col shadow-lg p-6 bg-white rounded-lg group">
             <div
                 onClick={(e) => {
-                    navigate(link);
+                    navigate(link + '?page=0');
                 }}
                 className="w-full cursor-pointer flex flex-row items-center justify-between "
             >

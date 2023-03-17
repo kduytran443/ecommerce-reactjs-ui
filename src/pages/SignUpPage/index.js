@@ -1,4 +1,5 @@
 import {
+    faBirthdayCake,
     faEnvelope,
     faLock,
     faPhone,
@@ -25,6 +26,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Line from '~/components/Line';
 import { HOME_PAGE_URL, LOGIN_PAGE_URL, SIGNUP_PAGE_URL } from '~/constants';
+import { userService } from '~/services/userService';
 
 function SignUpPage() {
     const navigate = useNavigate();
@@ -50,6 +52,7 @@ function SignUpPage() {
     const [dateOfBirthErrorState, setDateOfBirthErrorState] = useState('');
     const [genderErrorState, setGenderErrorState] = useState('');
     const [errorState, setErrorState] = useState('');
+    const [birthYearState, setBirthYearState] = useState();
 
     const clearError = () => {
         setUsernameErrorState('');
@@ -87,10 +90,6 @@ function SignUpPage() {
             validForm = false;
             setPhoneNumberErrorState('Không hợp lệ!');
         }
-        if (!dateOfBirthState) {
-            validForm = false;
-            setDateOfBirthErrorState('Không hợp lệ!');
-        }
         if (!genderState) {
             validForm = false;
             setGenderErrorState('Không hợp lệ!');
@@ -107,10 +106,30 @@ function SignUpPage() {
             console.log(usernameState, passwordState);
 
             //fetch-api
+            const obj = {
+                username: usernameState,
+                fullname: fullnameState,
+                email: emailState,
+                phoneNumber: phoneNumberState,
+                gender: genderState,
+                brithYear: birthYearState,
+                password: passwordState,
+                avatar: '',
+            };
 
-            navigate(HOME_PAGE_URL);
+            userService.signUp(obj).then((data) => {
+                if (data.id) {
+                    navigate('/personal');
+                }
+            });
         } else {
             setErrorState('Sai tên đăng nhập hoặc mật khẩu');
+        }
+    };
+
+    const onInput = (e, callback) => {
+        if (!isNaN(e.target.value) && !e.target.value.includes(' ')) {
+            callback(e.target.value);
         }
     };
 
@@ -200,7 +219,9 @@ function SignUpPage() {
                 </div>
                 <div className="mb-2 mt-4 w-full">
                     <TextField
-                        onChange={(e) => setPhoneNumberState(e.target.value)}
+                        onChange={(e) => {
+                            onInput(e, setPhoneNumberState);
+                        }}
                         className="w-full"
                         label="Số điện thoại"
                         placeholder="Số điện thoại"
@@ -239,7 +260,22 @@ function SignUpPage() {
                     />
                 </div>
                 <div className="mb-2 mt-4 w-full">
-                    Ngày sinh: <input type={'date'} />
+                    <TextField
+                        label="Năm sinh"
+                        placeholder="Năm sinh"
+                        value={birthYearState}
+                        onInput={(e) => {
+                            onInput(e, setBirthYearState);
+                        }}
+                        className="w-full"
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                    <FontAwesomeIcon icon={faBirthdayCake} />
+                                </InputAdornment>
+                            ),
+                        }}
+                    />
                 </div>
                 <div className="mb-2 mt-4 w-full">
                     <FormControl fullWidth>

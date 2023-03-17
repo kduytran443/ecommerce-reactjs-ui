@@ -17,11 +17,7 @@ function AdminCategoryDetailsPage() {
     const navigate = useNavigate();
     const { categoryCode } = useParams();
 
-    const [categoryState, setCategoryState] = useState({
-        id: 1,
-        name: 'Laptop',
-        code: 'laptop',
-    });
+    const [categoryState, setCategoryState] = useState({});
 
     const [productListState, setProductListState] = useState([
         {

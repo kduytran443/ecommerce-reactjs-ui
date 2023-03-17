@@ -28,6 +28,7 @@ import { userService } from '~/services/userService';
 import { DataGrid } from '@mui/x-data-grid';
 import { renderToTime } from '~/utils/renderTime';
 import { paymentService } from '~/services/paymentService';
+import OrderSocket from '~/components/OrderDetailsSocket';
 
 const VND = new Intl.NumberFormat('vi-VN', {
     style: 'currency',
@@ -242,62 +243,69 @@ function AdminOrderDetailsPage() {
             </div>
             {orderDataState && (
                 <div className="w-full mb-8 flex flex-row items-center">
-                    {orderDataState.status === 3 && (
-                        <div className="w-[64px]">
-                            <div
-                                onClick={backProcess}
-                                className="w-full p-4 rounded-lg hover:bg-gray-600 active:bg-gray-700 text-center bg-gray-500 shadow-gray-300 shadow-lg cursor-pointer select-none text-white font-bold text-xl"
-                            >
-                                <FontAwesomeIcon icon={faRotateBack} />
-                            </div>
-                        </div>
-                    )}
-                    {orderDataState.status === 2 && (
-                        <div className="w-full">
-                            <div
-                                onClick={processOrder}
-                                className="w-full p-4 rounded-lg hover:bg-blue-600 active:bg-blue-700 text-center bg-blue-500 shadow-blue-300 shadow-lg cursor-pointer select-none text-white font-bold text-xl"
-                            >
-                                Xác nhận đã xử lý đơn hàng
-                            </div>
-                        </div>
-                    )}
-                    {orderDataState.status === 1 && (
-                        <div className="w-full">
-                            <div className="w-full p-4 rounded-lg hover:bg-red-600 active:bg-red-700 text-center bg-red-500 shadow-blue-300 shadow-lg cursor-pointer select-none text-white font-bold text-xl">
-                                <FontAwesomeIcon icon={faMoneyBillTransfer} className="mr-2" /> Chưa thanh toán
-                            </div>
-                        </div>
-                    )}
-                    {orderDataState.status === 3 && (
-                        <div className="w-full">
-                            <div
-                                onClick={confirmDeliver}
-                                className="w-full p-4 rounded-lg hover:bg-blue-600 active:bg-blue-700 text-center bg-blue-500 shadow-blue-300 shadow-lg cursor-pointer select-none text-white font-bold text-xl"
-                            >
-                                <FontAwesomeIcon icon={faTruck} className="mr-2" /> Xác nhận giao hàng
-                            </div>
-                        </div>
-                    )}
-                    {orderDataState.status === 4 && (
-                        <div className="w-full">
-                            <div
-                                onClick={confirmWaitingDone}
-                                className="w-full p-4 rounded-lg hover:bg-blue-600 active:bg-blue-700 text-center bg-blue-500 shadow-blue-300 shadow-lg cursor-pointer select-none text-white font-bold text-xl"
-                            >
-                                <FontAwesomeIcon icon={faTruck} className="mr-2" /> Giao thành công
-                            </div>
-                        </div>
-                    )}
-                    {orderDataState.status === 5 && (
-                        <div className="w-full">
-                            <div className="w-full p-4 rounded-lg text-center bg-blue-500 shadow-blue-300 shadow-lg cursor-pointer select-none text-white font-bold text-xl">
-                                <FontAwesomeIcon icon={faCheck} className="mr-2" /> Đã hoàn thành
-                            </div>
-                            <div className="w-full mt-8 p-4 rounded-lg text-center bg-red-500 shadow-red-300 shadow-lg cursor-pointer select-none text-white font-bold text-xl">
-                                <FontAwesomeIcon icon={faMoneyBill1} className="mr-2" /> Xuất hóa đơn
-                            </div>
-                        </div>
+                    {orderDataState && (
+                        <OrderSocket loadOrder={loadOrder} orderId={orderId}>
+                            <>
+                                {orderDataState.status === 3 && (
+                                    <div className="w-[64px]">
+                                        <div
+                                            onClick={backProcess}
+                                            className="w-full p-4 rounded-lg hover:bg-gray-600 active:bg-gray-700 text-center bg-gray-500 shadow-gray-300 shadow-lg cursor-pointer select-none text-white font-bold text-xl"
+                                        >
+                                            <FontAwesomeIcon icon={faRotateBack} />
+                                        </div>
+                                    </div>
+                                )}
+                                {orderDataState.status === 2 && (
+                                    <div className="w-full">
+                                        <div
+                                            onClick={processOrder}
+                                            className="w-full p-4 rounded-lg hover:bg-blue-600 active:bg-blue-700 text-center bg-blue-500 shadow-blue-300 shadow-lg cursor-pointer select-none text-white font-bold text-xl"
+                                        >
+                                            Xác nhận đã xử lý đơn hàng
+                                        </div>
+                                    </div>
+                                )}
+                                {orderDataState.status === 1 && (
+                                    <div className="w-full">
+                                        <div className="w-full p-4 rounded-lg hover:bg-red-600 active:bg-red-700 text-center bg-red-500 shadow-blue-300 shadow-lg cursor-pointer select-none text-white font-bold text-xl">
+                                            <FontAwesomeIcon icon={faMoneyBillTransfer} className="mr-2" /> Chưa thanh
+                                            toán
+                                        </div>
+                                    </div>
+                                )}
+                                {orderDataState.status === 3 && (
+                                    <div className="w-full">
+                                        <div
+                                            onClick={confirmDeliver}
+                                            className="w-full p-4 rounded-lg hover:bg-blue-600 active:bg-blue-700 text-center bg-blue-500 shadow-blue-300 shadow-lg cursor-pointer select-none text-white font-bold text-xl"
+                                        >
+                                            <FontAwesomeIcon icon={faTruck} className="mr-2" /> Xác nhận giao hàng
+                                        </div>
+                                    </div>
+                                )}
+                                {orderDataState.status === 4 && (
+                                    <div className="w-full">
+                                        <div
+                                            onClick={confirmWaitingDone}
+                                            className="w-full p-4 rounded-lg hover:bg-blue-600 active:bg-blue-700 text-center bg-blue-500 shadow-blue-300 shadow-lg cursor-pointer select-none text-white font-bold text-xl"
+                                        >
+                                            <FontAwesomeIcon icon={faTruck} className="mr-2" /> Giao thành công
+                                        </div>
+                                    </div>
+                                )}
+                                {orderDataState.status === 5 && (
+                                    <div className="w-full">
+                                        <div className="w-full p-4 rounded-lg text-center bg-blue-500 shadow-blue-300 shadow-lg cursor-pointer select-none text-white font-bold text-xl">
+                                            <FontAwesomeIcon icon={faCheck} className="mr-2" /> Đã hoàn thành
+                                        </div>
+                                        <div className="w-full mt-8 p-4 rounded-lg text-center bg-red-500 shadow-red-300 shadow-lg cursor-pointer select-none text-white font-bold text-xl">
+                                            <FontAwesomeIcon icon={faMoneyBill1} className="mr-2" /> Xuất hóa đơn
+                                        </div>
+                                    </div>
+                                )}
+                            </>
+                        </OrderSocket>
                     )}
                 </div>
             )}

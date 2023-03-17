@@ -16,10 +16,12 @@ function OrderSocket({ orderId, children, loadOrder = () => {} }) {
 
     function onMessageReceived(messagePayload) {
         const message = JSON.parse(messagePayload.body);
-
+        console.log('Nhận dc');
         switch (message.type) {
             case 'PROCESS_ORDER': {
-                loadOrder();
+                setTimeout(() => {
+                    loadOrder();
+                }, 1000);
                 break;
             }
             default: {
@@ -45,13 +47,18 @@ function OrderSocket({ orderId, children, loadOrder = () => {} }) {
     }
 
     const send = () => {
+        console.log('ORDER NÈEEEE');
         const chatMessage = {
             type: 'PROCESS_ORDER',
         };
         stompClient.send(`/app/order.send/${orderId}`, {}, JSON.stringify(chatMessage));
     };
 
-    return <div onClick={send}>{children}</div>;
+    return (
+        <div className="w-full" onClick={send}>
+            {children}
+        </div>
+    );
 }
 
 export default OrderSocket;

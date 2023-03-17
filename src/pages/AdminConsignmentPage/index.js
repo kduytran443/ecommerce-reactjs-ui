@@ -1,4 +1,4 @@
-import { faArrowLeft, faPlus, faTasks } from '@fortawesome/free-solid-svg-icons';
+import { faArrowLeft, faPlus, faTasks, faWarehouse } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Accordion, Avatar, Button, IconButton, TextField } from '@mui/material';
 import { useEffect, useState } from 'react';
@@ -13,6 +13,7 @@ import { consignmentService } from '~/services/congisnmentService';
 import { renderToTime } from '~/utils/renderTime';
 import AdminConsignmentEditDialog from '~/components/AdminConsignmentEditDialog';
 import AdminConsignmentDeleteDialog from '~/components/AdminConsignmentDeleteDialog';
+import AdminStatics from '~/components/AdminStatics';
 
 function AdminConsignmentPage() {
     const [consignmentList, setConsignmentList] = useState([]);
@@ -85,6 +86,17 @@ function AdminConsignmentPage() {
                         </div>
                     );
                 })}
+            </div>
+
+            <div className="w-full md:w-[33%] p-4">
+                <AdminStatics
+                    color="bg-purple-500 shadow-purple-400"
+                    data="Hàng tồn"
+                    title="Thống kê"
+                    icon={<FontAwesomeIcon icon={faWarehouse} />}
+                    description="Thống kê hàng tồn"
+                    link="/admin/view-product"
+                />
             </div>
         </div>
     );

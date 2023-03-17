@@ -9,6 +9,12 @@ export const paymentService = {
         const response = await fetch(`${API_BASE_URL}/${this.api}/${orderId}`, config);
         return response.json();
     },
+    async getPaymentByUser() {
+        //classLessonId
+        const config = getConfig();
+        const response = await fetch(`${API_BASE_URL}/${this.api}`, config);
+        return response.json();
+    },
     async postPayment(payment) {
         //classLessonId
         const config = postConfig(payment);

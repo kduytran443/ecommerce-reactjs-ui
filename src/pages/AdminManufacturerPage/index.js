@@ -79,10 +79,10 @@ function AdminManufacturerPage() {
                     Quay lại
                 </Button>
             </div>
-            <h1 className="text-3xl font-black mb-6">Nhà cung cấp</h1>
+            <h1 className="text-3xl font-black mb-6">Nhà sản xuất</h1>
             <div className="w-full mb-10">
                 {!isEditingState ? (
-                    <SimpleAccordion title={<b>+ Thêm nhà cung cấp</b>}>
+                    <SimpleAccordion title={<b>+ Thêm nhà sản xuất</b>}>
                         <div className="p-6 border border-slate-300 rounded-lg bg-white shadow">
                             <div className="flex flex-col md:flex-row items-center flex-wrap">
                                 <div className="group w-full bg-slate-800 flex flex-col items-center justify-center py-4 rounded cursor-pointer relative duration-200 hover:shadow-md">

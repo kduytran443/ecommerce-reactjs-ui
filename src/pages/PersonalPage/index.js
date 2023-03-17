@@ -202,14 +202,14 @@ function PersonalPage() {
                     <div
                         className={`select-none aspect-square text-gray-600 cursor-pointer w-full border-gray-200 py-2 rounded-2xl my-2 flex flex-col justify-center items-center hover:bg-gray-200 hover:shadow-sm bg-gray-100 border-[1px] shadow`}
                         onClick={(e) => {
-                            navigate('/history');
+                            navigate('/order');
                         }}
                     >
                         <HistoryIcon
                             style={{ padding: '4px', margin: '0', width: '64px', height: '64px' }}
                             fontSize="large"
                         />
-                        <span className="text-lg font-bold">Lịch sử</span>
+                        <span className="text-lg font-bold">Đơn hàng</span>
                     </div>
                 </li>
                 <li className="p-4 pt-0 w-[50%] md:w-[160px]">

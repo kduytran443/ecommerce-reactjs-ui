@@ -40,7 +40,11 @@ function LoginPage() {
                     console.log('thành công', data);
                     dispatchUserState(setUserInfo(data));
 
-                    navigate('/home');
+                    if (data.role === 'USER') {
+                        navigate('/home');
+                    } else if (data.role === 'ADMIN') {
+                        navigate('/admin/home');
+                    }
                 }
             })
             .catch((error) => {

@@ -13,7 +13,6 @@ import { useUser } from '~/stores/UserStore';
 
 function Header() {
     const navigate = useNavigate();
-    const [authenticatedState, setAuthenticatedState] = useState(true);
     const [userState, dispatchUserState] = useUser();
 
     return (

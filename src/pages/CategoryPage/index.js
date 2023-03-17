@@ -1,34 +1,107 @@
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Button, Pagination, Slider } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import Line from '~/components/Line';
 import RecipeReviewCard from '~/components/RecipeReviewCard';
 import SimpleAccordion from '~/components/SimpleAccordion';
+import { categoryService } from '~/services/categoryService';
+import { productService } from '~/services/productService';
 
 function CategoryPage() {
-    const [productListState, setProductListState] = useState(() => {
-        return [1, 2, 3, 4, 5, 1, 2, 3, 4, 5];
-    });
-    const [categoryState, setCategoryState] = useState(null);
+    const [productListState, setProductListState] = useState([]);
     const navigate = useNavigate();
-    const { code } = useParams();
+    const { categoryCode } = useParams();
+    const location = useLocation();
+    const [categoryState, setCategoryState] = useState({});
+    const [searchParams, setSearchParams] = useSearchParams();
+    const page = searchParams.get('page');
 
     useEffect(() => {
-        async function getData() {
-            const data = {
-                id: 1,
-                code: code,
-                name: 'PC Gaming',
-            };
-            setCategoryState(data);
-        }
         getData();
-    }, []);
+        loadProducts();
+    }, [location]);
+
+    const getData = () => {
+        categoryService.getCategoryByCode(categoryCode).then((data) => {
+            if (data.id) {
+                console.log('category', data);
+                setCategoryState(data);
+            }
+        });
+    };
+
+    const [countAll, setCountAll] = useState();
+    const loadProducts = () => {
+        productService.getProducts(page, categoryCode).then((data) => {
+            if (data.data.length > 0) {
+                setProductListState(data.data);
+                setCountAll(Number(data.countAll));
+            }
+        });
+    };
+
+    console.log('productListState', countAll / 8);
 
     return (
         <>
             <div>
+                <Button
+                    onClick={(e) => {
+                        navigate('/home');
+                    }}
+                    startIcon={<FontAwesomeIcon icon={faArrowLeft} />}
+                >
+                    Quay lại
+                </Button>
                 <Line title={categoryState?.name} />
+                <div
+                    className="w-full py-20 rounded"
+                    style={{
+                        backgroundImage: `url(${categoryState.image})`,
+                        backgroundPosition: 'center',
+                        backgroundSize: 'cover',
+                    }}
+                ></div>
+                <div></div>
+                <ul className="flex mt-8 flex-row flex-wrap justify-start items-center">
+                    {productListState.map((product) => {
+                        return (
+                            <li className="py-2 px-[2px] sm:px-2 w-full md:w-[33%] lg:w-[25%]">
+                                <RecipeReviewCard
+                                    price={product.price}
+                                    image={product.avatar}
+                                    productCode={product.code}
+                                    name={product.name}
+                                    discounts={product.discounts}
+                                />
+                            </li>
+                        );
+                    })}
+                </ul>
+            </div>
+            <div className="mt-12 mb-4">
+                {countAll > 0 && (
+                    <Pagination
+                        onChange={(event, value) => {
+                            navigate('/category/' + categoryCode + '?page=' + value);
+                        }}
+                        count={Math.ceil(countAll / 8)}
+                        defaultValue
+                        color="primary"
+                    />
+                )}
+            </div>
+        </>
+    );
+}
+
+export default CategoryPage;
+
+/*
+
+
                 <div className="max-w-full w-full overflow-x-auto overflow-hidden my-4">
                     <div className="w-[620px] py-2 md:py-0 md:w-full">
                         <div className="flex flex-row items-center justify-start">
@@ -67,23 +140,6 @@ function CategoryPage() {
                         </div>
                     </div>
                 </SimpleAccordion>
-                <div></div>
-                <ul className="flex flex-row flex-wrap justify-center items-center">
-                    {productListState.map((product) => {
-                        return (
-                            <li
-                                key={product.id}
-                                className="py-2 px-[2px] sm:px-2 w-[50%] md:w-[33%] lg:w-[25%] xl:w-[20%]"
-                            >
-                                <RecipeReviewCard productCode={'/product/laptop-gaming-asus'} />
-                            </li>
-                        );
-                    })}
-                </ul>
-            </div>
-            <Pagination count={10} color="primary" />
-        </>
-    );
-}
 
-export default CategoryPage;
+                <Pagination count={10} color="primary" />
+*/

@@ -39,7 +39,7 @@ function AdminSidebarMenu({ preAction = () => {} }) {
                     selected && ' bg-gray-200 border-[1px] shadow'
                 }`}
                 onClick={(e) => {
-                    doNavigate('/admin/category');
+                    doNavigate('/admin/order');
                 }}
             >
                 <AssignmentIcon style={{ color: 'black', padding: '4px', margin: '0' }} fontSize="large" />
@@ -61,33 +61,11 @@ function AdminSidebarMenu({ preAction = () => {} }) {
                     selected && ' bg-gray-200 border-[1px] shadow'
                 }`}
                 onClick={(e) => {
-                    doNavigate('/admin/post');
-                }}
-            >
-                <FactCheckIcon style={{ color: 'black', padding: '4px', margin: '0' }} fontSize="large" />
-                <span className="text-xs font-bold">Duyệt bài đăng</span>
-            </li>
-            <li
-                className={`select-none cursor-pointer w-[72px] h-[72px] border-gray-200 py-2 rounded-2xl my-[2px] flex flex-col items-center w-full hover:bg-gray-100 hover:shadow-sm ${
-                    selected && ' bg-gray-200 border-[1px] shadow'
-                }`}
-                onClick={(e) => {
                     doNavigate('/history');
                 }}
             >
                 <QueryStatsIcon style={{ color: 'black', padding: '4px', margin: '0' }} fontSize="large" />
                 <span className="text-xs font-bold">Thống kê</span>
-            </li>
-            <li
-                className={`select-none cursor-pointer w-[72px] h-[72px] border-gray-200 py-2 rounded-2xl my-[2px] flex flex-col items-center w-full hover:bg-gray-100 hover:shadow-sm ${
-                    selected && ' bg-gray-200 border-[1px] shadow'
-                }`}
-                onClick={(e) => {
-                    doNavigate('/history');
-                }}
-            >
-                <SupportAgentIcon style={{ color: 'black', padding: '4px', margin: '0' }} fontSize="large" />
-                <span className="text-xs font-bold">Tư vấn</span>
             </li>
         </ul>
     );

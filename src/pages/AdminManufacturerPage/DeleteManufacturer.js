@@ -29,7 +29,7 @@ export default function DeleteManufacturer({ code, reLoad = () => {} }) {
 
     return (
         <div>
-            <Button variant="outlined" onClick={handleClickOpen}>
+            <Button color="error" variant="outlined" onClick={handleClickOpen}>
                 Xóa
             </Button>
             <Dialog
@@ -41,13 +41,17 @@ export default function DeleteManufacturer({ code, reLoad = () => {} }) {
                 <DialogTitle id="alert-dialog-title">{'Xác nhận?'}</DialogTitle>
                 <DialogContent>
                     <DialogContentText id="alert-dialog-description">
-                        <div className="w-[300px]">Xác nhận xóa nhà sản xuất này?</div>
+                        <div className="w-[300px]">
+                            Xác nhận xóa nhà sản xuất <b>{code}</b>?
+                        </div>
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleClose}>Disagree</Button>
-                    <Button onClick={submit} variant="contained" autoFocus>
-                        Agree
+                    <Button onClick={handleClose} color="inherit">
+                        Hủy
+                    </Button>
+                    <Button color="error" onClick={submit} variant="contained" autoFocus>
+                        Đồng ý
                     </Button>
                 </DialogActions>
             </Dialog>

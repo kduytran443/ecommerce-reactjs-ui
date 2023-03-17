@@ -13,4 +13,10 @@ export const userService = {
         const response = await fetch(`${API_BASE_URL}/${this.api}`, config);
         return response.json();
     },
+
+    async signUp(user) {
+        const config = postConfig(user);
+        const response = await fetch(`${API_BASE_URL}/api/sign-up`, config);
+        return response.json();
+    },
 };

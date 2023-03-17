@@ -10,27 +10,17 @@ import HeaderAvatar from '~/components/HeaderAvatar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
 import AdminMobileHeaderMenu from '../AdminMobileHeaderMenu';
+import { useUser } from '~/stores/UserStore';
 
 function AdminHeader() {
     const navigate = useNavigate();
-    const [authenticatedState, setAuthenticatedState] = useState(true);
+    const [userState, dispatchUserState] = useUser();
 
     return (
         <header className="sticky z-50 top-0 w-full relative bg-white">
             <div className="w-full py-2 h-header-height shadow border-slate-200 border-b-[1px] flex flex-row justify-between items-center px-4">
                 <div className="md:hidden block">
                     <AdminMobileHeaderMenu />
-                </div>
-                <div className="md:hidden flex flex-row items-center justify-center">
-                    <IconButton
-                        onClick={(e) => {
-                            navigate('/search');
-                        }}
-                        sx={{ p: '10px' }}
-                        aria-label="menu"
-                    >
-                        <SearchIcon />
-                    </IconButton>
                 </div>
                 <div
                     className="h-full  flex-row justify-center items-center md:flex hidden select-none cursor-pointer"
@@ -40,15 +30,9 @@ function AdminHeader() {
                 >
                     <div className="font-black text-2xl">ADMIN</div>
                 </div>
-                <div className="md:block hidden">
-                    <CustomizedInputBase />
-                </div>
-                {authenticatedState ? (
+                {userState.username ? (
                     <div className="flex flex-row justify-center items-center">
-                        <div className="p-[10px] mr-4">
-                            <HeaderNotifier />
-                        </div>
-                        <HeaderAvatar />
+                        <HeaderAvatar image={userState.avatar} username={userState.username} />
                     </div>
                 ) : (
                     <div>

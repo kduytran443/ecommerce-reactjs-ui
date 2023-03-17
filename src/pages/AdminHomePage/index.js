@@ -64,17 +64,18 @@ function AdminHomePage() {
                         data="Hàng tồn"
                         title="Quản lý"
                         icon={<FontAwesomeIcon icon={faWarehouse} />}
-                        description="Thống kê hàng tồn"
-                        link="/admin/view-product"
+                        description="Quản lý hàng tồn"
+                        link="/admin/consignment"
                     />
                 </div>
                 <div className="w-full md:w-[33%] p-4">
                     <AdminStatics
                         color="bg-blue-500 shadow-blue-400"
-                        data="Doanh thu"
+                        data="Doanh thu sản phẩm"
                         title="Quản lý"
                         icon={<FontAwesomeIcon icon={faMoneyBill} />}
-                        description="Doanh thu website"
+                        description="Doanh thu sản phẩm"
+                        link="/admin/view-product"
                     />
                 </div>
                 <div className="w-full md:w-[33%] p-4">

@@ -11,16 +11,7 @@ function OrderPage() {
     let createdDate = new Date();
     const navigate = useNavigate();
 
-    const [orderListState, setOrderListState] = useState(() => [
-        {
-            id: 1,
-            date: `${createdDate.getDate()}/${createdDate.getMonth() + 1}/${createdDate.getFullYear()}`,
-            productList: [
-                'Laptop MSI Modern 14 C11M 011VN',
-                'Tay Cầm Xbox One S Controller Chính Hãng Cho PC Giá Bán Xbox One S',
-            ],
-        },
-    ]);
+    const [orderListState, setOrderListState] = useState(() => []);
 
     const location = useLocation();
 
@@ -87,6 +78,9 @@ function OrderPage() {
                         );
                     })}
             </ul>
+            {orderListState.length === 0 && (
+                <div className="mt-12 font-semibold ml-8 text-3xl">Chưa có đơn hàng nào</div>
+            )}
         </div>
     );
 }
