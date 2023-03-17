@@ -2,12 +2,15 @@ import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { CheckBox } from '@mui/icons-material';
 import { Checkbox, FormControlLabel, FormGroup, InputAdornment, Slider, TextField } from '@mui/material';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import RecipeReviewCard from '~/components/RecipeReviewCard';
 import SimpleAccordion from '~/components/SimpleAccordion';
+import { productService } from '~/services/productService';
 
 function SearchPage() {
     const [searchInputState, setSearchInputState] = useState('');
+    const { searchValue } = useParams();
     const [searchOptionsState, setSearchOptionsState] = useState({
         categoryList: [],
         minPrice: 0,
@@ -17,6 +20,7 @@ function SearchPage() {
     const [productListState, setProductListState] = useState(() => {
         return [];
     });
+    const location = useLocation();
     const [categoryListState, setCategoryListState] = useState([
         {
             id: 1,
@@ -50,6 +54,19 @@ function SearchPage() {
             setSearchOptionsState((pre) => {
                 return { ...searchOptionsState, maxPrice: e.target.value };
             });
+        }
+    };
+
+    useEffect(() => {
+        productService.searchByName(searchValue).then((data) => {
+            console.log('data', data);
+            setProductListState(data);
+        });
+    }, [location]);
+    const navigate = useNavigate();
+    const search = () => {
+        if (searchInputState.trim()) {
+            navigate('/search/' + encodeURI(searchInputState));
         }
     };
 
@@ -127,16 +144,28 @@ function SearchPage() {
                         autoCapitalize: 'off',
                         autoCorrect: 'off',
                     }}
+                    onKeyUp={(e) => {
+                        if (e.key === 'Enter') {
+                            search();
+                        }
+                    }}
                 />
             </div>
             <ul className="flex flex-row flex-wrap justify-center items-center">
                 {productListState.map((product) => {
                     return (
-                        <li key={product.id} className="py-2 px-[2px] sm:px-2 w-[50%] md:w-[33%] lg:w-[25%] xl:w-[20%]">
-                            <RecipeReviewCard productCode={'/product/laptop-gaming-asus'} />
+                        <li className="py-2 px-[2px] sm:px-2 w-full md:w-[33%] lg:w-[25%]">
+                            <RecipeReviewCard
+                                price={product.price}
+                                image={product.avatar}
+                                productCode={product.code}
+                                name={product.name}
+                                discounts={product.discounts}
+                            />
                         </li>
                     );
                 })}
+                {productListState.length === 0 && <div className="mt-8">Không có sản phẩm nào phù hợp</div>}
             </ul>
         </div>
     );

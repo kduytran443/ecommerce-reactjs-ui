@@ -21,27 +21,18 @@ function AdminHomePage() {
                 <div className="w-full md:w-[33%] p-4">
                     <AdminStatics
                         color="bg-red-500 shadow-red-400"
-                        data="2 đơn hàng"
-                        title="Đơn hàng cần xử lý"
+                        data="Đơn hàng"
+                        title="Quản lý"
                         icon={<FontAwesomeIcon icon={faTasks} />}
                         link="/admin/order"
-                        description="Đơn hàng cần xử lý"
-                    />
-                </div>
-                <div className="w-full md:w-[33%] p-4">
-                    <AdminStatics
-                        color="bg-orange-500 shadow-orange-400"
-                        data="2 yêu cầu"
-                        title="Đổi trả hàng"
-                        icon={<FontAwesomeIcon icon={faRetweet} />}
-                        description="Yêu cầu đổi trả hàng"
+                        description="Danh sách đơn hàng"
                     />
                 </div>
                 <div className="w-full md:w-[33%] p-4">
                     <AdminStatics
                         color="bg-lime-500 shadow-lime-400"
-                        data="3 danh mục"
-                        title="Danh mục"
+                        data="Danh mục"
+                        title="Quản lý"
                         icon={<FontAwesomeIcon icon={faList} />}
                         description="Danh mục"
                         link="/admin/category"
@@ -50,28 +41,28 @@ function AdminHomePage() {
                 <div className="w-full md:w-[33%] p-4">
                     <AdminStatics
                         color="bg-yellow-500 shadow-yellow-400"
-                        data="2 nhà cung cấp"
-                        title="Nhà cung cấp"
+                        data="Nhà sản xuất"
+                        title="Quản lý"
                         icon={<FontAwesomeIcon icon={faIndustry} />}
-                        description="Nhà cung cấp"
+                        description="Nhà sản xuất"
                         link="/admin/manufacturer"
                     />
                 </div>
                 <div className="w-full md:w-[33%] p-4">
                     <AdminStatics
                         color="bg-sky-500 shadow-sky-400"
-                        data="5 sản phẩm"
-                        title="Sản phẩm"
+                        data="Sản phẩm"
+                        title="Quản lý"
                         icon={<FontAwesomeIcon icon={faLaptop} />}
-                        description="Tổng sản phẩm"
+                        description="Quản lý các sản phẩm"
                         link="/admin/product"
                     />
                 </div>
                 <div className="w-full md:w-[33%] p-4">
                     <AdminStatics
                         color="bg-purple-500 shadow-purple-400"
-                        data="8"
-                        title="Thống kê hàng tồn"
+                        data="Hàng tồn"
+                        title="Quản lý"
                         icon={<FontAwesomeIcon icon={faWarehouse} />}
                         description="Thống kê hàng tồn"
                         link="/admin/view-product"
@@ -80,8 +71,8 @@ function AdminHomePage() {
                 <div className="w-full md:w-[33%] p-4">
                     <AdminStatics
                         color="bg-blue-500 shadow-blue-400"
-                        data="26.5 tr"
-                        title="Doanh thu"
+                        data="Doanh thu"
+                        title="Quản lý"
                         icon={<FontAwesomeIcon icon={faMoneyBill} />}
                         description="Doanh thu website"
                     />
@@ -89,8 +80,8 @@ function AdminHomePage() {
                 <div className="w-full md:w-[33%] p-4">
                     <AdminStatics
                         color="bg-green-500 shadow-green-400"
-                        data="10 người"
-                        title="Người dùng"
+                        data="Người dùng"
+                        title="Quản lý"
                         icon={<FontAwesomeIcon icon={faUser} />}
                         description="Số người dùng đã đăng ký tài khoản"
                         link="/admin/user"
@@ -99,8 +90,8 @@ function AdminHomePage() {
                 <div className="w-full md:w-[33%] p-4">
                     <AdminStatics
                         color="bg-red-500 shadow-red-400"
-                        data="5 sản phẩm"
-                        title="Sản phẩm yêu thích"
+                        data="Sản phẩm yêu thích"
+                        title="Quản lý"
                         icon={<FontAwesomeIcon icon={faHeart} />}
                         description="Số sản phẩm được yêu thích bởi người dùng"
                         link="/admin/view-product"

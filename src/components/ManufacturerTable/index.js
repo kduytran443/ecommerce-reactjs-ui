@@ -4,13 +4,12 @@ import { Avatar, Button, IconButton, TextField } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import { useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import DeleteManufacturer from '~/pages/AdminManufacturerPage/DeleteManufacturer';
 import SimpleDialog from '../OrderDialog';
 
 //id, avatar, name, code
 
-function ManufacturerTable({ rows, getId = () => {} }) {
-    const [rowsState, setRowsState] = useState(rows);
-
+function ManufacturerTable({ rows, getId = () => {}, reload = () => {} }) {
     const [selectedDataState, setSelectedDataState] = useState({
         id: 5,
         name: 'MSI',
@@ -21,7 +20,7 @@ function ManufacturerTable({ rows, getId = () => {} }) {
     const columns = [
         { field: 'id', headerName: 'ID', width: 70 },
         {
-            field: 'avatar',
+            field: 'logo',
             headerName: 'Hình ảnh',
             width: 80,
             renderCell: (param) => {
@@ -43,16 +42,7 @@ function ManufacturerTable({ rows, getId = () => {} }) {
                         <Link to={'/admin/manufacturer-details/' + param.value}>
                             <Button color="primary">Sửa</Button>
                         </Link>
-                        <SimpleDialog
-                            openButton={<Button color="error">Xóa</Button>}
-                            title="Xác nhận xóa"
-                            color="error"
-                            agreeAction={(e) => {
-                                console.log('xóa');
-                            }}
-                        >
-                            <div className="p-4 px-20">Xóa nhà cung cấp này?</div>
-                        </SimpleDialog>
+                        <DeleteManufacturer code={param.value} reLoad={reload} />
                     </div>
                 );
             },
@@ -61,7 +51,7 @@ function ManufacturerTable({ rows, getId = () => {} }) {
 
     return (
         <div style={{ height: 420, width: '100%' }}>
-            <DataGrid onCellClick={getId} rows={rowsState} columns={columns} />
+            <DataGrid onCellClick={getId} rows={rows} columns={columns} />
         </div>
     );
 }

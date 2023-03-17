@@ -1,19 +1,41 @@
 import { faArrowLeft, faCamera } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Avatar, Button, IconButton, TextField } from '@mui/material';
-import { useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useRef, useState } from 'react';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import ManufacturerTable from '~/components/ManufacturerTable';
 import SimpleDialog from '~/components/OrderDialog';
+import { manufacturerService } from '~/services/manufacturerService';
 
 //id, avatar, name, code
 function AdminManufacturerDetailsPage() {
     const [manufacturerState, setManufacturerState] = useState({
-        id: 1,
-        avatar: 'https://cdn.dribbble.com/userupload/3827533/file/original-dca276f3a2211b2beb214574de05d468.jpg?resize=400x0',
-        name: 'Asus',
-        code: 'asus',
+        logo: '',
+        name: '',
+        code: '',
     });
+
+    const { manufacturerCode } = useParams();
+
+    const loadData = () => {
+        manufacturerService.getManufacturerByCode(manufacturerCode).then((data) => {
+            if (data) {
+                setManufacturerState(data);
+            }
+        });
+    };
+
+    const update = () => {
+        manufacturerService.putManufacturer(manufacturerState).then((data) => {
+            navigate('/admin/manufacturer');
+        });
+    };
+
+    const location = useLocation();
+
+    useEffect(() => {
+        loadData();
+    }, [location]);
 
     const avatarRef = useRef();
     const uploadAvatar = (e) => {
@@ -25,7 +47,7 @@ function AdminManufacturerDetailsPage() {
                 reader.readAsDataURL(file);
                 reader.onload = () => {
                     setManufacturerState((pre) => {
-                        return { ...pre, avatar: reader.result };
+                        return { ...pre, logo: reader.result };
                     });
                     avatarRef.current.value = '';
                 };
@@ -61,7 +83,7 @@ function AdminManufacturerDetailsPage() {
                         <div>
                             <Avatar
                                 className="group-hover:opacity-80 duration-200"
-                                src={manufacturerState.avatar}
+                                src={manufacturerState.logo}
                                 sx={{ width: '120px', height: '120px' }}
                             />
                             <div
@@ -106,7 +128,7 @@ function AdminManufacturerDetailsPage() {
                     <Button onClick={cancel} color="inherit">
                         Hủy
                     </Button>
-                    <Button>Thay đổi</Button>
+                    <Button onClick={update}>Thay đổi</Button>
                 </div>
             </div>
         </div>

@@ -1,49 +1,33 @@
 import { faArrowLeft, faCamera, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Avatar, Button, IconButton, TextField } from '@mui/material';
-import { useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useRef, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import ManufacturerTable from '~/components/ManufacturerTable';
 import SimpleAccordion from '~/components/SimpleAccordion';
+import { manufacturerService } from '~/services/manufacturerService';
 
 //id, avatar, name, code
 function AdminManufacturerPage() {
-    const [manufacturerListState, setManufacturerListState] = useState([
-        {
-            id: 1,
-            avatar: 'https://cdn.dribbble.com/userupload/3827533/file/original-dca276f3a2211b2beb214574de05d468.jpg?resize=400x0',
-            name: 'Asus',
-            code: 'asus',
-        },
-        {
-            id: 2,
-            avatar: 'https://w0.peakpx.com/wallpaper/1021/824/HD-wallpaper-acer-steel-logo-metal-mesh-background-acer-logo-acer-emblem-acer-metal-background.jpg',
-            name: 'Acer',
-            code: 'acer',
-        },
-        {
-            id: 3,
-            avatar: 'https://inkythuatso.com/uploads/images/2021/10/dell-logo-inkythuatso-4-01-30-10-17-55.jpg',
-            name: 'Dell',
-            code: 'dell',
-        },
-        {
-            id: 4,
-            avatar: 'https://d1yjjnpx0p53s8.cloudfront.net/styles/logo-thumbnail/s3/0014/9595/brand.gif?itok=sLT3qVSv',
-            name: 'Lenovo',
-            code: 'lenovo',
-        },
-        {
-            id: 5,
-            avatar: 'https://preview.redd.it/anyone-else-notice-the-msi-logo-is-basicly-gaben-v0-e6p9hfg5ukga1.jpg?auto=webp&s=41a4e231d34271bb755458172330e7f287b61f60',
-            name: 'MSI',
-            code: 'msi',
-        },
-    ]);
+    const [manufacturerListState, setManufacturerListState] = useState([]);
 
+    const location = useLocation();
     const [newManufacturerState, setNewManufacturerState] = useState({});
     const [isEditingState, setIsEditingState] = useState(false);
     const navigate = useNavigate();
+
+    const loadData = () => {
+        manufacturerService.getManufacturers().then((data) => {
+            if (data.length > 0) {
+                console.log('data', data);
+                setManufacturerListState(data);
+            }
+        });
+    };
+
+    useEffect(() => {
+        loadData();
+    }, [location]);
 
     const avatarRef = useRef();
     const uploadAvatar = (e) => {
@@ -63,6 +47,23 @@ function AdminManufacturerPage() {
                     console.log('error uploading!');
                 };
             }
+        }
+    };
+
+    const submitAdd = () => {
+        if (newManufacturerState.avatar && newManufacturerState.name && newManufacturerState.code) {
+            console.log('newManufacturerState.avatar', newManufacturerState.avatar);
+            manufacturerService
+                .postManufacturer({
+                    logo: newManufacturerState.avatar,
+                    name: newManufacturerState.name,
+                    code: newManufacturerState.code,
+                    status: 1,
+                })
+                .then((data) => {
+                    loadData();
+                    setNewManufacturerState({});
+                });
         }
     };
 
@@ -140,7 +141,11 @@ function AdminManufacturerPage() {
                                     </div>
                                 </div>
                             </div>
-                            <Button startIcon={<FontAwesomeIcon icon={faPlus} />} variant="contained">
+                            <Button
+                                onClick={submitAdd}
+                                startIcon={<FontAwesomeIcon icon={faPlus} />}
+                                variant="contained"
+                            >
                                 Thêm nhà cung cấp
                             </Button>
                         </div>
@@ -149,7 +154,7 @@ function AdminManufacturerPage() {
                     <div>EDIT</div>
                 )}
             </div>
-            <ManufacturerTable rows={manufacturerListState} />
+            {manufacturerListState.length > 0 && <ManufacturerTable reload={loadData} rows={manufacturerListState} />}
         </div>
     );
 }

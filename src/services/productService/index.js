@@ -24,9 +24,24 @@ export const productService = {
         const response = await fetch(`${API_BASE_URL}/public/${this.api}${paramUrl}`, config);
         return response.json();
     },
+    async searchByName(name) {
+        const config = getConfig();
+        const response = await fetch(`${API_BASE_URL}/public/${this.api}/search/${name}`, config);
+        return response.json();
+    },
     async getAllProducts() {
         const config = getConfig();
         const response = await fetch(`${API_BASE_URL}/public/${this.api}/all`, config);
+        return response.json();
+    },
+    async getAllProductDetailsByName(name) {
+        const config = getConfig();
+        const response = await fetch(`${API_BASE_URL}/public/${this.api}/details/${name}`, config);
+        return response.json();
+    },
+    async getAllProductDetails() {
+        const config = getConfig();
+        const response = await fetch(`${API_BASE_URL}/public/${this.api}/details`, config);
         return response.json();
     },
     async getProductByCode(code) {

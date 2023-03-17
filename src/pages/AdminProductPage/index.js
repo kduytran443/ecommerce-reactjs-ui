@@ -47,7 +47,7 @@ function AdminProductPage() {
             <div className="mb-6">
                 <Button
                     onClick={(e) => {
-                        navigate('/admin/product');
+                        navigate('/admin/');
                     }}
                     startIcon={<FontAwesomeIcon icon={faArrowLeft} />}
                 >

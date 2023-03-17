@@ -35,6 +35,7 @@ import AdminCategoryDetailsEditPage from './pages/AdminCategoryDetailsPage/Admin
 import { PayPalScriptProvider } from '@paypal/react-paypal-js';
 import AdminProductCreatePage from './pages/AdminProductPage/AdminProductCreatePage';
 import AdminProductEditPage from './pages/AdminProductPage/AdminProductEditPage';
+import AdminConsignmentPage from './pages/AdminConsignmentPage';
 
 function App() {
     const [isAuthenticatedState, setIsAuthenticatedState] = useState(null);
@@ -129,7 +130,7 @@ function App() {
                         }
                     />
                     <Route
-                        path={'/search'}
+                        path={'/search/:searchValue?'}
                         element={
                             <FullLayout>
                                 <SearchPage />
@@ -278,6 +279,14 @@ function App() {
                         element={
                             <AdminLayout>
                                 <AdminUserPage />
+                            </AdminLayout>
+                        }
+                    />
+                    <Route
+                        path={'/admin/consignment'}
+                        element={
+                            <AdminLayout>
+                                <AdminConsignmentPage />
                             </AdminLayout>
                         }
                     />

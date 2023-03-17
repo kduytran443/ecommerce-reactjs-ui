@@ -199,10 +199,6 @@ function AdminCategoryDetailsPage() {
                     )}
                 </ul>
             </div>
-            <div className="mt-16">
-                <h2 className="font-bold text-xl mt-8 mb-2">Sản phẩm thuộc danh mục</h2>
-                <ProductTable rows={productListState} />
-            </div>
             <div className="mt-10">
                 <SimpleDialog
                     openButton={

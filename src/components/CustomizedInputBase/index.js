@@ -18,6 +18,12 @@ export default function CustomizedInputBase() {
         setSearchInputValueState(value);
     };
 
+    const search = () => {
+        if (searchInputValueState.trim()) {
+            navigate('/search/' + encodeURI(searchInputValueState));
+        }
+    };
+
     return (
         <Paper component="form" sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', width: 400 }}>
             <IconButton
@@ -38,7 +44,7 @@ export default function CustomizedInputBase() {
                     setSearchInputValueState(e.target.value);
                 }}
             />
-            <IconButton type="button" sx={{ p: '10px' }} aria-label="search">
+            <IconButton onClick={search} type="button" sx={{ p: '10px' }} aria-label="search">
                 <SearchIcon />
             </IconButton>
             <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
