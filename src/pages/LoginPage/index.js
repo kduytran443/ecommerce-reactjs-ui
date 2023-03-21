@@ -1,7 +1,7 @@
 import { faLock, faRightToBracket, faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Button, Checkbox, FormControlLabel, FormGroup, InputAdornment, TextField } from '@mui/material';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Line from '~/components/Line';
 import { API_BASE_URL, HOME_PAGE_URL, SIGNUP_PAGE_URL } from '~/constants';
@@ -22,7 +22,7 @@ function LoginPage() {
         setUsernameErrorState('');
         setPasswordErrorState('');
     };
-
+    const [error, setError] = useState('');
     const login = async (data) => {
         const options = {
             method: 'POST',
@@ -35,7 +35,7 @@ function LoginPage() {
             .then((res) => res.json())
             .then((data) => {
                 if (data.status === 403) {
-                    console.log('Fail to login!');
+                    setError('Tài khoản này không tồn tại');
                 } else {
                     console.log('thành công', data);
                     dispatchUserState(setUserInfo(data));
@@ -51,6 +51,12 @@ function LoginPage() {
                 console.log(error);
             });
     };
+
+    useEffect(() => {
+        if (userState && userState.username) {
+            navigate('/home');
+        }
+    }, [userState]);
 
     const submitForm = async () => {
         let validForm = true;
@@ -122,20 +128,10 @@ function LoginPage() {
                         helperText={passwordErrorState}
                     />
                 </div>
-                <div className="select-none">
-                    <FormGroup>
-                        <FormControlLabel
-                            control={<Checkbox onChange={(e) => setSaveUsernameState(e.target.checked)} />}
-                            label="Nhớ tên tài khoản"
-                        />
-                    </FormGroup>
-                </div>
+                {error && <div className="text-red-500">*{error}</div>}
                 <div className="mt-4 mb-0 w-full">
                     <Button variant="contained" className="w-full" onClick={submitForm}>
                         <div className="w-full font-bold p-2">Đăng nhập</div>
-                    </Button>
-                    <Button variant="text" className="w-full">
-                        <div className="w-full p-2">Quên mật khẩu?</div>
                     </Button>
                 </div>
                 <div className="mb-4 mt-2 w-full">

@@ -3,6 +3,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Avatar, Button, IconButton, TextField } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import AlertFailDialog from '~/components/AlertFailDialog';
+import AlertSuccessDialog from '~/components/AlertSuccessDialog';
 import ManufacturerTable from '~/components/ManufacturerTable';
 import SimpleDialog from '~/components/OrderDialog';
 import { manufacturerService } from '~/services/manufacturerService';
@@ -25,10 +27,22 @@ function AdminManufacturerDetailsPage() {
         });
     };
 
+    const [success, setSuccess] = useState(0);
+
     const update = () => {
-        manufacturerService.putManufacturer(manufacturerState).then((data) => {
-            navigate('/admin/manufacturer');
-        });
+        if (manufacturerState.logo && manufacturerState.name && manufacturerState.code) {
+            manufacturerService.putManufacturer(manufacturerState).then((data) => {
+                setSuccess(1);
+                setTimeout(() => {
+                    navigate('/admin/manufacturer');
+                }, 1000);
+            });
+        } else {
+            setSuccess(-1);
+            setTimeout(() => {
+                setSuccess(0);
+            }, 1000);
+        }
     };
 
     const location = useLocation();
@@ -78,6 +92,8 @@ function AdminManufacturerDetailsPage() {
             </div>
             <h1 className="text-3xl font-black mb-6">Nhà cung cấp</h1>
             <div className="p-4 md:px-20 flex flex-col">
+                <AlertSuccessDialog open={success === 1} />
+                <AlertFailDialog open={success === -1} />
                 <div className="mt-2">
                     <div className="group bg-slate-800 flex flex-col items-center justify-center py-4 rounded cursor-pointer relative duration-200 hover:shadow-md">
                         <div>
@@ -117,9 +133,11 @@ function AdminManufacturerDetailsPage() {
                         label="Code"
                         value={manufacturerState.code}
                         onInput={(e) => {
-                            setManufacturerState((pre) => {
-                                return { ...pre, code: e.target.value };
-                            });
+                            if (!e.target.value.includes(' ')) {
+                                setManufacturerState((pre) => {
+                                    return { ...pre, code: e.target.value };
+                                });
+                            }
                         }}
                         className="w-full"
                     />

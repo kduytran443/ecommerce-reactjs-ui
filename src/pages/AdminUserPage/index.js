@@ -1,9 +1,12 @@
 import { faAdd } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { TextField } from '@mui/material';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import SimpleAccordion from '~/components/SimpleAccordion';
 import UserTable from '~/components/UserTable';
+import { userService } from '~/services/userService';
+import AdminCreateUserDialog from './AdminCreateUserDialog';
 
 function AdminUserPage() {
     const [adminListState, setAdminListState] = useState([
@@ -51,74 +54,38 @@ function AdminUserPage() {
         });
     };
 
+    const loadData = () => {
+        userService.getAllUser().then((data) => {
+            if (data.length >= 0) {
+                const adminArr = data.filter((item) => item.role === 'ADMIN' && item.status === 1);
+                const userArr = data
+                    .filter((item) => item.role === 'USER' && item.status === 1)
+                    .map((item) => {
+                        item.usernameToBlock = item.username;
+                        return item;
+                    });
+                setAdminListState(adminArr);
+                setUserListState(userArr);
+            }
+        });
+    };
+
+    const location = useLocation();
+
+    useEffect(() => {
+        loadData();
+    }, [location]);
+
     return (
         <div>
-            <SimpleAccordion title="Tạo admin">
-                <div className="flex flex-col w-full">
-                    <div className="my-2">
-                        <TextField
-                            value={newAdminDataState.username}
-                            className="w-full"
-                            onInput={(e) => {
-                                onInputNewAdmin('username', e.target.value);
-                            }}
-                            label="Username"
-                        />
-                    </div>
-                    <div className="my-2">
-                        <TextField
-                            value={newAdminDataState.password}
-                            className="w-full"
-                            onInput={(e) => {
-                                onInputNewAdmin('password', e.target.value);
-                            }}
-                            label="Password"
-                        />
-                    </div>
-                    <div className="my-2">
-                        <TextField
-                            value={repasswordState}
-                            className="w-full"
-                            onInput={(e) => {
-                                setRepasswordState(e.target.value);
-                            }}
-                            label="Nhập lại password"
-                        />
-                    </div>
-                    <div className="my-2">
-                        <TextField
-                            value={newAdminDataState.fullname}
-                            className="w-full"
-                            onInput={(e) => {
-                                onInputNewAdmin('fullname', e.target.value);
-                            }}
-                            label="Họ và tên"
-                        />
-                    </div>
-                    <div className="my-2">
-                        <TextField
-                            value={newAdminDataState.birthYear}
-                            className="w-full"
-                            onInput={(e) => {
-                                onInputNewAdmin('birthYear', e.target.value);
-                            }}
-                            label="Năm sinh"
-                        />
-                    </div>
-                    <div className="w-full mt-4">
-                        <div className="w-full p-4 rounded-lg hover:bg-blue-600 active:bg-blue-700 text-center bg-blue-500 shadow-blue-300 shadow-lg cursor-pointer select-none text-white font-bold text-xl">
-                            <FontAwesomeIcon icon={faAdd} /> Tạo Admin
-                        </div>
-                    </div>
-                </div>
-            </SimpleAccordion>
+            <AdminCreateUserDialog />
             <div className="bg-white rounded">
                 <h1 className="text-xl font-bold mt-8 p-2">Admin</h1>
                 <UserTable rows={adminListState} isAdmin />
             </div>
             <div className="bg-white rounded">
                 <h1 className="text-xl font-bold mt-8 p-2">User</h1>
-                <UserTable rows={userListState} />
+                <UserTable rows={userListState} loadData={loadData} />
             </div>
         </div>
     );

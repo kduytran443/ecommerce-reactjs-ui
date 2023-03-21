@@ -1,8 +1,18 @@
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useUser } from '~/stores/UserStore';
 import AdminHeader from '../components/AdminHeader';
 import AdminSidebarMenu from '../components/AdminSidebarMenu';
 import SimpleFooter from '../components/SimpleFooter';
 
 function AdminLayout({ children }) {
+    const [userDataState, setUserDataState] = useUser({});
+    const navigate = useNavigate();
+    useEffect(() => {
+        if (userDataState && userDataState.role !== 'ADMIN') {
+            navigate('/page-not-found');
+        }
+    }, [userDataState]);
     return (
         <div className="flex flex-col min-h-[100vh]">
             <AdminHeader />

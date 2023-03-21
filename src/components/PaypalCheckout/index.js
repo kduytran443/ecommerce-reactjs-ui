@@ -6,6 +6,9 @@ function PaypalCheckout({ orderDataId, username, email, phoneNumber, totalPrice,
 
     const [paidFor, setPaidFor] = useState(false);
 
+    let price = totalPrice / 23585;
+    price = price.toFixed(2);
+
     const handleApprove = (orderId) => {
         //orderId ở phương thức này là orderId của paypal (transaction) chứ không phải là orderId mua bán
         setPaidFor(true);
@@ -44,7 +47,7 @@ function PaypalCheckout({ orderDataId, username, email, phoneNumber, totalPrice,
                                     {
                                         description: description,
                                         amount: {
-                                            value: totalPrice,
+                                            value: price,
                                         },
                                     },
                                 ],

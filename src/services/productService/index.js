@@ -65,4 +65,19 @@ export const productService = {
         const response = await fetch(`${API_BASE_URL}/${this.api}`, config);
         return response.json();
     },
+    async favoriteProduct(productCode) {
+        const config = postConfig();
+        const response = await fetch(`${API_BASE_URL}/${this.api}/favorite/${productCode}`, config);
+        return response.json();
+    },
+    async checkFavoritedProduct(productCode) {
+        const config = getConfig();
+        const response = await fetch(`${API_BASE_URL}/${this.api}/favorite/${productCode}`, config);
+        return response.json();
+    },
+    async getFavoritedProductsByUser() {
+        const config = getConfig();
+        const response = await fetch(`${API_BASE_URL}/${this.api}/favorite`, config);
+        return response.json();
+    },
 };

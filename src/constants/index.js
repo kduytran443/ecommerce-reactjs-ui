@@ -7,7 +7,7 @@ const CATEGORY_PAGE_URL = '/category/:code';
 const ROLE_ADMIN = 'ROLE_ADMIN';
 const ROLE_USER = 'ROLE_USER';
 
-const API_BASE_URL = 'http://192.168.1.4:8083';
+const API_BASE_URL = 'http://localhost:8083';
 const LOCAL_STORAGE_NAME = 'ecormerce_ctu';
 
 const ACTION_GET_USER_INFO = 'ACTION_GET_USER_INFO';

@@ -8,8 +8,18 @@ export const userService = {
         const response = await fetch(`${API_BASE_URL}/${this.api}`, config);
         return response.json();
     },
+    async getAllUser() {
+        const config = getConfig();
+        const response = await fetch(`${API_BASE_URL}/${this.api}/all`, config);
+        return response.json();
+    },
     async getUserByUsername(username) {
         const config = getConfig();
+        const response = await fetch(`${API_BASE_URL}/${this.api}`, config);
+        return response.json();
+    },
+    async block(user) {
+        const config = deleteConfig(user);
         const response = await fetch(`${API_BASE_URL}/${this.api}`, config);
         return response.json();
     },
@@ -17,6 +27,11 @@ export const userService = {
     async signUp(user) {
         const config = postConfig(user);
         const response = await fetch(`${API_BASE_URL}/api/sign-up`, config);
+        return response.json();
+    },
+    async signUpAdmin(user) {
+        const config = postConfig(user);
+        const response = await fetch(`${API_BASE_URL}/api/sign-up/admin`, config);
         return response.json();
     },
 };

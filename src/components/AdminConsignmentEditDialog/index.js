@@ -142,7 +142,7 @@ export default function AdminConsignmentEditDialog({ reload = () => {}, consignm
                                 </div>
                             )}
                             <div className="w-full">
-                                <p>Giá (USD)/sản phẩm</p>
+                                <p>Giá (VNĐ)/sản phẩm</p>
                                 <TextField
                                     className="w-full"
                                     value={price}

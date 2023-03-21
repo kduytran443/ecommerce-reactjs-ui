@@ -3,6 +3,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Avatar, Button, IconButton, TextField } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import AlertFailDialog from '~/components/AlertFailDialog';
+import AlertSuccessDialog from '~/components/AlertSuccessDialog';
 import ManufacturerTable from '~/components/ManufacturerTable';
 import SimpleAccordion from '~/components/SimpleAccordion';
 import { manufacturerService } from '~/services/manufacturerService';
@@ -11,6 +13,7 @@ import { manufacturerService } from '~/services/manufacturerService';
 function AdminManufacturerPage() {
     const [manufacturerListState, setManufacturerListState] = useState([]);
 
+    const [success, setSuccess] = useState(0);
     const location = useLocation();
     const [newManufacturerState, setNewManufacturerState] = useState({});
     const [isEditingState, setIsEditingState] = useState(false);
@@ -62,8 +65,16 @@ function AdminManufacturerPage() {
                 })
                 .then((data) => {
                     loadData();
-                    setNewManufacturerState({});
+                    setSuccess(1);
+                    setTimeout(() => {
+                        setSuccess(0);
+                    }, 1000);
                 });
+        } else {
+            setSuccess(-1);
+            setTimeout(() => {
+                setSuccess(0);
+            }, 1000);
         }
     };
 
@@ -81,6 +92,8 @@ function AdminManufacturerPage() {
             </div>
             <h1 className="text-3xl font-black mb-6">Nhà sản xuất</h1>
             <div className="w-full mb-10">
+                <AlertSuccessDialog open={success === 1} />
+                <AlertFailDialog open={success === -1} />
                 {!isEditingState ? (
                     <SimpleAccordion title={<b>+ Thêm nhà sản xuất</b>}>
                         <div className="p-6 border border-slate-300 rounded-lg bg-white shadow">

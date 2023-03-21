@@ -82,7 +82,7 @@ function OrderDetailsPage() {
             headerName: 'Giá',
             width: 120,
             renderCell: (param) => {
-                return <>{param.value} USD</>;
+                return <>{param.value} VND</>;
             },
         },
         {
@@ -151,13 +151,11 @@ function OrderDetailsPage() {
     const loadOrder = () => {
         orderService.getOrderById(orderId).then((data) => {
             if (data.id) {
-                console.log('LOAD ORDER');
                 setOrderDataState(data);
             }
         });
     };
 
-    const [userDataState, setUserDataState] = useState({});
     useEffect(() => {
         if (orderDataState.username) {
             userService.getUserByUsername(orderDataState.username).then((data) => {
@@ -167,6 +165,13 @@ function OrderDetailsPage() {
             });
         }
     }, [orderDataState]);
+
+    const [userDataState, setUserDataState] = useState({});
+    useEffect(() => {
+        if (userDataState && userDataState.username !== orderDataState.username) {
+            navigate('/page-not-found');
+        }
+    }, [userDataState]);
 
     const loadTotalPrice = () => {
         if (orderDetailsState.length > 0) {
@@ -262,9 +267,6 @@ function OrderDetailsPage() {
                     </div>
                 </div>
             )}
-            <OrderSocket loadOrder={loadOrder} orderId={orderId}>
-                <Button>Xác nhận thanh toán</Button>
-            </OrderSocket>
             {orderDataState.status > 1 && paymentDataState && (
                 <div>
                     <h1 className="font-bold text-xl my-4">Thông tin thanh toán</h1>
@@ -276,7 +278,7 @@ function OrderDetailsPage() {
                             <div>{renderToTime(paymentDataState.date)}</div>
                             <div className="font-bold">Tiền đã thanh toán: </div>
                             <div>
-                                <span className="text-blue-700 font-bold">{paymentDataState.totalPrice}</span> USD
+                                <span className="text-blue-700 font-bold">{paymentDataState.totalPrice}</span> VND
                             </div>
                         </div>
                     </div>
@@ -318,12 +320,12 @@ function OrderDetailsPage() {
                     <b className="text-gray-700">
                         <FontAwesomeIcon icon={faNoteSticky} /> Phí vận chuyển:
                     </b>{' '}
-                    <span className="text-red-500">{deliveryFeeState} USD</span>
+                    <span className="text-red-500">{deliveryFeeState} VND</span>
                 </div>
             </div>
             <div className="text-xl my-6">
                 <b>Tổng tiền: </b>
-                <span className="text-green-500">{totalPriceState} USD</span>
+                <span className="text-green-500">{totalPriceState} VND</span>
             </div>
             <div>
                 <h2 className="mt-4 font-bold text-xl">Danh sách sản phẩm:</h2>

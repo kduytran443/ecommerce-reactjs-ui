@@ -206,12 +206,14 @@ function ProductPage() {
                 </div>
                 <div className="md:w-[50%] w-full flex flex-col">
                     <div className="flex-1">
-                        <ProductInfomation
-                            warrantyMonth={productState.warrantyMonth}
-                            price={productState.price}
-                            productCode={productState.code}
-                            discounts={productState.discounts}
-                        />
+                        {productState.code && (
+                            <ProductInfomation
+                                warrantyMonth={productState.warrantyMonth}
+                                price={productState.price}
+                                productCode={productState.code}
+                                discounts={productState.discounts}
+                            />
+                        )}
                         <div className="w-full p-4 flex flex-col">
                             <CustomizedSnackbars
                                 openButton={
@@ -283,15 +285,15 @@ function ProductPage() {
                                     <div className="flex my-2 flex-row md:p-4 md:flex-row items-center justify-between">
                                         <div>
                                             <div>
-                                                <b>Phí vận chuyển:</b> {deliveryFee} USD
+                                                <b>Phí vận chuyển:</b> {deliveryFee} VNĐ
                                             </div>
                                             <b>Tổng tiền:</b>
                                             <p className="text-lg md:text-xl font-bold text-red-500">
-                                                {totalPrice + deliveryFee}$
+                                                {totalPrice + deliveryFee} VNĐ
                                             </p>
                                         </div>
                                         <div>
-                                            <strike>${productState.price}</strike>
+                                            <strike>{productState.price} VNĐ</strike>
                                             <p className="text-blue-500">
                                                 <p>
                                                     Giảm <b>{discountState.discountPercent}%</b>

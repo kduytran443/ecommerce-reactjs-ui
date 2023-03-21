@@ -23,6 +23,7 @@ export default function SimpleDialog({
     color = 'primary',
     agreeAction = () => {},
     selectedAddress,
+    isCart = false,
 }) {
     const [open, setOpen] = React.useState(false);
 
@@ -51,7 +52,7 @@ export default function SimpleDialog({
                             {cancel}
                         </Button>
                         <Button
-                            disabled={!selectedAddress}
+                            disabled={!selectedAddress && !isCart}
                             onClick={(e) => {
                                 handleClose();
                                 agreeAction();

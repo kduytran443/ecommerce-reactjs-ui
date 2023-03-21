@@ -63,7 +63,7 @@ function AdminConsignmentPage() {
                                 </div>
                                 <div className="flex flex-row items-center">
                                     <h3 className="font-bold">Giá: </h3>
-                                    <div className="ml-4">{item.price} USD</div>
+                                    <div className="ml-4">{item.price} VND</div>
                                 </div>
                                 <div className="flex flex-row items-center">
                                     <h3 className="font-bold">Ngày cập nhật: </h3>{' '}

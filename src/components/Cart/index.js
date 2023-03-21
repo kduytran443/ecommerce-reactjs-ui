@@ -180,6 +180,7 @@ function Cart({ main = false }) {
                             agreeAction={(e) => {
                                 deleteCart(param.value);
                             }}
+                            isCart
                         >
                             <div className="p-4 px-10 min-w-[260px]">Xóa sản phẩm khỏi giỏ hàng?</div>
                         </SimpleDialog>

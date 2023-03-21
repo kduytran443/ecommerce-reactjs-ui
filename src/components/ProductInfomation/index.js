@@ -16,7 +16,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { useEffect, useState } from 'react';
 import { SpaOutlined, Title } from '@mui/icons-material';
 import CustomizedSnackbars from '../CustomizedSnackbars';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { HOME_PAGE_URL } from '~/constants';
 import { Button } from '@mui/material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -30,10 +30,11 @@ import {
     faTools,
     faTv,
 } from '@fortawesome/free-solid-svg-icons';
+import { productService } from '~/services/productService';
 
 const formatter = new Intl.NumberFormat('en-US', {
     style: 'currency',
-    currency: 'USD',
+    currency: 'VND',
 
     // These options are needed to round to whole numbers if that's what you want.
     //minimumFractionDigits: 0, // (this suffices for whole numbers, but will print 2500.10 as $2,500.1)
@@ -62,7 +63,23 @@ export default function ProductInfomation({
         }
     }, [discounts]);
 
-    console.log('discountState', discountState);
+    const location = useLocation();
+    const checkFavoritedProduct = () => {
+        if (productCode) {
+            productService.checkFavoritedProduct(productCode).then((data) => {
+                setLikedState(data);
+            });
+        }
+    };
+    useEffect(() => {
+        checkFavoritedProduct();
+    }, [location]);
+
+    const favorite = () => {
+        productService.favoriteProduct(productCode).then((data) => {
+            checkFavoritedProduct();
+        });
+    };
 
     return (
         <Card sx={{ width: '100%' }}>
@@ -127,9 +144,7 @@ export default function ProductInfomation({
                             }}
                         />
                         <IconButton
-                            onClick={(e) => {
-                                setLikedState(!likedState);
-                            }}
+                            onClick={favorite}
                             aria-label="add to favorites"
                             color={likedState ? 'error' : 'default'}
                         >

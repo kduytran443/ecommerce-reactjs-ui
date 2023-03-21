@@ -55,7 +55,7 @@ function CategoryPage() {
                 >
                     Quay lại
                 </Button>
-                <Line title={categoryState?.name} />
+                <Line code={categoryState.code} title={categoryState?.name} />
                 <div
                     className="w-full py-20 rounded"
                     style={{

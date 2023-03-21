@@ -26,7 +26,7 @@ import { VND } from '~/utils/VND';
 
 const formatter = new Intl.NumberFormat('en-US', {
     style: 'currency',
-    currency: 'USD',
+    currency: 'VND',
 
     // These options are needed to round to whole numbers if that's what you want.
     //minimumFractionDigits: 0, // (this suffices for whole numbers, but will print 2500.10 as $2,500.1)
@@ -78,7 +78,7 @@ export default function RecipeReviewCard({
                         <p className="text-xl font-bold text-red-500">
                             {formatter.format(price - price * (discountState / 100))}
                             <span className="text-gray-500 ml-4">
-                                {discountState > 0 && <strike>{formatter.format(price)}</strike>}
+                                {discountState > 0 && <strike>{price} VNĐ</strike>}
                             </span>
                         </p>
                         {discountState > 0 && (
@@ -102,15 +102,6 @@ export default function RecipeReviewCard({
                             navigator.clipboard.writeText(url);
                         }}
                     />
-                    <IconButton
-                        onClick={(e) => {
-                            setLikedState(!likedState);
-                        }}
-                        aria-label="add to favorites"
-                        color={likedState ? 'error' : 'default'}
-                    >
-                        <FavoriteIcon />
-                    </IconButton>
                 </div>
             </CardActions>
         </Card>
