@@ -37,6 +37,7 @@ import AdminProductCreatePage from './pages/AdminProductPage/AdminProductCreateP
 import AdminProductEditPage from './pages/AdminProductPage/AdminProductEditPage';
 import AdminConsignmentPage from './pages/AdminConsignmentPage';
 import FavoritePage from './pages/FavoritePage';
+import AdminDiscountPage from './pages/AdminDiscountPage';
 
 function App() {
     const [isAuthenticatedState, setIsAuthenticatedState] = useState(null);
@@ -296,6 +297,14 @@ function App() {
                         element={
                             <AdminLayout>
                                 <AdminConsignmentPage />
+                            </AdminLayout>
+                        }
+                    />
+                    <Route
+                        path={'/admin/discount/'}
+                        element={
+                            <AdminLayout>
+                                <AdminDiscountPage />
                             </AdminLayout>
                         }
                     />

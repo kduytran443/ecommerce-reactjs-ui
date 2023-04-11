@@ -106,7 +106,7 @@ function AdminHomePage() {
                         title="Quản lý"
                         icon={<FontAwesomeIcon icon={faPercent} />}
                         description="Quản lý giảm giá"
-                        link="/admin/view-product"
+                        link="/admin/discount"
                     />
                 </div>
             </div>

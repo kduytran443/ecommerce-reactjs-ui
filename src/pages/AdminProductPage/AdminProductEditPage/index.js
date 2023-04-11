@@ -1,16 +1,29 @@
-import { faAdd, faArrowLeft, faCamera } from '@fortawesome/free-solid-svg-icons';
+import { faAdd, faArrowLeft, faCamera, faGift, faPen } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Avatar, Button, FormControl, IconButton, InputLabel, MenuItem, Select, TextField } from '@mui/material';
+import {
+    Alert,
+    Avatar,
+    Button,
+    Checkbox,
+    FormControl,
+    IconButton,
+    InputLabel,
+    MenuItem,
+    Select,
+    TextField,
+} from '@mui/material';
 import { Box } from '@mui/system';
 import { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import UploadImage from '~/components/UploadImage';
 import { categoryService } from '~/services/categoryService';
+import { discountService } from '~/services/discountService';
 import { manufacturerService } from '~/services/manufacturerService';
 import { productImageService } from '~/services/productImageService';
 import { productService } from '~/services/productService';
 import { productSpecificationService } from '~/services/productSpecificationService';
 import { specificationService } from '~/services/specificationService';
+import { renderToTime } from '~/utils';
 
 function AdminProductEditPage() {
     const location = useLocation();
@@ -78,48 +91,164 @@ function AdminProductEditPage() {
         setSpecificationsController(obj);
     };
 
+    const [nameError, setnameError] = useState('');
+    const [codeError, setcodeError] = useState('');
+    const [yearError, setyearError] = useState('');
+    const [manufacturerError, setmanufacturerError] = useState('');
+    const [priceError, setpriceError] = useState('');
+    const [warrantyMonthError, setwarrantyMonthError] = useState('');
+    const [categoryError, setcategoryError] = useState('');
+    const [avatarError, setavatarError] = useState('');
+    const [imageError, setimageError] = useState('');
+    const [errorState, setErrorState] = useState('');
+
+    const check = () => {
+        let valid = true;
+
+        if (!nameState) {
+            setnameError('Tên không hợp lệ');
+            valid = false;
+        }
+
+        if (!codeState) {
+            setcodeError('Code không hợp lệ');
+            valid = false;
+        }
+
+        const date = new Date();
+        if (yearState < 2000 || yearState > date.getFullYear()) {
+            setyearError('Năm không hợp lệ');
+            valid = false;
+        }
+
+        if (!selectedManufacturer) {
+            setmanufacturerError('Nhà sản xuất không hợp lệ');
+            valid = false;
+        }
+
+        if (!priceState) {
+            setpriceError('Số tiền không hợp lệ');
+            valid = false;
+        }
+
+        if (warrantyState < 0 || warrantyState > 48) {
+            setwarrantyMonthError('Tháng bảo hành không hợp lệ');
+            valid = false;
+        }
+
+        if (!selectedCategoryCode) {
+            setcategoryError('Danh mục không hợp lệ');
+            valid = false;
+        }
+
+        if (!avatarState) {
+            setavatarError('Hình đại diện không được bỏ trống');
+            valid = false;
+        }
+
+        return valid;
+    };
+
     const submit = () => {
-        const product = {
-            id: idState,
-            name: nameState,
-            code: codeState,
-            year: yearState,
-            status: 0,
-            warrantyMonth: warrantyState,
-            price: priceState,
-            avatar: avatarState,
-            categoryCode: selectedCategoryCode,
-            manufacturer: {
-                id: selectedManufacturer,
-            },
-        };
-        productService.putProduct(product).then((data) => {
-            if (data) {
-                console.log('Sửa thành công');
-                const keys = Object.keys(specificationsController);
-                keys.forEach((key) => {
-                    const content = specificationsController[key];
-                    if (content) {
-                        const obj = {
-                            productId: data.id,
-                            specificationId: key,
-                            content: content,
-                        };
-                        productSpecificationService.putProductSpecification(obj).then((data) => {});
-                    }
-                });
+        if (check()) {
+            const product = {
+                id: idState,
+                name: nameState,
+                code: codeState,
+                year: yearState,
+                status: 0,
+                warrantyMonth: warrantyState,
+                price: priceState,
+                avatar: avatarState,
+                categoryCode: selectedCategoryCode,
+                manufacturer: {
+                    id: selectedManufacturer,
+                },
+            };
+            productService.putProduct(product).then((data) => {
+                if (data.id) {
+                    setErrorState('');
+                    const keys = Object.keys(specificationsController);
+                    keys.forEach((key) => {
+                        const content = specificationsController[key];
+                        if (content) {
+                            const obj = {
+                                productId: data.id,
+                                specificationId: key,
+                                content: content,
+                            };
+                            productSpecificationService.putProductSpecification(obj).then((data) => {});
+                        }
+                    });
+
+                    discounts.forEach((item) => {
+                        if (checkIsSelected(item.id)) {
+                            discountService.apply({ id: item.id }, productCode).then((data) => {});
+                        } else {
+                            discountService.remove({ id: item.id }, productCode).then((data) => {});
+                        }
+                    });
+                } else {
+                    setErrorState(data.message);
+                }
+                navigate('/admin/product');
+            });
+        } else {
+            setErrorState('Dữ liệu đầu vào không hợp lệ');
+        }
+    };
+
+    const [discounts, setDiscounts] = useState([]);
+    const [selectedDiscounts, setSelectedDiscounts] = useState([]);
+    const loadDiscounts = () => {
+        discountService.getAll().then((data) => {
+            if (data.length > 0) {
+                const date = new Date();
+                const arr = data.filter((item) => date < item.endTime);
+                setDiscounts(arr);
             }
-            navigate('/admin/product');
         });
+    };
+    const loadSelecetedDiscounts = () => {
+        discountService.getAllByProductCode(productCode).then((data) => {
+            if (data.length > 0) {
+                setSelectedDiscounts(data.map((item) => item.id));
+            }
+        });
+    };
+
+    const addSelected = (id) => {
+        const arr = [...selectedDiscounts];
+        const index = arr.indexOf(id);
+        if (index === -1) {
+            arr.push(id);
+            setSelectedDiscounts(arr);
+        }
+    };
+
+    const removeSelected = (id) => {
+        const arr = [...selectedDiscounts];
+        const index = arr.indexOf(id);
+        if (index !== -1) {
+            arr.splice(index, 1);
+            setSelectedDiscounts(arr);
+        }
+    };
+
+    const checkIsSelected = (id) => {
+        const index = selectedDiscounts.indexOf(id);
+        if (index !== -1) return true;
+        return false;
     };
 
     useEffect(() => {
         loadData();
+        loadDiscounts();
+        loadSelecetedDiscounts();
     }, [location]);
 
     const loadData = () => {
         productService.getProductByCode(productCode).then((data) => {
-            console.log('SẢN PHẨM', data);
             if (data) {
                 setNameState(data.name);
                 setCodeState(data.code);
@@ -162,31 +291,41 @@ function AdminProductEditPage() {
                     <div>Tên sản phẩm</div>
                     <TextField
                         className="w-full"
+                        error={nameError}
                         value={nameState}
                         onInput={(e) => {
                             setNameState(e.target.value);
                         }}
                     />
+                    {nameError && <div className="text-red-500">*{nameError}</div>}
                 </div>
                 <div className="w-full my-4">
                     <div>Code sản phẩm</div>
                     <TextField
                         className="w-full"
                         value={codeState}
+                        error={codeError}
                         onInput={(e) => {
-                            setCodeState(e.target.value);
+                            const test = /^(\w+(-)?)*$/;
+                            if (e.target.value.match(test) || e.target.value == '') {
+                                setCodeState(e.target.value);
+                            }
                         }}
                     />
+                    {codeError && <div className="text-red-500">*{codeError}</div>}
                 </div>
                 <div className="w-full my-4">
                     <div>Năm sản xuất</div>
                     <TextField
                         className="w-full"
                         value={yearState}
+                        error={yearError}
+                        type="number"
                         onInput={(e) => {
                             setYearState(e.target.value);
                         }}
                     />
+                    {yearError && <div className="text-red-500">*{yearError}</div>}
                 </div>
                 {selectedManufacturer && (
                     <div className="my-4">
@@ -194,6 +333,7 @@ function AdminProductEditPage() {
                             <FormControl fullWidth>
                                 <InputLabel id="demo-simple-select-label">Nhà sản xuất</InputLabel>
                                 <Select
+                                    error={manufacturerError}
                                     labelId="demo-simple-select-label"
                                     id="demo-simple-select"
                                     value={selectedManufacturer}
@@ -211,6 +351,7 @@ function AdminProductEditPage() {
                                 </Select>
                             </FormControl>
                         </Box>
+                        {manufacturerError && <div className="text-red-500">*{manufacturerError}</div>}
                     </div>
                 )}
                 <div className="w-full my-4">
@@ -218,24 +359,26 @@ function AdminProductEditPage() {
                     <TextField
                         className="w-full"
                         value={priceState}
+                        type="number"
                         onInput={(e) => {
-                            if (!isNaN(e.target.value) && !e.target.value.includes(' ')) {
-                                setPriceState(e.target.value);
-                            }
+                            setPriceState(e.target.value);
                         }}
+                        error={priceError}
                     />
+                    {priceError && <div className="text-red-500">*{priceError}</div>}
                 </div>
                 <div className="w-full my-4">
                     <div>Tháng bảo hành</div>
                     <TextField
                         className="w-full"
                         value={warrantyState}
+                        type="number"
                         onInput={(e) => {
-                            if (!isNaN(e.target.value) && !e.target.value.includes(' ')) {
-                                setWarrantyState(e.target.value);
-                            }
+                            setWarrantyState(e.target.value);
                         }}
+                        error={warrantyMonthError}
                     />
+                    {warrantyMonthError && <div className="text-red-500">*{warrantyMonthError}</div>}
                 </div>
 
                 {selectedCategoryCode && (
@@ -245,6 +388,7 @@ function AdminProductEditPage() {
                                 <InputLabel id="demo-simple-select-label">Danh mục</InputLabel>
                                 <Select
                                     disabled
+                                    error={categoryError}
                                     labelId="demo-simple-select-label"
                                     id="demo-simple-select"
                                     value={selectedCategoryCode}
@@ -262,6 +406,7 @@ function AdminProductEditPage() {
                                 </Select>
                             </FormControl>
                         </Box>
+                        {categoryError && <div className="text-red-500">*{categoryError}</div>}
                     </div>
                 )}
                 <div>
@@ -282,17 +427,46 @@ function AdminProductEditPage() {
                         );
                     })}
                 </div>
-                <div></div>
+                <div>
+                    {discounts.map((discount, index) => {
+                        return (
+                            <div className="mr-[8px]">
+                                <Checkbox
+                                    onChange={(e) => {
+                                        if (e.target.checked) {
+                                            addSelected(discount.id);
+                                        } else {
+                                            removeSelected(discount.id);
+                                        }
+                                    }}
+                                    defaultChecked={checkIsSelected(discount.id)}
+                                    value={checkIsSelected(discount.id)}
+                                />
+                                <FontAwesomeIcon className="mr-2" icon={faGift} />
+                                <span>
+                                    <b>{discount.discountPercent}%</b> - {discount.name} (
+                                    {renderToTime(discount.startTime)} -{renderToTime(discount.endTime)})
+                                </span>
+                            </div>
+                        );
+                    })}
+                </div>
                 <div>
                     <div>Hình đại diện</div>
                     <UploadImage image={avatarState} callback={uploadAvatar} />
+                    {avatarError && <div className="text-red-500">*{avatarError}</div>}
                 </div>
             </div>
+            {errorState && (
+                <div className="mt-12">
+                    <Alert severity="error">{errorState}</Alert>
+                </div>
+            )}
             <div
                 onClick={submit}
-                className="w-full mt-8 p-4 rounded-lg hover:bg-blue-600 active:bg-blue-700 text-center bg-blue-500 shadow-blue-300 shadow-lg cursor-pointer select-none text-white font-bold text-xl"
+                className="w-full mt-6 p-4 rounded-lg hover:bg-blue-600 active:bg-blue-700 text-center bg-blue-500 shadow-blue-300 shadow-lg cursor-pointer select-none text-white font-bold text-xl"
             >
-                <FontAwesomeIcon icon={faAdd} className="mr-2" /> Sửa
+                <FontAwesomeIcon icon={faPen} className="mr-2" /> Sửa
             </div>
         </div>
     );
