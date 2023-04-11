@@ -39,6 +39,7 @@ function HistoryPage() {
                         </div>
                     );
                 })}
+                {paymentList.length === 0 && <div className="p-6 text-lg">Empty</div>}
             </div>
         </div>
     );

@@ -5,6 +5,7 @@ import {
     faLaptop,
     faList,
     faMoneyBill,
+    faPercent,
     faRetweet,
     faTasks,
     faUser,
@@ -95,6 +96,16 @@ function AdminHomePage() {
                         title="Quản lý"
                         icon={<FontAwesomeIcon icon={faHeart} />}
                         description="Số sản phẩm được yêu thích bởi người dùng"
+                        link="/admin/view-product"
+                    />
+                </div>
+                <div className="w-full md:w-[33%] p-4">
+                    <AdminStatics
+                        color="bg-pink-500 shadow-pink-400"
+                        data="Giảm giá"
+                        title="Quản lý"
+                        icon={<FontAwesomeIcon icon={faPercent} />}
+                        description="Quản lý giảm giá"
                         link="/admin/view-product"
                     />
                 </div>

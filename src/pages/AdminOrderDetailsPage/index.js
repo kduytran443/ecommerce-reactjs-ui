@@ -64,7 +64,7 @@ function AdminOrderDetailsPage() {
             headerName: 'Giá',
             width: 120,
             renderCell: (param) => {
-                return <>{param.value} USD</>;
+                return <>{param.value} VND</>;
             },
         },
         {
@@ -321,7 +321,7 @@ function AdminOrderDetailsPage() {
                                 <div>{renderToTime(paymentDataState.date)}</div>
                                 <div className="font-bold">Tiền đã thanh toán: </div>
                                 <div>
-                                    <span className="text-blue-700 font-bold">{paymentDataState.totalPrice}</span> USD
+                                    <span className="text-blue-700 font-bold">{paymentDataState.totalPrice}</span> VND
                                 </div>
                             </div>
                         </div>
@@ -362,12 +362,12 @@ function AdminOrderDetailsPage() {
                         <b className="text-gray-700">
                             <FontAwesomeIcon icon={faNoteSticky} /> Phí vận chuyển:
                         </b>{' '}
-                        <span className="text-red-500">{deliveryFeeState} USD</span>
+                        <span className="text-red-500">{deliveryFeeState} VND</span>
                     </div>
                 </div>
                 <div className="text-xl my-6">
                     <b>Tổng tiền: </b>
-                    <span className="text-green-500">{totalPriceState} USD</span>
+                    <span className="text-green-500">{totalPriceState} VND</span>
                 </div>
                 <div>
                     <h2 className="mt-4 font-bold text-xl">Danh sách sản phẩm:</h2>

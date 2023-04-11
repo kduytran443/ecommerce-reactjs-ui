@@ -4,8 +4,9 @@ import { IconButton, Snackbar, TextField } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { addressService } from '~/services/addressService';
 import SimpleDialog from '../SimpleDialog';
+import AddressDeleteDialog from '../AddressDeleteDialog';
 
-function AddressItem({ content, id, putAction = () => {}, deleteAction = () => {} }) {
+function AddressItem({ content, id, reload = () => {}, putAction = () => {}, deleteAction = () => {} }) {
     const [addressState, setAddressState] = useState(content);
     const [edittingState, setEdittingState] = useState(false);
 
@@ -45,15 +46,7 @@ function AddressItem({ content, id, putAction = () => {}, deleteAction = () => {
                             </div>
                         )}
                         <div>
-                            <IconButton
-                                onClick={(e) => {
-                                    deleteAction(id);
-                                }}
-                                size="small"
-                                color="error"
-                            >
-                                <FontAwesomeIcon icon={faTrash} />
-                            </IconButton>
+                            <AddressDeleteDialog reload={reload} addressId={id} />
                         </div>
                     </>
                 ) : (

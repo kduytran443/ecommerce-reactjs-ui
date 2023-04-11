@@ -7,6 +7,7 @@ import { faEllipsis } from '@fortawesome/free-solid-svg-icons';
 import HistoryIcon from '@mui/icons-material/History';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import { useUser } from '~/stores/UserStore';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 
 function SidebarMenu({ preAction = () => {} }) {
     const location = useLocation();
@@ -47,6 +48,17 @@ function SidebarMenu({ preAction = () => {} }) {
                     >
                         <AssignmentIcon style={{ color: 'black', padding: '4px', margin: '0' }} fontSize="large" />
                         <span className="text-xs font-bold">Đơn hàng</span>
+                    </li>
+                    <li
+                        className={`select-none cursor-pointer w-[72px] h-[72px] border-gray-200 py-2 rounded-2xl my-2 flex flex-col items-center w-full hover:bg-gray-100 hover:shadow-sm ${
+                            selected && ' bg-gray-200 border-[1px] shadow'
+                        }`}
+                        onClick={(e) => {
+                            doNavigate('/favorite');
+                        }}
+                    >
+                        <FavoriteIcon style={{ color: 'black', padding: '4px', margin: '0' }} fontSize="large" />
+                        <span className="text-xs font-bold">Yêu thích</span>
                     </li>
                     <li
                         className={`select-none cursor-pointer w-[72px] h-[72px] border-gray-200 py-2 rounded-2xl my-2 flex flex-col items-center w-full hover:bg-gray-100 hover:shadow-sm ${

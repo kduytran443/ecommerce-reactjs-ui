@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import CommentCard from '~/components/CommentCard';
 import ProductInfomation from '~/components/ProductInfomation';
 import RecipeReviewCard from '~/components/RecipeReviewCard';
@@ -13,7 +13,17 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCartShopping, faComment, faMoneyBill } from '@fortawesome/free-solid-svg-icons';
 import LoadingProcess from '~/components/LoadingProcess';
 import { Box } from '@mui/system';
-import { Button, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, Tab, TextField } from '@mui/material';
+import {
+    Button,
+    FormControl,
+    FormControlLabel,
+    FormLabel,
+    Radio,
+    RadioGroup,
+    Rating,
+    Tab,
+    TextField,
+} from '@mui/material';
 import ReviewCard from '~/components/ReviewCard';
 import Line from '~/components/Line';
 import { TabContext, TabList } from '@mui/lab';
@@ -32,6 +42,8 @@ import { manufacturerService } from '~/services/manufacturerService';
 import { useUser } from '~/stores/UserStore';
 import { orderService } from '~/services/orderService';
 import { orderDetailsService } from '~/services/orderDetailsService';
+import { reviewService } from '~/services/reviewService';
+import AlertSuccessDialog from '~/components/AlertSuccessDialog';
 
 const content = `<div class="st-pd-content"><p style="text-align:justify; margin-bottom:11px"><b>Asus TUF Gaming F15 FX506LHB-HN188W là chiếc <a href="https://fptshop.com.vn/may-tinh-xach-tay/gaming-do-hoa">laptop gaming giá rẻ</a> với thiết kế tuyệt đẹp, phong cách chuẩn game thủ và cấu hình mạnh mẽ cho cả học tập, công việc cũng như chơi game. Bên cạnh đó là độ bền chuẩn quân đội đã làm nên tên tuổi của dòng TUF.</b></p>
 
@@ -64,6 +76,7 @@ function ProductPage() {
     ]);
     const location = useLocation();
     const [value, setValue] = useState('review');
+    const [alertSuccess, setAlertSuccess] = useState(0);
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
@@ -191,15 +204,77 @@ function ProductPage() {
             });
         }
     };
-    console.log('total', totalDiscountPercent);
     const navigateToLogin = () => {
         navigate('/login');
     };
 
     const [userState, dispatchUserState] = useUser();
 
+    const loadReviews = () => {
+        reviewService.getReviews(productCode).then((data) => {
+            if (data.length > 0) {
+                setReviewListState(data);
+            }
+        });
+    };
+    const loadReviewByUser = () => {
+        reviewService.getReviewByUser(productCode).then((data) => {
+            console.log('datadatadatadatadatadata', data);
+            setReviewRatingState(data);
+        });
+    };
+    useEffect(() => {
+        loadReviews();
+        loadReviewByUser();
+    }, [location]);
+    const [reviewRatingState, setReviewRatingState] = useState({ rating: 0 });
+    const changeReviewRating = (e) => {
+        const obj = { ...reviewRatingState };
+        obj.rating = e.target.value;
+        setReviewRatingState(obj);
+    };
+    const changeReviewComment = (e) => {
+        const obj = { ...reviewRatingState };
+        obj.content = e.target.value;
+        setReviewRatingState(obj);
+    };
+    const postReview = () => {
+        const review = {
+            rating: reviewRatingState.rating,
+            productCode: productCode,
+            content: reviewRatingState.content,
+        };
+
+        reviewService.postReview(review).then((data) => {
+            if (data) {
+                setAlertSuccess(1);
+                setTimeout(() => {
+                    loadReviews();
+                    setAlertSuccess(0);
+                }, 1000);
+            } else {
+                setAlertSuccess(-1);
+                setTimeout(() => {
+                    setAlertSuccess(0);
+                }, 1000);
+            }
+        });
+    };
+    const [commentPagination, setCommentPagination] = useState(1);
+
+    const rating = useMemo(() => {
+        if (reviewListState.length === 0) return 0;
+
+        return (
+            reviewListState.reduce((pre, cur) => {
+                return pre + cur.rating;
+            }, 0) / reviewListState.length
+        );
+    }, [reviewListState]);
+
     return (
         <div className="bg-white">
+            <AlertSuccessDialog open={alertSuccess === 1} />
             <div className="flex flex-col md:flex-row md:items-stretch">
                 <div className="md:w-[50%] w-full ">
                     <SildeshowProduct dataList={productImageListState} />
@@ -316,7 +391,19 @@ function ProductPage() {
                     />
                 )}
             </div>
-            <div className="flex md:flex-row flex-col-reverse mt-8 p-4">
+            <div className="w-full p-4 rounded border">
+                <h3 className="text-lg">Đánh giá: ({reviewListState.length})</h3>
+                {rating >= 0 && (
+                    <Rating
+                        readOnly={true}
+                        defaultValue={rating}
+                        value={rating}
+                        precision={1}
+                        onChange={changeReviewRating}
+                    />
+                )}
+            </div>
+            <div className="flex md:flex-row flex-col-reverse">
                 {productState && (
                     <div className="w-full md:w-[100%]">
                         <div className="w-full p-4">
@@ -326,78 +413,86 @@ function ProductPage() {
                     </div>
                 )}
             </div>
-            <div className="mt-10 w-full">
-                <Box sx={{ width: '100%', typography: 'body1' }}>
-                    <TabContext value={value}>
-                        <Box>
-                            <TabList onChange={handleChange} aria-label="lab API tabs example">
-                                {allTabsState.map((tab) => {
-                                    return <Tab label={tab.name} value={tab.type} key={tab.id} />;
-                                })}
-                            </TabList>
-                        </Box>
-                    </TabContext>
-                </Box>
-                {value === 'review' ? (
-                    <ul className="border border-slate-200 rounded-lg shadow ease-in p-4 md:p-8">
-                        {reviewListState === null ? (
-                            <LoadingProcess />
-                        ) : (
-                            reviewListState.map((review, index) => {
-                                return (
-                                    <li key={index}>
-                                        <ReviewCard
-                                            avatar={review.userAvatar}
-                                            comment={review.comment}
-                                            stars={review.stars}
-                                            username={review.userName}
-                                        />
-                                    </li>
-                                );
-                            })
-                        )}
-                    </ul>
+            <div className="mt-12 p-4">
+                {reviewRatingState && reviewRatingState.rating > 0 ? (
+                    <>
+                        <p className="font-bold">Review của bạn về sản phẩm này:</p>
+                        <Rating
+                            readOnly={false}
+                            defaultValue={reviewRatingState.rating}
+                            value={reviewRatingState.rating}
+                            precision={1}
+                            onChange={changeReviewRating}
+                        />
+                    </>
                 ) : (
-                    <ul className="border border-slate-200 rounded-lg shadow ease-in p-4 md:p-8">
-                        {commentListState === null ? (
-                            <LoadingProcess />
-                        ) : (
-                            <>
-                                <div className="w-full flex flex-col items-center mb-6">
-                                    <div className="w-full">
-                                        <TextField
-                                            label="Bình luận"
-                                            className="w-full"
-                                            rows={3}
-                                            maxRows={4}
-                                            multiline
-                                            onInput={commentOnInput}
-                                            value={commentDataState}
-                                        />
-                                    </div>
-                                    <div className="w-full flex flex-row justify-end mt-2">
-                                        <Button endIcon={<FontAwesomeIcon icon={faComment} />} variant="contained">
-                                            Bình luận
-                                        </Button>
-                                    </div>
-                                </div>
-                                {commentListState.map((review, index) => {
-                                    return (
-                                        <li key={index}>
-                                            <CommentCard
-                                                avatar={review.userAvatar}
-                                                comment={review.comment}
-                                                username={review.userName}
-                                                fullname={review.fullname}
-                                                date={review.createdDate}
-                                            />
-                                        </li>
-                                    );
-                                })}
-                            </>
-                        )}
-                    </ul>
+                    <>
+                        <p className="font-bold">Review của bạn về sản phẩm này:</p>
+                        <Rating
+                            readOnly={false}
+                            value={reviewRatingState.rating}
+                            precision={1}
+                            onChange={changeReviewRating}
+                        />
+                    </>
                 )}
+                <>
+                    <div className="w-full">
+                        <TextField
+                            label="Đánh giá"
+                            className="w-full"
+                            multiline
+                            rows={2}
+                            onInput={changeReviewComment}
+                            value={reviewRatingState.content || ''}
+                        />
+                    </div>
+                    <Button onClick={postReview}>Đánh giá</Button>
+                </>
+            </div>
+            <div className="mt-2 w-full">
+                <ul className="border border-slate-200 rounded-lg shadow ease-in">
+                    {reviewListState === null ? (
+                        <LoadingProcess />
+                    ) : (
+                        <>
+                            {reviewListState.length > 0 ? (
+                                <>
+                                    {reviewListState
+                                        .filter((review, index) => {
+                                            return index + 1 <= commentPagination * 5;
+                                        })
+                                        .map((review, index) => {
+                                            return (
+                                                <li key={index}>
+                                                    <ReviewCard
+                                                        avatar={review.avatar}
+                                                        comment={review.content}
+                                                        rating={review.rating}
+                                                        username={review.username}
+                                                    />
+                                                    {index < reviewListState.length - 1 && (
+                                                        <div className="w-full h-[1px] bg-slate-300"></div>
+                                                    )}
+                                                </li>
+                                            );
+                                        })}
+                                    {reviewListState.length > commentPagination * 5 && (
+                                        <Button
+                                            onClick={(e) => {
+                                                setCommentPagination((pre) => pre + 1);
+                                            }}
+                                        >
+                                            Xem thêm
+                                        </Button>
+                                    )}
+                                </>
+                            ) : (
+                                <div className="p-6">Chưa có đánh giá nào</div>
+                            )}
+                        </>
+                    )}
+                </ul>
             </div>
         </div>
     );

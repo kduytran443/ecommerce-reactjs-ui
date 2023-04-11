@@ -10,6 +10,7 @@ import AddressDialog from '~/components/AddressDialog';
 import { useUser } from '~/stores/UserStore';
 import { userService } from '~/services/userService';
 import { addressService } from '~/services/addressService';
+import UserEditDialog from './UserEditDialog';
 
 function PersonalPage() {
     const [userState, dispatchUserState] = useUser();
@@ -18,13 +19,15 @@ function PersonalPage() {
     const [personDataState, setPersonDataState] = useState({});
 
     const location = useLocation();
-
-    useEffect(() => {
+    const loadPersonal = () => {
         userService.getUser().then((data) => {
             if (data.status !== 500) {
                 setPersonDataState(data);
             }
         });
+    };
+    useEffect(() => {
+        loadPersonal();
     }, [location]);
 
     const [addressListState, setAddressListState] = useState([]);
@@ -58,6 +61,7 @@ function PersonalPage() {
                     setPersonDataState((pre) => {
                         return { ...pre, avatar: reader.result };
                     });
+                    userService.updateUserAvatar({ avatar: reader.result }).then((data) => {});
                     avatarRef.current.value = '';
                 };
                 reader.onerror = (error) => {
@@ -133,14 +137,7 @@ function PersonalPage() {
                             <>
                                 <div className="font-bold">{personDataState.fullname}</div>
                                 <div className="ml-2">
-                                    <IconButton
-                                        onClick={(e) => {
-                                            setVisibleFullnameEditingState(true);
-                                        }}
-                                        size="small"
-                                    >
-                                        <FontAwesomeIcon icon={faPen} />
-                                    </IconButton>
+                                    <UserEditDialog reload={loadPersonal} />
                                 </div>
                             </>
                         ) : (
@@ -171,7 +168,12 @@ function PersonalPage() {
                 </div>
             </div>
             <div className="my-6">
-                <Address list={addressListState} putAction={editAddress} deleteAction={deleteAddress} />
+                <Address
+                    reload={loadAddress}
+                    list={addressListState}
+                    putAction={editAddress}
+                    deleteAction={deleteAddress}
+                />
                 <AddressDialog
                     openButton={
                         <div className="w-full mt-2 h-[62px] font-bold text-slate-500 text-2xl select-none hover:bg-slate-100 active:bg-slate-200 cursor-pointer border-2 border-dashed border-slate-300 flex flex-col items-center justify-center rounded-lg">

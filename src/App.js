@@ -36,6 +36,7 @@ import { PayPalScriptProvider } from '@paypal/react-paypal-js';
 import AdminProductCreatePage from './pages/AdminProductPage/AdminProductCreatePage';
 import AdminProductEditPage from './pages/AdminProductPage/AdminProductEditPage';
 import AdminConsignmentPage from './pages/AdminConsignmentPage';
+import FavoritePage from './pages/FavoritePage';
 
 function App() {
     const [isAuthenticatedState, setIsAuthenticatedState] = useState(null);
@@ -158,6 +159,14 @@ function App() {
                         element={
                             <FullLayout>
                                 <OrderDetailsPage />
+                            </FullLayout>
+                        }
+                    />
+                    <Route
+                        path={'/favorite'}
+                        element={
+                            <FullLayout>
+                                <FavoritePage />
                             </FullLayout>
                         }
                     />

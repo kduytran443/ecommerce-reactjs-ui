@@ -8,95 +8,31 @@ import RecipeReviewCard from '~/components/RecipeReviewCard';
 import SimpleAccordion from '~/components/SimpleAccordion';
 import { productService } from '~/services/productService';
 
-function SearchPage() {
+function FavoritePage() {
     const [searchInputState, setSearchInputState] = useState('');
     const { searchValue } = useParams();
-    const [searchOptionsState, setSearchOptionsState] = useState({
-        categoryList: [],
-        minPrice: 0,
-        maxPrice: 0,
-        status: 1,
-    });
     const [productListState, setProductListState] = useState(() => {
         return [];
     });
     const location = useLocation();
-    const [categoryListState, setCategoryListState] = useState([
-        {
-            id: 1,
-            name: 'Laptop',
-            code: 'laptop',
-        },
-        {
-            id: 2,
-            name: 'Máy tính',
-            code: 'may-tinh',
-        },
-        {
-            id: 3,
-            name: 'Linh kiện',
-            code: 'linh-kien',
-        },
-    ]);
 
-    const handleChangeMinPrice = (e) => {
-        const regex = /^[0-9\b]+$/;
-        if (e.target.value === '' || regex.test(e.target.value)) {
-            setSearchOptionsState((pre) => {
-                return { ...searchOptionsState, minPrice: e.target.value };
-            });
-        }
-    };
-
-    const handleChangeMaxPrice = (e) => {
-        const regex = /^[0-9\b]+$/;
-        if (e.target.value === '' || regex.test(e.target.value)) {
-            setSearchOptionsState((pre) => {
-                return { ...searchOptionsState, maxPrice: e.target.value };
-            });
-        }
+    const loadData = () => {
+        productService.getFavoritedProductsByUser().then((data) => {
+            if (data.length >= 0) {
+                setProductListState(data);
+            }
+        });
     };
 
     useEffect(() => {
-        productService.searchByName(searchValue).then((data) => {
-            console.log('data', data);
-            setProductListState(data);
-        });
+        loadData();
     }, [location]);
     const navigate = useNavigate();
-    const search = () => {
-        if (searchInputState.trim() || searchInputState === ' ') {
-            navigate('/search/' + encodeURI(searchInputState));
-        }
-    };
 
     return (
         <div className="select-none">
-            <h1 className="font-bold text-3xl p-2">Tìm kiếm</h1>
-            <div className="my-6">
-                <TextField
-                    onChange={(e) => setSearchInputState(e.target.value)}
-                    className="w-full"
-                    value={searchInputState}
-                    label="Tìm kiếm"
-                    placeholder="Tìm kiếm"
-                    variant="outlined"
-                    InputProps={{
-                        startAdornment: (
-                            <InputAdornment position="start">
-                                <FontAwesomeIcon icon={faSearch} />
-                            </InputAdornment>
-                        ),
-                        autoCapitalize: 'off',
-                        autoCorrect: 'off',
-                    }}
-                    onKeyUp={(e) => {
-                        if (e.key === 'Enter') {
-                            search();
-                        }
-                    }}
-                />
-            </div>
+            <h1 className="font-bold text-3xl p-2">Danh sách sản phẩm yêu thích</h1>
+
             <ul className="flex flex-row flex-wrap justify-start items-center">
                 {productListState.map((product) => {
                     return (
@@ -117,7 +53,7 @@ function SearchPage() {
     );
 }
 
-export default SearchPage;
+export default FavoritePage;
 
 /*
 

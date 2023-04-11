@@ -57,37 +57,39 @@ export default function RecipeReviewCard({
     }, [discounts]);
 
     return (
-        <Card sx={{ width: '100%' }} className={'flex flex-col justify-between'}>
-            <Link to={link}>
-                <div className="group relative top-0 left-0 hover:shadow-md duration-200">
-                    <div className="absolute w-full h-full top-0 left-0 duration-200 opacity-0 group-hover:opacity-100">
-                        <div className="absolute top-0 left-0 bg-black w-full h-full opacity-30"></div>
-                        <div className="absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 text-white font-semibold">
-                            Bấm vào để xem chi tiết sản phẩm
+        <Card sx={{ width: '100%', height: '100%' }} className={'flex flex-col justify-between'}>
+            <div>
+                <Link to={link}>
+                    <div className="group relative top-0 left-0 hover:shadow-md duration-200">
+                        <div className="absolute w-full h-full top-0 left-0 duration-200 opacity-0 group-hover:opacity-100">
+                            <div className="absolute top-0 left-0 bg-black w-full h-full opacity-30"></div>
+                            <div className="absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 text-white font-semibold">
+                                Bấm vào để xem chi tiết sản phẩm
+                            </div>
                         </div>
+                        <CardMedia component="img" height="194" image={image} alt="img" />
                     </div>
-                    <CardMedia component="img" height="194" image={image} alt="img" />
-                </div>
-            </Link>
-            <div className="my-2">
-                <CardContent style={{ paddingBottom: 0 }}>
-                    <Link to={link}>
-                        <h3 className="font-bold text-base md:text-lg hover:text-blue-500">{name}</h3>
-                    </Link>
-                    <div className="flex flex-col md:flex-row items-center justify-between mt-2">
-                        <p className="text-xl font-bold text-red-500">
-                            {formatter.format(price - price * (discountState / 100))}
-                            <span className="text-gray-500 ml-4">
-                                {discountState > 0 && <strike>{price} VNĐ</strike>}
-                            </span>
-                        </p>
-                        {discountState > 0 && (
-                            <p className="text-blue-500">
-                                Giảm <b>{discountState}%</b>
+                </Link>
+                <div className="my-2">
+                    <CardContent style={{ paddingBottom: 0 }}>
+                        <Link to={link}>
+                            <h3 className="font-bold text-base md:text-lg hover:text-blue-500">{name}</h3>
+                        </Link>
+                        <div className="flex flex-col md:flex-row items-center flex-wrap justify-between mt-2">
+                            <p className="text-xl font-bold text-red-500">
+                                {formatter.format(price - price * (discountState / 100))}
+                                <span className="text-gray-500 ml-4">
+                                    {discountState > 0 && <strike>{formatter.format(price)}</strike>}
+                                </span>
                             </p>
-                        )}
-                    </div>
-                </CardContent>
+                            {discountState > 0 && (
+                                <p className="text-blue-500">
+                                    Giảm <b>{discountState}%</b>
+                                </p>
+                            )}
+                        </div>
+                    </CardContent>
+                </div>
             </div>
             <CardActions disableSpacing style={{ paddingTop: 0 }}>
                 <div className="flex flex-row justify-end items-end w-full">

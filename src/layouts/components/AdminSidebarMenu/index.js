@@ -61,7 +61,7 @@ function AdminSidebarMenu({ preAction = () => {} }) {
                     selected && ' bg-gray-200 border-[1px] shadow'
                 }`}
                 onClick={(e) => {
-                    doNavigate('/history');
+                    doNavigate('/admin/view-product');
                 }}
             >
                 <QueryStatsIcon style={{ color: 'black', padding: '4px', margin: '0' }} fontSize="large" />

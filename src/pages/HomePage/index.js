@@ -46,7 +46,7 @@ function HomePage() {
             <ul className="flex flex-row flex-wrap mb-6">
                 {categoryListState.map((item, index) => {
                     return (
-                        <div className="w-full md:w-[33%] p-4">
+                        <div className="w-full md:w-[50%] lg:w-[33%] p-4">
                             <Category
                                 color="bg-gray-200 shadow-gray-100"
                                 data={item.name}
@@ -61,11 +61,11 @@ function HomePage() {
                 })}
             </ul>
             <div>
-                <Line title={`Laptop gaming ${laptopNumberState}`} />
-                <ul className="flex flex-row flex-wrap items-start">
+                <Line title={`Laptop gaming ${laptopNumberState}`} code="laptop" />
+                <ul className="flex flex-row flex-wrap items-stretch ">
                     {laptopListState.map((product) => {
                         return (
-                            <li className="py-2 px-[2px] sm:px-2 w-full md:w-[33%] lg:w-[25%]">
+                            <li className="py-2 px-[2px] sm:px-2 w-full md:w-[50%] lg:w-[33%] xl:w-[25%]">
                                 <RecipeReviewCard
                                     price={product.price}
                                     image={product.avatar}

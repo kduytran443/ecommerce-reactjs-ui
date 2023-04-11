@@ -34,17 +34,19 @@ function LoginPage() {
         fetch(`${API_BASE_URL}/api/login`, options)
             .then((res) => res.json())
             .then((data) => {
-                if (data.status === 403) {
-                    setError('Tài khoản này không tồn tại');
-                } else {
-                    console.log('thành công', data);
+                if (data.id) {
                     dispatchUserState(setUserInfo(data));
-
-                    if (data.role === 'USER') {
-                        navigate('/home');
-                    } else if (data.role === 'ADMIN') {
+                    console.log('data');
+                    if (data.role === 'ADMIN') {
                         navigate('/admin/home');
+                    } else {
+                        navigate('/home');
                     }
+                } else {
+                    if (data.message == 'Bad credentials') {
+                        data.message = 'Mật khẩu không đúng';
+                    }
+                    setError(data.message);
                 }
             })
             .catch((error) => {
@@ -86,7 +88,14 @@ function LoginPage() {
                 <h1 className="font-bold text-xl mb-2">ĐĂNG NHẬP</h1>
                 <div className="my-2 mt-4 w-full">
                     <TextField
-                        onChange={(e) => setUsernameState(e.target.value)}
+                        onKeyUp={(e) => {
+                            if (e.key === 'Enter') {
+                                submitForm();
+                            }
+                        }}
+                        onChange={(e) => {
+                            setUsernameState(e.target.value);
+                        }}
                         className="w-full"
                         value={usernameState}
                         label="Tài khoản"
@@ -105,9 +114,13 @@ function LoginPage() {
                         helperText={usernameErrorState}
                     />
                 </div>
-
                 <div className="mb-2 mt-4 w-full">
                     <TextField
+                        onKeyUp={(e) => {
+                            if (e.key === 'Enter') {
+                                submitForm();
+                            }
+                        }}
                         onChange={(e) => setPasswordState(e.target.value)}
                         className="w-full"
                         label="Mật khẩu"

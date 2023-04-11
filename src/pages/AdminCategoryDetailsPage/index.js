@@ -197,6 +197,7 @@ function AdminCategoryDetailsPage() {
             </div>
             <div className="mt-10">
                 <SimpleDialog
+                    isCart
                     openButton={
                         <Button startIcon={<FontAwesomeIcon icon={faTrash} />} variant="contained" color="error">
                             Xóa danh mục

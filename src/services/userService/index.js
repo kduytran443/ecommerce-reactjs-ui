@@ -23,10 +23,19 @@ export const userService = {
         const response = await fetch(`${API_BASE_URL}/${this.api}`, config);
         return response.json();
     },
-
+    async put(user) {
+        const config = putConfig(user);
+        const response = await fetch(`${API_BASE_URL}/${this.api}`, config);
+        return response.json();
+    },
     async signUp(user) {
         const config = postConfig(user);
         const response = await fetch(`${API_BASE_URL}/api/sign-up`, config);
+        return response.json();
+    },
+    async updateUserAvatar(user) {
+        const config = putConfig(user);
+        const response = await fetch(`${API_BASE_URL}/${this.api}/avatar`, config);
         return response.json();
     },
     async signUpAdmin(user) {

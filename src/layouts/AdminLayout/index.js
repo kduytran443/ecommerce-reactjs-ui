@@ -8,11 +8,7 @@ import SimpleFooter from '../components/SimpleFooter';
 function AdminLayout({ children }) {
     const [userDataState, setUserDataState] = useUser({});
     const navigate = useNavigate();
-    useEffect(() => {
-        if (userDataState && userDataState.role !== 'ADMIN') {
-            navigate('/page-not-found');
-        }
-    }, [userDataState]);
+    useEffect(() => {}, [userDataState]);
     return (
         <div className="flex flex-col min-h-[100vh]">
             <AdminHeader />

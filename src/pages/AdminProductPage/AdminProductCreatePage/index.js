@@ -160,7 +160,9 @@ function AdminProductCreatePage() {
                         label="Code sản phẩm"
                         value={codeState}
                         onInput={(e) => {
-                            setCodeState(e.target.value);
+                            if (!e.target.value.includes(' ')) {
+                                setCodeState(e.target.value);
+                            }
                         }}
                     />
                 </div>
@@ -169,6 +171,7 @@ function AdminProductCreatePage() {
                         className="w-full"
                         label="Năm sản xuất"
                         value={yearState}
+                        type="number"
                         onInput={(e) => {
                             setYearState(e.target.value);
                         }}
@@ -202,10 +205,9 @@ function AdminProductCreatePage() {
                         className="w-full"
                         label="Giá"
                         value={priceState}
+                        type="number"
                         onInput={(e) => {
-                            if (!isNaN(e.target.value) && !e.target.value.includes(' ')) {
-                                setPriceState(e.target.value);
-                            }
+                            setPriceState(e.target.value);
                         }}
                     />
                 </div>
@@ -214,10 +216,9 @@ function AdminProductCreatePage() {
                         className="w-full"
                         label="Tháng bảo hành"
                         value={warrantyState}
+                        type="number"
                         onInput={(e) => {
-                            if (!isNaN(e.target.value) && !e.target.value.includes(' ')) {
-                                setWarrantyState(e.target.value);
-                            }
+                            setWarrantyState(e.target.value);
                         }}
                     />
                 </div>
@@ -231,7 +232,7 @@ function AdminProductCreatePage() {
                                 id="demo-simple-select"
                                 value={selectedCategoryCode}
                                 defaultValue={selectedCategoryCode}
-                                label="Chủ đề"
+                                label="Danh mục"
                                 onChange={(e) => {
                                     setSelectedCategoryCode(e.target.value);
                                 }}
@@ -262,18 +263,6 @@ function AdminProductCreatePage() {
                             </div>
                         );
                     })}
-                </div>
-                <div className="w-full my-4">
-                    <TextField
-                        className="w-full"
-                        label="Nội dung"
-                        value={contentState}
-                        multiline
-                        rows={6}
-                        onInput={(e) => {
-                            setContentState(e.target.value);
-                        }}
-                    />
                 </div>
                 <div></div>
                 <div>

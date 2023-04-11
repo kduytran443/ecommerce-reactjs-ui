@@ -65,7 +65,7 @@ function CategoryPage() {
                     }}
                 ></div>
                 <div></div>
-                <ul className="flex mt-8 flex-row flex-wrap justify-start items-center">
+                <ul className="flex mt-8 flex-row flex-wrap justify-start items-stretch ">
                     {productListState.map((product) => {
                         return (
                             <li className="py-2 px-[2px] sm:px-2 w-full md:w-[33%] lg:w-[25%]">

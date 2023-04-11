@@ -2,16 +2,11 @@ import { Avatar, Button } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import AdminProductDeleteDialog from '~/pages/AdminProductPage/AdminProductDeleteDialog';
 import { productService } from '~/services/productService';
 import SimpleDialog from '../OrderDialog';
 
 function ProductTable({ rows, reload = () => {} }) {
-    const deleteItem = (code) => {
-        productService.deleteProduct({ code: code }).then((data) => {
-            reload();
-        });
-    };
-
     const columns = [
         { field: 'id', headerName: 'ID', width: 70 },
         {
@@ -45,11 +40,6 @@ function ProductTable({ rows, reload = () => {} }) {
             width: 120,
         },
         {
-            field: 'discount',
-            headerName: 'Giảm giá',
-            width: 120,
-        },
-        {
             field: 'code',
             headerName: 'Thao tác',
             width: 160,
@@ -59,14 +49,7 @@ function ProductTable({ rows, reload = () => {} }) {
                         <Link to={'/admin/product/edit/' + param.value}>
                             <Button>Sửa</Button>
                         </Link>
-                        <Button
-                            onClick={(e) => {
-                                deleteItem(param.value);
-                            }}
-                            color="error"
-                        >
-                            Xóa
-                        </Button>
+                        <AdminProductDeleteDialog code={param.value} reload={reload} />
                     </>
                 );
             },
