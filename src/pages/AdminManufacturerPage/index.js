@@ -1,6 +1,6 @@
 import { faArrowLeft, faCamera, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Avatar, Button, IconButton, TextField } from '@mui/material';
+import { Alert, Avatar, Button, IconButton, TextField } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import AlertFailDialog from '~/components/AlertFailDialog';
@@ -53,6 +53,7 @@ function AdminManufacturerPage() {
         }
     };
 
+    const [errorState, setErrorState] = useState('');
     const submitAdd = () => {
         if (newManufacturerState.avatar && newManufacturerState.name && newManufacturerState.code) {
             console.log('newManufacturerState.avatar', newManufacturerState.avatar);
@@ -64,11 +65,16 @@ function AdminManufacturerPage() {
                     status: 1,
                 })
                 .then((data) => {
-                    loadData();
-                    setSuccess(1);
-                    setTimeout(() => {
-                        setSuccess(0);
-                    }, 1000);
+                    if (data.id) {
+                        setErrorState('');
+                        loadData();
+                        setSuccess(1);
+                        setTimeout(() => {
+                            setSuccess(0);
+                        }, 1000);
+                    } else {
+                        setErrorState(data.message);
+                    }
                 });
         } else {
             setSuccess(-1);
@@ -124,11 +130,11 @@ function AdminManufacturerPage() {
                                     </div>
                                 </div>
                                 <div className="my-4 w-full">
-                                    Tên nhà cung cấp
+                                    Tên nhà sản xuất
                                     <div className="w-full mt-2">
                                         <TextField
                                             className="w-full"
-                                            label="Tên nhà cung cấp"
+                                            label="Tên nhà sản xuất"
                                             value={newManufacturerState.name}
                                             onInput={(e) => {
                                                 setNewManufacturerState((pre) => {
@@ -154,12 +160,17 @@ function AdminManufacturerPage() {
                                     </div>
                                 </div>
                             </div>
+                            {errorState && (
+                                <div className="mt-4 mb-4">
+                                    <Alert severity="error">{errorState}</Alert>
+                                </div>
+                            )}
                             <Button
                                 onClick={submitAdd}
                                 startIcon={<FontAwesomeIcon icon={faPlus} />}
                                 variant="contained"
                             >
-                                Thêm nhà cung cấp
+                                Thêm
                             </Button>
                         </div>
                     </SimpleAccordion>

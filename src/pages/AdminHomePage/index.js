@@ -18,8 +18,8 @@ import WarehouseIcon from '@mui/icons-material/Warehouse';
 function AdminHomePage() {
     return (
         <div className="w-full">
-            <div className="w-full flex flex-col md:flex-row mt-4 items-center flex-wrap">
-                <div className="w-full md:w-[33%] p-4">
+            <div className="w-full flex flex-col md:flex-row mt-4 items-start flex-wrap">
+                <div className="w-full md:w-[50%] lg:w-[33%] p-4">
                     <AdminStatics
                         color="bg-red-500 shadow-red-400"
                         data="Đơn hàng"
@@ -29,7 +29,7 @@ function AdminHomePage() {
                         description="Danh sách đơn hàng"
                     />
                 </div>
-                <div className="w-full md:w-[33%] p-4">
+                <div className="w-full md:w-[50%] lg:w-[33%] p-4">
                     <AdminStatics
                         color="bg-lime-500 shadow-lime-400"
                         data="Danh mục"
@@ -39,7 +39,7 @@ function AdminHomePage() {
                         link="/admin/category"
                     />
                 </div>
-                <div className="w-full md:w-[33%] p-4">
+                <div className="w-full md:w-[50%] lg:w-[33%] p-4">
                     <AdminStatics
                         color="bg-yellow-500 shadow-yellow-400"
                         data="Nhà sản xuất"
@@ -49,7 +49,7 @@ function AdminHomePage() {
                         link="/admin/manufacturer"
                     />
                 </div>
-                <div className="w-full md:w-[33%] p-4">
+                <div className="w-full md:w-[50%] lg:w-[33%] p-4">
                     <AdminStatics
                         color="bg-sky-500 shadow-sky-400"
                         data="Sản phẩm"
@@ -59,7 +59,7 @@ function AdminHomePage() {
                         link="/admin/product"
                     />
                 </div>
-                <div className="w-full md:w-[33%] p-4">
+                <div className="w-full md:w-[50%] lg:w-[33%] p-4">
                     <AdminStatics
                         color="bg-purple-500 shadow-purple-400"
                         data="Hàng tồn"
@@ -69,7 +69,7 @@ function AdminHomePage() {
                         link="/admin/consignment"
                     />
                 </div>
-                <div className="w-full md:w-[33%] p-4">
+                <div className="w-full md:w-[50%] lg:w-[33%] p-4">
                     <AdminStatics
                         color="bg-blue-500 shadow-blue-400"
                         data="Doanh thu sản phẩm"
@@ -79,7 +79,7 @@ function AdminHomePage() {
                         link="/admin/view-product"
                     />
                 </div>
-                <div className="w-full md:w-[33%] p-4">
+                <div className="w-full md:w-[50%] lg:w-[33%] p-4">
                     <AdminStatics
                         color="bg-green-500 shadow-green-400"
                         data="Người dùng"
@@ -89,7 +89,7 @@ function AdminHomePage() {
                         link="/admin/user"
                     />
                 </div>
-                <div className="w-full md:w-[33%] p-4">
+                <div className="w-full md:w-[50%] lg:w-[33%] p-4">
                     <AdminStatics
                         color="bg-red-500 shadow-red-400"
                         data="Sản phẩm yêu thích"
@@ -99,7 +99,7 @@ function AdminHomePage() {
                         link="/admin/view-product"
                     />
                 </div>
-                <div className="w-full md:w-[33%] p-4">
+                <div className="w-full md:w-[50%] lg:w-[33%] p-4">
                     <AdminStatics
                         color="bg-pink-500 shadow-pink-400"
                         data="Giảm giá"

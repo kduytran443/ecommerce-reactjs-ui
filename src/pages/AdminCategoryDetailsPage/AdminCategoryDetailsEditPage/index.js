@@ -72,8 +72,21 @@ function AdminCategoryDetailsEditPage() {
         });
     };
 
+    const [nameError, setnameError] = useState('');
+    const [codeError, setcodeError] = useState('');
+    const [descriptionError, setdescriptionError] = useState('');
+    const [iconError, seticonError] = useState('');
+    const [imageError, setimageError] = useState('');
     const addNewSubmit = () => {
-        addNewCategory(categoryDataState);
+        if (
+            categoryDataState.name &&
+            categoryDataState.code &&
+            categoryDataState.description &&
+            categoryDataState.icon &&
+            categoryDataState.image
+        ) {
+            addNewCategory(categoryDataState);
+        }
     };
     const editSubmit = () => {
         console.log(categoryDataState);

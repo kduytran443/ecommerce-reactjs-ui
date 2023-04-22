@@ -1,6 +1,6 @@
 import { faArrowLeft, faCamera } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Avatar, Button, IconButton, TextField } from '@mui/material';
+import { Alert, Avatar, Button, IconButton, TextField } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import AlertFailDialog from '~/components/AlertFailDialog';
@@ -28,17 +28,24 @@ function AdminManufacturerDetailsPage() {
     };
 
     const [success, setSuccess] = useState(0);
+    const [errorState, setErrorState] = useState('');
 
     const update = () => {
         if (manufacturerState.logo && manufacturerState.name && manufacturerState.code) {
             manufacturerService.putManufacturer(manufacturerState).then((data) => {
-                setSuccess(1);
-                setTimeout(() => {
-                    navigate('/admin/manufacturer');
-                }, 1000);
+                if (data.id) {
+                    setErrorState('');
+                    setSuccess(1);
+                    setTimeout(() => {
+                        navigate('/admin/manufacturer');
+                    }, 1000);
+                } else {
+                    setErrorState(data.message);
+                }
             });
         } else {
             setSuccess(-1);
+
             setTimeout(() => {
                 setSuccess(0);
             }, 1000);
@@ -133,7 +140,8 @@ function AdminManufacturerDetailsPage() {
                         label="Code"
                         value={manufacturerState.code}
                         onInput={(e) => {
-                            if (!e.target.value.includes(' ')) {
+                            const test = /^(\w+(-)?)*$/;
+                            if (e.target.value.match(test) || e.target.value == '') {
                                 setManufacturerState((pre) => {
                                     return { ...pre, code: e.target.value };
                                 });
@@ -142,6 +150,11 @@ function AdminManufacturerDetailsPage() {
                         className="w-full"
                     />
                 </div>
+                {errorState && (
+                    <div className="mt-12">
+                        <Alert severity="error">{errorState}</Alert>
+                    </div>
+                )}
                 <div className="mt-8">
                     <Button onClick={cancel} color="inherit">
                         Hủy

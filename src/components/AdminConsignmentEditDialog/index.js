@@ -65,7 +65,7 @@ export default function AdminConsignmentEditDialog({ reload = () => {}, consignm
     };
     const [error, setError] = useState(false);
     const submit = () => {
-        if (productId && price && quantity) {
+        if (productId && price && quantity && price > 0 && quantity > 0) {
             const obj = {
                 quantity: quantity,
                 price: price,
@@ -149,6 +149,7 @@ export default function AdminConsignmentEditDialog({ reload = () => {}, consignm
                                     onInput={(e) => {
                                         onInput(e, setPrice);
                                     }}
+                                    type="number"
                                 />
                             </div>
                             <div className="w-full">

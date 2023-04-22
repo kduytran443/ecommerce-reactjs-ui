@@ -38,6 +38,7 @@ import AdminProductEditPage from './pages/AdminProductPage/AdminProductEditPage'
 import AdminConsignmentPage from './pages/AdminConsignmentPage';
 import FavoritePage from './pages/FavoritePage';
 import AdminDiscountPage from './pages/AdminDiscountPage';
+import BillDetailsPage from './pages/BillDetailsPage';
 
 function App() {
     const [isAuthenticatedState, setIsAuthenticatedState] = useState(null);
@@ -161,6 +162,15 @@ function App() {
                             <FullLayout>
                                 <OrderDetailsPage />
                             </FullLayout>
+                        }
+                    />
+
+                    <Route
+                        path={'/admin/bill-details/:orderId'}
+                        element={
+                            <AdminLayout>
+                                <BillDetailsPage />
+                            </AdminLayout>
                         }
                     />
                     <Route

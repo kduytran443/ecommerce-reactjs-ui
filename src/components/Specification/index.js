@@ -5,6 +5,7 @@ import { useState } from 'react';
 import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import SimpleDialog from '../OrderDialog';
+import DeleteSpecificationDialog from '../DeleteSpecificationDialog';
 
 function Specification({ name, id, deleteAction = () => {}, editAction = () => {} }) {
     const [dataState, setDataState] = useState({
@@ -38,11 +39,9 @@ function Specification({ name, id, deleteAction = () => {}, editAction = () => {
             </div>
             {visibleEditing ? (
                 <>
-                    {dataState.name && dataState.name.trim() && (
-                        <IconButton onClick={submitEdit} color="primary">
-                            <FontAwesomeIcon icon={faCheckCircle} />
-                        </IconButton>
-                    )}
+                    <IconButton disabled={dataState.name && dataState.name.trim()} onClick={submitEdit} color="primary">
+                        <FontAwesomeIcon icon={faCheckCircle} />
+                    </IconButton>
                     <IconButton onClick={cancel} color="error">
                         <FontAwesomeIcon icon={faXmarkCircle} />
                     </IconButton>
@@ -57,7 +56,7 @@ function Specification({ name, id, deleteAction = () => {}, editAction = () => {
                     >
                         <DriveFileRenameOutlineIcon />
                     </IconButton>
-                    <SimpleDialog
+                    <DeleteSpecificationDialog
                         openButton={
                             <IconButton color="error" onClick={submitEdit}>
                                 <DeleteForeverIcon />
@@ -70,7 +69,7 @@ function Specification({ name, id, deleteAction = () => {}, editAction = () => {
                         color="error"
                     >
                         <div className="py-4 px-8">Bạn có đồng ý xóa không?</div>
-                    </SimpleDialog>
+                    </DeleteSpecificationDialog>
                 </>
             )}
         </div>

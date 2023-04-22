@@ -1,14 +1,23 @@
 import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useUser } from '~/stores/UserStore';
 import AdminHeader from '../components/AdminHeader';
 import AdminSidebarMenu from '../components/AdminSidebarMenu';
 import SimpleFooter from '../components/SimpleFooter';
+import { userService } from '~/services/userService';
 
 function AdminLayout({ children }) {
     const [userDataState, setUserDataState] = useUser({});
     const navigate = useNavigate();
-    useEffect(() => {}, [userDataState]);
+    const location = useLocation();
+    useEffect(() => {
+        userService.getUser().then((data) => {
+            console.log('USER', data, !data.username, !data.role == 'ADMIN');
+            if (!data.username || data.role !== 'ADMIN') {
+                navigate('/login');
+            }
+        });
+    }, [location]);
     return (
         <div className="flex flex-col min-h-[100vh]">
             <AdminHeader />

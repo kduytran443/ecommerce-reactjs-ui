@@ -1,12 +1,29 @@
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { CheckBox } from '@mui/icons-material';
-import { Checkbox, FormControlLabel, FormGroup, InputAdornment, Slider, TextField } from '@mui/material';
+import {
+    Checkbox,
+    FormControl,
+    FormControlLabel,
+    FormGroup,
+    FormLabel,
+    InputAdornment,
+    InputLabel,
+    MenuItem,
+    RadioGroup,
+    Select,
+    Slider,
+    TextField,
+} from '@mui/material';
+import { Box } from '@mui/system';
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import RecipeReviewCard from '~/components/RecipeReviewCard';
 import SimpleAccordion from '~/components/SimpleAccordion';
+import { categoryService } from '~/services/categoryService';
+import { manufacturerService } from '~/services/manufacturerService';
 import { productService } from '~/services/productService';
+import { validDiscount } from '~/utils';
 
 function SearchPage() {
     const [searchInputState, setSearchInputState] = useState('');
@@ -21,23 +38,28 @@ function SearchPage() {
         return [];
     });
     const location = useLocation();
-    const [categoryListState, setCategoryListState] = useState([
-        {
-            id: 1,
-            name: 'Laptop',
-            code: 'laptop',
-        },
-        {
-            id: 2,
-            name: 'Máy tính',
-            code: 'may-tinh',
-        },
-        {
-            id: 3,
-            name: 'Linh kiện',
-            code: 'linh-kien',
-        },
-    ]);
+    const [categoryListState, setCategoryListState] = useState([]);
+    const [selectedCategoryCode, setSelectedCategoryCode] = useState();
+
+    const [manufacturers, setManufacturers] = useState([]);
+    const [selectedManufacturer, setSelectedManufacturer] = useState();
+
+    const [checkDiscount, setCheckDiscount] = useState(false);
+
+    useEffect(() => {
+        categoryService.getCategories().then((data) => {
+            if (data.length > 0) {
+                setCategoryListState(data);
+            }
+        });
+    }, [location]);
+    useEffect(() => {
+        manufacturerService.getManufacturers().then((data) => {
+            if (data.length > 0) {
+                setManufacturers(data);
+            }
+        });
+    }, [location]);
 
     const handleChangeMinPrice = (e) => {
         const regex = /^[0-9\b]+$/;
@@ -59,7 +81,6 @@ function SearchPage() {
 
     useEffect(() => {
         productService.searchByName(searchValue).then((data) => {
-            console.log('data', data);
             setProductListState(data);
         });
     }, [location]);
@@ -68,6 +89,44 @@ function SearchPage() {
         if (searchInputState.trim() || searchInputState === ' ') {
             navigate('/search/' + encodeURI(searchInputState));
         }
+    };
+
+    const [filteredProductList, setFilteredProductList] = useState([]);
+
+    const filter = () => {
+        const arr = [...productListState];
+
+        const filteredArr = arr
+            .filter((item) => {
+                return item.name.toLowerCase().includes(searchInputState.toLowerCase());
+            })
+            .filter((item) => {
+                return selectedCategoryCode
+                    ? item?.categoryCode === selectedCategoryCode || selectedManufacturer === 'all'
+                    : true;
+            })
+            .filter((item) => {
+                return selectedManufacturer
+                    ? item?.manufacturer.code === selectedManufacturer || selectedManufacturer === 'all'
+                    : true;
+            })
+            .filter((item) => {
+                const countDiscount = item?.discounts.reduce((pre, cur) => {
+                    return validDiscount(cur) ? pre + 1 : pre;
+                }, 0);
+
+                return checkDiscount ? countDiscount > 0 : true;
+            });
+
+        setFilteredProductList(filteredArr);
+    };
+
+    useEffect(() => {
+        filter();
+    }, [productListState]);
+
+    const submit = () => {
+        filter();
     };
 
     return (
@@ -97,8 +156,82 @@ function SearchPage() {
                     }}
                 />
             </div>
+            <div>
+                <div>
+                    <Box sx={{ minWidth: 120 }}>
+                        <FormControl fullWidth>
+                            <InputLabel id="demo-simple-select-label">Danh mục</InputLabel>
+                            <Select
+                                labelId="demo-simple-select-label"
+                                id="demo-simple-select"
+                                value={selectedCategoryCode}
+                                defaultValue={selectedCategoryCode}
+                                label="Danh mục"
+                                onChange={(e) => {
+                                    setSelectedCategoryCode(e.target.value);
+                                }}
+                            >
+                                <MenuItem value={'all'}>Tất cả</MenuItem>
+                                {categoryListState.map((item) => (
+                                    <MenuItem key={item.code} value={item.code}>
+                                        {item.name}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                    </Box>
+                </div>
+            </div>
+
+            <div className="my-4">
+                <Box sx={{ minWidth: 120 }}>
+                    <FormControl fullWidth>
+                        <InputLabel id="demo-simple-select-label">Nhà sản xuất</InputLabel>
+                        <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            value={selectedManufacturer}
+                            defaultValue={selectedManufacturer}
+                            label="Chủ đề"
+                            onChange={(e) => {
+                                setSelectedManufacturer(e.target.value);
+                            }}
+                        >
+                            <MenuItem value={'all'}>Tất cả</MenuItem>
+                            {manufacturers.map((item) => (
+                                <MenuItem key={item.id} value={item.code}>
+                                    {item.name}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+                </Box>
+            </div>
+            <div className="flex flex-row items-center">
+                <FormGroup>
+                    <FormControlLabel
+                        control={
+                            <Checkbox
+                                onChange={(e) => {
+                                    setCheckDiscount(e.target.checked);
+                                }}
+                                defaultChecked
+                            />
+                        }
+                        label="Giảm giá"
+                    />
+                </FormGroup>
+            </div>
+
+            <div
+                onClick={submit}
+                className="w-full mt-8 p-4 rounded-lg hover:bg-blue-600 active:bg-blue-700 text-center bg-blue-500 shadow-blue-300 shadow-lg cursor-pointer select-none text-white font-bold text-xl"
+            >
+                <FontAwesomeIcon icon={faSearch} className="mr-2" /> Tìm kiếm
+            </div>
+
             <ul className="flex flex-row flex-wrap justify-start items-center">
-                {productListState.map((product) => {
+                {filteredProductList.map((product) => {
                     return (
                         <li className="py-2 px-[2px] sm:px-2 w-full md:w-[33%] lg:w-[25%]">
                             <RecipeReviewCard
@@ -111,7 +244,7 @@ function SearchPage() {
                         </li>
                     );
                 })}
-                {productListState.length === 0 && <div className="mt-8">Không có sản phẩm nào phù hợp</div>}
+                {filteredProductList.length === 0 && <div className="mt-8">Không có sản phẩm nào phù hợp</div>}
             </ul>
         </div>
     );

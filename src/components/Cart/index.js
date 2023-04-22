@@ -1,15 +1,31 @@
 import { faCartShopping, faCashRegister, faCheck, faMinus, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Avatar, Button, Checkbox, IconButton } from '@mui/material';
+import {
+    Avatar,
+    Button,
+    Checkbox,
+    FormControl,
+    FormControlLabel,
+    FormLabel,
+    IconButton,
+    Radio,
+    RadioGroup,
+} from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { cartService } from '~/services/cartService';
 import { deliveryFee } from '~/utils/deliveryFee';
 import ComplexAccordion from '../ComplexAccordion';
-import SimpleDialog from '../OrderDialog';
 import ProductStatistics from '../ProductStatistics';
 import RecipeReviewCard from '../RecipeReviewCard';
+import { addressService } from '~/services/addressService';
+import { orderService } from '~/services/orderService';
+import { orderDetailsService } from '~/services/orderDetailsService';
+import OrderDialog from '~/components/OrderDialog';
+import { useUser } from '~/stores/UserStore';
+import SimpleDialog from '../SimpleDialog';
+import { validDiscount } from '~/utils';
 
 const VND = new Intl.NumberFormat('vi-VN', {
     style: 'currency',
@@ -48,7 +64,9 @@ function Cart({ main = false }) {
                     let discount = 0;
                     if (item.product.discounts && item.product.discounts.length > 0) {
                         item.product.discounts.forEach((discountItem) => {
-                            discount += discountItem.discountPercent;
+                            if (validDiscount(discountItem)) {
+                                discount += discountItem.discountPercent;
+                            }
                         });
                     }
 
@@ -106,6 +124,8 @@ function Cart({ main = false }) {
     useEffect(() => {
         loadCart();
     }, [location]);
+
+    const [userState, dispatchUserState] = useUser();
 
     const columns = [
         { field: 'id', headerName: 'Id' },
@@ -215,6 +235,58 @@ function Cart({ main = false }) {
         getTotalPrice();
     }, [cartDataState]);
 
+    const [addressListState, setAddressListState] = useState([]);
+    const loadAddress = () => {
+        addressService.getAddress().then((data) => {
+            if (data.length > 0 && data.status !== 500) {
+                setAddressListState(data);
+            }
+        });
+    };
+    const [selectedAddressIdState, setSelectedAddressIdState] = useState();
+    const checkAddress = (e) => {
+        setSelectedAddressIdState(e.target.value);
+    };
+    useEffect(() => {
+        loadAddress();
+    }, [location]);
+    console.log('cartDataState', cartDataState);
+    const order = () => {
+        if (selectedAddressIdState) {
+            const orderObj = {
+                address: { id: selectedAddressIdState },
+                note: 'Ghi chú',
+            };
+
+            orderService.postOrder(orderObj).then((orderData) => {
+                if (orderData.id) {
+                    let done = false;
+                    cartDataState.forEach((cartData, index) => {
+                        const orderDetails = {
+                            quantity: 1,
+                            discountPercent: cartData.discount,
+                            orderId: orderData.id,
+                            productId: cartData.id,
+                            price: cartData.price,
+                        };
+
+                        orderDetailsService.postOrderDetails(orderDetails).then((orderDetailsData) => {
+                            if (index === cartDataState.length - 1) done = true;
+                        });
+                    });
+
+                    if (done) {
+                        navigate('/order-details/' + orderData.id);
+                    }
+                }
+            });
+        }
+    };
+
+    const navigateToLogin = () => {
+        navigate('/login');
+    };
+
     return (
         <div className="h-full flex flex-col max-h-full relative bg-white p-4 min-h-[300px]">
             <div className="flex flex-row items-center">
@@ -244,6 +316,49 @@ function Cart({ main = false }) {
                     </div>
                 </>
             )}
+            <OrderDialog
+                agreeAction={order}
+                agree="Đặt hàng"
+                title="Đặt hàng"
+                selectedAddress={selectedAddressIdState}
+                openButton={
+                    <div
+                        onClick={!userState.username && navigateToLogin}
+                        className="flex flex-col justify-center] items-center w-full mt-4 p-4 bg-blue-500 text-lg cursor-pointer hover:bg-blue-600 hover:shadow-lg select-none rounded shadow-md active:bg-blue-700 shadow-blue-400 text-white font-semibold"
+                    >
+                        ĐẶT HÀNG
+                    </div>
+                }
+            >
+                <div className="p-4">
+                    <div>
+                        <FormControl>
+                            <FormLabel className="mt-4" id="address-product-order-radio-buttons-group-label">
+                                Địa chỉ
+                            </FormLabel>
+                            <RadioGroup
+                                value={selectedAddressIdState}
+                                aria-labelledby="address-product-order-radio-buttons-group-label"
+                                defaultValue="female"
+                                name="radio-buttons-group"
+                                onChange={checkAddress}
+                            >
+                                {addressListState &&
+                                    addressListState.map((address, index) => {
+                                        return (
+                                            <FormControlLabel
+                                                key={index}
+                                                value={address.id}
+                                                control={<Radio />}
+                                                label={address.details}
+                                            />
+                                        );
+                                    })}
+                            </RadioGroup>
+                        </FormControl>
+                    </div>
+                </div>
+            </OrderDialog>
         </div>
     );
 }

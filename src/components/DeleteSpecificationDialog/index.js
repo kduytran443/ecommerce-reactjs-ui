@@ -14,7 +14,7 @@ import AddIcon from '@mui/icons-material/Add';
 import Typography from '@mui/material/Typography';
 import { blue } from '@mui/material/colors';
 
-export default function SimpleDialog({
+export default function DeleteSpecificationDialog({
     openButton,
     children,
     title,
@@ -40,7 +40,7 @@ export default function SimpleDialog({
             <div onClick={handleClickOpen}>{openButton}</div>
             <Dialog className="w-full" onClose={handleClose} open={open}>
                 <DialogTitle>{title}</DialogTitle>
-                <div className="w-full min-w-[300px]">{children}</div>
+                <div className="w-full">{children}</div>
                 <div className="p-4">
                     <div className="flex flex-row items-center justify-end">
                         <Button
@@ -52,7 +52,6 @@ export default function SimpleDialog({
                             {cancel}
                         </Button>
                         <Button
-                            disabled={!selectedAddress && !isCart}
                             onClick={(e) => {
                                 handleClose();
                                 agreeAction();

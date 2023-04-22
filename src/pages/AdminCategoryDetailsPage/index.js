@@ -12,6 +12,7 @@ import ProductTable from '~/components/ProductTable';
 import SimpleDialog from '~/components/OrderDialog';
 import { specificationService } from '~/services/specificationService';
 import { categoryService } from '~/services/categoryService';
+import AlertSuccessDialog from '~/components/AlertSuccessDialog';
 
 function AdminCategoryDetailsPage() {
     const navigate = useNavigate();
@@ -98,8 +99,11 @@ function AdminCategoryDetailsPage() {
         }
     }, [location]);
 
+    const [alert, setAlert] = useState(0);
+
     return (
         <div className="w-full bg-white p-4 md:p-12 rounded">
+            <AlertSuccessDialog open={alert === 1} />
             <div className="mb-6 flex flex-row items-center justify-between">
                 <Button
                     onClick={(e) => {
@@ -164,10 +168,15 @@ function AdminCategoryDetailsPage() {
                                             onInput={(e) => {
                                                 setNewSpecificationState(e.target.value);
                                             }}
+                                            value={newSpecificationState}
                                         />
                                     </div>
                                     <div>
-                                        <IconButton onClick={submitNewSpecification} color="primary">
+                                        <IconButton
+                                            disabled={!newSpecificationState}
+                                            onClick={submitNewSpecification}
+                                            color="primary"
+                                        >
                                             <FontAwesomeIcon icon={faCheckCircle} />
                                         </IconButton>
                                         <IconButton onClick={cancelNew} color="error">
@@ -206,7 +215,13 @@ function AdminCategoryDetailsPage() {
                     title="Xác nhận xóa"
                     color="error"
                     agreeAction={(e) => {
-                        console.log('xóa');
+                        categoryService.deleteCategory({ id: categoryState.id }).then((data) => {
+                            setAlert(1);
+                            setTimeout(() => {
+                                setAlert(0);
+                                navigate('/admin/category/');
+                            }, 1000);
+                        });
                     }}
                 >
                     <div className="p-4 px-20">

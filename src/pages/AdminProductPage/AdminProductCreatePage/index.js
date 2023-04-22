@@ -75,6 +75,64 @@ function AdminProductCreatePage() {
         setSpecificationsController(obj);
     };
 
+    const [nameError, setnameError] = useState('');
+    const [codeError, setcodeError] = useState('');
+    const [yearError, setyearError] = useState('');
+    const [manufacturerError, setmanufacturerError] = useState('');
+    const [priceError, setpriceError] = useState('');
+    const [warrantyMonthError, setwarrantyMonthError] = useState('');
+    const [categoryError, setcategoryError] = useState('');
+    const [avatarError, setavatarError] = useState('');
+    const [imageError, setimageError] = useState('');
+    const [errorState, setErrorState] = useState('');
+
+    const check = () => {
+        let valid = true;
+
+        if (!nameState) {
+            setnameError('Tên không hợp lệ');
+            valid = false;
+        }
+
+        if (!codeState) {
+            setcodeError('Code không hợp lệ');
+            valid = false;
+        }
+
+        const date = new Date();
+        if (yearState < 2000 || !yearState || yearState > date.getFullYear()) {
+            setyearError('Năm không hợp lệ');
+            valid = false;
+        }
+
+        if (!selectedManufacturer) {
+            setmanufacturerError('Nhà sản xuất không hợp lệ');
+            valid = false;
+        }
+
+        if (!priceState) {
+            setpriceError('Số tiền không hợp lệ');
+            valid = false;
+        }
+
+        if (warrantyState < 0 || warrantyState > 48 || !warrantyState) {
+            setwarrantyMonthError('Tháng bảo hành không hợp lệ');
+            valid = false;
+        }
+
+        if (!selectedCategoryCode) {
+            setcategoryError('Danh mục không hợp lệ');
+            valid = false;
+        }
+
+        if (!avatarState) {
+            setavatarError('Hình đại diện không được bỏ trống');
+            valid = false;
+        }
+
+        return valid;
+    };
+
     const submit = () => {
         const product = {
             name: nameState,
@@ -89,45 +147,47 @@ function AdminProductCreatePage() {
                 id: selectedManufacturer,
             },
         };
-        productService.postProduct(product).then((data) => {
-            if (data) {
-                const keys = Object.keys(specificationsController);
-                keys.forEach((key) => {
-                    const content = specificationsController[key];
-                    if (content) {
-                        const obj = {
-                            productId: data.id,
-                            specificationId: key,
-                            content: content,
-                        };
-                        console.log('objobj', obj);
-                        productSpecificationService.postProductSpecification(obj).then((data) => {});
-                    }
-                });
+        if (check()) {
+            productService.postProduct(product).then((data) => {
+                if (data) {
+                    const keys = Object.keys(specificationsController);
+                    keys.forEach((key) => {
+                        const content = specificationsController[key];
+                        if (content) {
+                            const obj = {
+                                productId: data.id,
+                                specificationId: key,
+                                content: content,
+                            };
+                            console.log('objobj', obj);
+                            productSpecificationService.postProductSpecification(obj).then((data) => {});
+                        }
+                    });
 
-                if (image1State) {
-                    productImageService
-                        .postProductImage({ data: image1State, productCode: data.code })
-                        .then((data) => {});
+                    if (image1State) {
+                        productImageService
+                            .postProductImage({ data: image1State, productCode: data.code })
+                            .then((data) => {});
+                    }
+                    if (image2State) {
+                        productImageService
+                            .postProductImage({ data: image2State, productCode: data.code })
+                            .then((data) => {});
+                    }
+                    if (image3State) {
+                        productImageService
+                            .postProductImage({ data: image3State, productCode: data.code })
+                            .then((data) => {});
+                    }
+                    if (image4State) {
+                        productImageService
+                            .postProductImage({ data: image4State, productCode: data.code })
+                            .then((data) => {});
+                    }
+                    navigate('/admin/product');
                 }
-                if (image2State) {
-                    productImageService
-                        .postProductImage({ data: image2State, productCode: data.code })
-                        .then((data) => {});
-                }
-                if (image3State) {
-                    productImageService
-                        .postProductImage({ data: image3State, productCode: data.code })
-                        .then((data) => {});
-                }
-                if (image4State) {
-                    productImageService
-                        .postProductImage({ data: image4State, productCode: data.code })
-                        .then((data) => {});
-                }
-                navigate('/admin/product');
-            }
-        });
+            });
+        }
     };
 
     return (
@@ -153,6 +213,7 @@ function AdminProductCreatePage() {
                             setNameState(e.target.value);
                         }}
                     />
+                    {nameError && <div className="text-red-500">*{nameError}</div>}
                 </div>
                 <div className="w-full my-4">
                     <TextField
@@ -160,11 +221,13 @@ function AdminProductCreatePage() {
                         label="Code sản phẩm"
                         value={codeState}
                         onInput={(e) => {
-                            if (!e.target.value.includes(' ')) {
+                            const test = /^(\w+(-)?)*$/;
+                            if (e.target.value.match(test) || e.target.value == '') {
                                 setCodeState(e.target.value);
                             }
                         }}
                     />
+                    {codeError && <div className="text-red-500">*{codeError}</div>}
                 </div>
                 <div className="w-full my-4">
                     <TextField
@@ -176,6 +239,7 @@ function AdminProductCreatePage() {
                             setYearState(e.target.value);
                         }}
                     />
+                    {yearError && <div className="text-red-500">*{yearError}</div>}
                 </div>
                 <div className="my-4">
                     <Box sx={{ minWidth: 120 }}>
@@ -199,6 +263,7 @@ function AdminProductCreatePage() {
                             </Select>
                         </FormControl>
                     </Box>
+                    {manufacturerError && <div className="text-red-500">*{manufacturerError}</div>}
                 </div>
                 <div className="w-full my-4">
                     <TextField
@@ -210,6 +275,7 @@ function AdminProductCreatePage() {
                             setPriceState(e.target.value);
                         }}
                     />
+                    {priceError && <div className="text-red-500">*{priceError}</div>}
                 </div>
                 <div className="w-full my-4">
                     <TextField
@@ -221,8 +287,8 @@ function AdminProductCreatePage() {
                             setWarrantyState(e.target.value);
                         }}
                     />
+                    {warrantyMonthError && <div className="text-red-500">*{warrantyMonthError}</div>}
                 </div>
-
                 <div className="my-4">
                     <Box sx={{ minWidth: 120 }}>
                         <FormControl fullWidth>
@@ -245,6 +311,7 @@ function AdminProductCreatePage() {
                             </Select>
                         </FormControl>
                     </Box>
+                    {categoryError && <div className="text-red-500">*{categoryError}</div>}
                 </div>
                 <div>
                     {specificationListState.map((item) => {
@@ -268,6 +335,7 @@ function AdminProductCreatePage() {
                 <div>
                     <div>Hình đại diện</div>
                     <UploadImage image={avatarState} callback={uploadAvatar} />
+                    {avatarError && <div className="text-red-500">*{avatarError}</div>}
                 </div>
                 <div className="flex mt-8 flex-row items-center flex-wrap">
                     <div>

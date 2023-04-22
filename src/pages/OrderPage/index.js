@@ -18,7 +18,11 @@ function OrderPage() {
     useEffect(() => {
         orderService.getOrdersByUserId().then((data) => {
             if (data) {
-                setOrderListState(data);
+                const arr = [...data];
+                arr.sort((a, b) => {
+                    return b.date - a.date;
+                });
+                setOrderListState(arr);
             }
         });
     }, [location]);

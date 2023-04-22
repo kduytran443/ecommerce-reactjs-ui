@@ -427,27 +427,35 @@ function ProductPage() {
                     </>
                 ) : (
                     <>
-                        <p className="font-bold">Review của bạn về sản phẩm này:</p>
-                        <Rating
-                            readOnly={false}
-                            value={reviewRatingState.rating}
-                            precision={1}
-                            onChange={changeReviewRating}
-                        />
+                        {userState.username && (
+                            <>
+                                <p className="font-bold">Review của bạn về sản phẩm này:</p>
+                                <Rating
+                                    readOnly={false}
+                                    value={reviewRatingState.rating}
+                                    precision={1}
+                                    onChange={changeReviewRating}
+                                />
+                            </>
+                        )}
                     </>
                 )}
                 <>
-                    <div className="w-full">
-                        <TextField
-                            label="Đánh giá"
-                            className="w-full"
-                            multiline
-                            rows={2}
-                            onInput={changeReviewComment}
-                            value={reviewRatingState.content || ''}
-                        />
-                    </div>
-                    <Button onClick={postReview}>Đánh giá</Button>
+                    {userState.username && (
+                        <>
+                            <div className="w-full">
+                                <TextField
+                                    label="Đánh giá"
+                                    className="w-full"
+                                    multiline
+                                    rows={2}
+                                    onInput={changeReviewComment}
+                                    value={reviewRatingState.content || ''}
+                                />
+                            </div>
+                            <Button onClick={postReview}>Đánh giá</Button>
+                        </>
+                    )}
                 </>
             </div>
             <div className="mt-2 w-full">

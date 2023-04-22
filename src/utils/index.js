@@ -13,3 +13,10 @@ export const inputNumber = (value, callback) => {
         callback(value);
     }
 };
+export const validDiscount = (discount) => {
+    const date = new Date();
+    if (discount.status && date.getTime() >= discount.startTime && date.getTime() <= discount.endTime) {
+        return true;
+    }
+    return false;
+};
