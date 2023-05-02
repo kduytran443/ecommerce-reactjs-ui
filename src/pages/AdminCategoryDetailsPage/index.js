@@ -48,6 +48,7 @@ function AdminCategoryDetailsPage() {
             specificationService.postSpecification(specification).then((data) => {
                 if (data.status !== 500) {
                     loadSpecifications();
+                    setNewSpecificationState('');
                     setVisibleEditingSpecification(false);
                 }
             });

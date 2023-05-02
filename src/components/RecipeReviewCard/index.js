@@ -23,6 +23,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBriefcase, faHardDrive, faMemory, faMicrochip, faServer, faTv } from '@fortawesome/free-solid-svg-icons';
 import ProductStatistics from '../ProductStatistics';
 import { VND } from '~/utils/VND';
+import { validDiscount } from '~/utils';
 
 const formatter = new Intl.NumberFormat('en-US', {
     style: 'currency',
@@ -50,7 +51,9 @@ export default function RecipeReviewCard({
         if (discounts.length > 0) {
             let total = 0;
             discounts.forEach((discount) => {
-                total += discount.discountPercent;
+                if (validDiscount(discount)) {
+                    total += discount.discountPercent;
+                }
             });
             setDiscountState(total);
         }

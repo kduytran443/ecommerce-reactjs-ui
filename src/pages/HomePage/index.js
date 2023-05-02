@@ -63,8 +63,8 @@ function HomePage() {
             <div>
                 <Line title={`Laptop gaming ${laptopNumberState}`} code="laptop" />
                 <ul className="flex flex-row flex-wrap items-stretch ">
-                    {laptopListState.map((product) => {
-                        return (
+                    {laptopListState.map((product, index) => {
+                        return index < 8 ? (
                             <li className="py-2 px-[2px] sm:px-2 w-full md:w-[50%] lg:w-[33%] xl:w-[25%]">
                                 <RecipeReviewCard
                                     price={product.price}
@@ -74,6 +74,8 @@ function HomePage() {
                                     discounts={product.discounts}
                                 />
                             </li>
+                        ) : (
+                            <></>
                         );
                     })}
                 </ul>

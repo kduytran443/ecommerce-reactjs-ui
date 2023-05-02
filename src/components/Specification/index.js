@@ -39,7 +39,7 @@ function Specification({ name, id, deleteAction = () => {}, editAction = () => {
             </div>
             {visibleEditing ? (
                 <>
-                    <IconButton disabled={dataState.name && dataState.name.trim()} onClick={submitEdit} color="primary">
+                    <IconButton disabled={!dataState.name} onClick={submitEdit} color="primary">
                         <FontAwesomeIcon icon={faCheckCircle} />
                     </IconButton>
                     <IconButton onClick={cancel} color="error">

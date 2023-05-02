@@ -80,9 +80,15 @@ function SearchPage() {
     };
 
     useEffect(() => {
-        productService.searchByName(searchValue).then((data) => {
-            setProductListState(data);
-        });
+        if (searchValue) {
+            productService.searchByName(searchValue).then((data) => {
+                setProductListState(data);
+            });
+        } else {
+            productService.getAllProducts().then((data) => {
+                setProductListState(data);
+            });
+        }
     }, [location]);
     const navigate = useNavigate();
     const search = () => {
@@ -95,6 +101,9 @@ function SearchPage() {
 
     const filter = () => {
         const arr = [...productListState];
+        console.log('selectedCategoryCode', selectedCategoryCode);
+        console.log('selectedManufacturer', selectedManufacturer);
+        console.log('checkDiscount', checkDiscount);
 
         const filteredArr = arr
             .filter((item) => {
@@ -165,7 +174,7 @@ function SearchPage() {
                                 labelId="demo-simple-select-label"
                                 id="demo-simple-select"
                                 value={selectedCategoryCode}
-                                defaultValue={selectedCategoryCode}
+                                defaultValue={'all'}
                                 label="Danh mục"
                                 onChange={(e) => {
                                     setSelectedCategoryCode(e.target.value);
@@ -191,7 +200,7 @@ function SearchPage() {
                             labelId="demo-simple-select-label"
                             id="demo-simple-select"
                             value={selectedManufacturer}
-                            defaultValue={selectedManufacturer}
+                            defaultValue={'all'}
                             label="Chủ đề"
                             onChange={(e) => {
                                 setSelectedManufacturer(e.target.value);

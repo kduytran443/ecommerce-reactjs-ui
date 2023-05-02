@@ -58,9 +58,7 @@ const SildeshowIntroduction = () => {
                                 backgroundImage: `url(${slideImage.url})`,
                                 backgroundPosition: 'center',
                             }}
-                        >
-                            <span style={spanStyle}>{slideImage.caption}</span>
-                        </div>
+                        ></div>
                     </div>
                 ))}
             </Slide>

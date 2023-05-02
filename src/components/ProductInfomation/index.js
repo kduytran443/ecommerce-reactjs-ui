@@ -31,6 +31,7 @@ import {
     faTv,
 } from '@fortawesome/free-solid-svg-icons';
 import { productService } from '~/services/productService';
+import { validDiscount } from '~/utils';
 
 const formatter = new Intl.NumberFormat('en-US', {
     style: 'currency',
@@ -47,6 +48,7 @@ export default function ProductInfomation({
     price,
     productCode,
     warrantyMonth,
+    remainingAmount,
 }) {
     const [likedState, setLikedState] = useState(false);
     const [discountState, setDiscountState] = useState(0);
@@ -57,7 +59,9 @@ export default function ProductInfomation({
         if (discounts.length > 0) {
             let total = 0;
             discounts.forEach((discount) => {
-                total += discount.discountPercent;
+                if (validDiscount(discount)) {
+                    total += discount.discountPercent;
+                }
             });
             setDiscountState(total);
         }
@@ -112,13 +116,15 @@ export default function ProductInfomation({
                     <h2 className="font-bold">Khuyến mãi</h2>
                     {discounts.length > 0 ? (
                         discounts.map((discount, index) => {
-                            return (
+                            return validDiscount(discount) ? (
                                 <li className="mr-[8px]">
                                     <FontAwesomeIcon className="mr-2" icon={faGift} />
                                     <span>
                                         <b>{discount.discountPercent}%</b> - {discount.name}
                                     </span>
                                 </li>
+                            ) : (
+                                <></>
                             );
                         })
                     ) : (
@@ -128,6 +134,7 @@ export default function ProductInfomation({
                 <div className="text-blue-600 font-bold my-2">
                     <FontAwesomeIcon icon={faTools} /> {warrantyMonth} tháng bảo hành
                 </div>
+                <div>Số lượng còn lại: {remainingAmount <= 0 ? 'Hết hàng' : remainingAmount}</div>
             </CardContent>
             {showController && (
                 <CardActions disableSpacing style={{ paddingTop: 0 }}>

@@ -13,6 +13,11 @@ export const consignmentService = {
         const response = await fetch(`${API_BASE_URL}/${this.api}/${id}`, config);
         return response.json();
     },
+    async getConsignmentByProductCode(productCode) {
+        const config = getConfig();
+        const response = await fetch(`${API_BASE_URL}/${this.api}/product/${productCode}`, config);
+        return response.json();
+    },
     async postConsignment(consignment) {
         const config = postConfig(consignment);
         const response = await fetch(`${API_BASE_URL}/${this.api}`, config);

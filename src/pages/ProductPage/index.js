@@ -44,6 +44,7 @@ import { orderService } from '~/services/orderService';
 import { orderDetailsService } from '~/services/orderDetailsService';
 import { reviewService } from '~/services/reviewService';
 import AlertSuccessDialog from '~/components/AlertSuccessDialog';
+import { validDiscount } from '~/utils';
 
 const content = `<div class="st-pd-content"><p style="text-align:justify; margin-bottom:11px"><b>Asus TUF Gaming F15 FX506LHB-HN188W là chiếc <a href="https://fptshop.com.vn/may-tinh-xach-tay/gaming-do-hoa">laptop gaming giá rẻ</a> với thiết kế tuyệt đẹp, phong cách chuẩn game thủ và cấu hình mạnh mẽ cho cả học tập, công việc cũng như chơi game. Bên cạnh đó là độ bền chuẩn quân đội đã làm nên tên tuổi của dòng TUF.</b></p>
 
@@ -173,7 +174,9 @@ function ProductPage() {
             console.log(productState.discounts);
 
             productState.discounts.forEach((discount) => {
-                total += discount.discountPercent;
+                if (validDiscount(discount)) {
+                    total += discount.discountPercent;
+                }
             });
             setTotalDiscountPercent(total);
         }
@@ -287,98 +290,110 @@ function ProductPage() {
                                 price={productState.price}
                                 productCode={productState.code}
                                 discounts={productState.discounts}
+                                remainingAmount={productState.remainingAmount}
                             />
                         )}
-                        <div className="w-full p-4 flex flex-col">
-                            <CustomizedSnackbars
-                                openButton={
-                                    <div
-                                        onClick={!userState.username && navigateToLogin}
-                                        className="flex flex-col justify-center items-center w-full mr-0 lg:mr-2 p-4 bg-red-500 text-lg cursor-pointer hover:bg-red-600 hover:shadow-lg select-none rounded shadow-md active:bg-red-700 shadow-red-400 text-white font-semibold"
-                                    >
-                                        THÊM VÀO GIỎ HÀNG
-                                    </div>
-                                }
-                                message={'Đã thêm vào giỏ hàng'}
-                                actionAfterClick={
-                                    productState.id
-                                        ? () => {
-                                              postCart();
-                                          }
-                                        : () => {}
-                                }
-                            />
-                            <OrderDialog
-                                agreeAction={order}
-                                agree="Đặt hàng"
-                                selectedAddress={selectedAddressIdState}
-                                openButton={
-                                    <div
-                                        onClick={!userState.username && navigateToLogin}
-                                        className="flex flex-col justify-center] items-center w-full mt-4 p-4 bg-blue-500 text-lg cursor-pointer hover:bg-blue-600 hover:shadow-lg select-none rounded shadow-md active:bg-blue-700 shadow-blue-400 text-white font-semibold"
-                                    >
-                                        ĐẶT HÀNG
-                                    </div>
-                                }
-                            >
-                                <div className="p-4">
-                                    <div>
-                                        <div className="w-full max-w-[400px] max-h-[300px] overflow-hidden">
-                                            <img className="w-full" alt="" src={productState.avatar} />
-                                        </div>
-                                        <div className="font-bold mt-4">{productState.name}</div>
-                                    </div>
-                                    <div>
-                                        <FormControl>
-                                            <FormLabel
-                                                className="mt-4"
-                                                id="address-product-order-radio-buttons-group-label"
-                                            >
-                                                Địa chỉ
-                                            </FormLabel>
-                                            <RadioGroup
-                                                value={selectedAddressIdState}
-                                                aria-labelledby="address-product-order-radio-buttons-group-label"
-                                                defaultValue="female"
-                                                name="radio-buttons-group"
-                                                onChange={checkAddress}
-                                            >
-                                                {addressListState &&
-                                                    addressListState.map((address, index) => {
-                                                        return (
-                                                            <FormControlLabel
-                                                                key={index}
-                                                                value={address.id}
-                                                                control={<Radio />}
-                                                                label={address.details}
-                                                            />
-                                                        );
-                                                    })}
-                                            </RadioGroup>
-                                        </FormControl>
-                                    </div>
-                                    <div className="flex my-2 flex-row md:p-4 md:flex-row items-center justify-between">
-                                        <div>
-                                            <div>
-                                                <b>Phí vận chuyển:</b> {deliveryFee} VNĐ
+
+                        {productState.status == 1 ? (
+                            <>
+                                {productState && productState.remainingAmount > 0 ? (
+                                    <div className="w-full p-4 flex flex-col">
+                                        <CustomizedSnackbars
+                                            openButton={
+                                                <div
+                                                    onClick={!userState.username && navigateToLogin}
+                                                    className="flex flex-col justify-center items-center w-full mr-0 lg:mr-2 p-4 bg-red-500 text-lg cursor-pointer hover:bg-red-600 hover:shadow-lg select-none rounded shadow-md active:bg-red-700 shadow-red-400 text-white font-semibold"
+                                                >
+                                                    THÊM VÀO GIỎ HÀNG
+                                                </div>
+                                            }
+                                            message={'Đã thêm vào giỏ hàng'}
+                                            actionAfterClick={
+                                                productState.id
+                                                    ? () => {
+                                                          postCart();
+                                                      }
+                                                    : () => {}
+                                            }
+                                        />
+                                        <OrderDialog
+                                            agreeAction={order}
+                                            agree="Đặt hàng"
+                                            selectedAddress={selectedAddressIdState}
+                                            openButton={
+                                                <div
+                                                    onClick={!userState.username && navigateToLogin}
+                                                    className="flex flex-col justify-center] items-center w-full mt-4 p-4 bg-blue-500 text-lg cursor-pointer hover:bg-blue-600 hover:shadow-lg select-none rounded shadow-md active:bg-blue-700 shadow-blue-400 text-white font-semibold"
+                                                >
+                                                    ĐẶT HÀNG
+                                                </div>
+                                            }
+                                        >
+                                            <div className="p-4">
+                                                <div>
+                                                    <div className="w-full max-w-[400px] max-h-[300px] overflow-hidden">
+                                                        <img className="w-full" alt="" src={productState.avatar} />
+                                                    </div>
+                                                    <div className="font-bold mt-4">{productState.name}</div>
+                                                </div>
+                                                <div>
+                                                    <FormControl>
+                                                        <FormLabel
+                                                            className="mt-4"
+                                                            id="address-product-order-radio-buttons-group-label"
+                                                        >
+                                                            Địa chỉ
+                                                        </FormLabel>
+                                                        <RadioGroup
+                                                            value={selectedAddressIdState}
+                                                            aria-labelledby="address-product-order-radio-buttons-group-label"
+                                                            defaultValue="female"
+                                                            name="radio-buttons-group"
+                                                            onChange={checkAddress}
+                                                        >
+                                                            {addressListState &&
+                                                                addressListState.map((address, index) => {
+                                                                    return (
+                                                                        <FormControlLabel
+                                                                            key={index}
+                                                                            value={address.id}
+                                                                            control={<Radio />}
+                                                                            label={address.details}
+                                                                        />
+                                                                    );
+                                                                })}
+                                                        </RadioGroup>
+                                                    </FormControl>
+                                                </div>
+                                                <div className="flex my-2 flex-row md:p-4 md:flex-row items-center justify-between">
+                                                    <div>
+                                                        <div>
+                                                            <b>Phí vận chuyển:</b> {deliveryFee} VNĐ
+                                                        </div>
+                                                        <b>Tổng tiền:</b>
+                                                        <p className="text-lg md:text-xl font-bold text-red-500">
+                                                            {totalPrice + deliveryFee} VNĐ
+                                                        </p>
+                                                    </div>
+                                                    <div>
+                                                        <strike>{productState.price} VNĐ</strike>
+                                                        <p className="text-blue-500">
+                                                            <p>
+                                                                Giảm <b>{discountState.discountPercent}%</b>
+                                                            </p>
+                                                        </p>
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <b>Tổng tiền:</b>
-                                            <p className="text-lg md:text-xl font-bold text-red-500">
-                                                {totalPrice + deliveryFee} VNĐ
-                                            </p>
-                                        </div>
-                                        <div>
-                                            <strike>{productState.price} VNĐ</strike>
-                                            <p className="text-blue-500">
-                                                <p>
-                                                    Giảm <b>{discountState.discountPercent}%</b>
-                                                </p>
-                                            </p>
-                                        </div>
+                                        </OrderDialog>
                                     </div>
-                                </div>
-                            </OrderDialog>
-                        </div>
+                                ) : (
+                                    'Hết hàng'
+                                )}
+                            </>
+                        ) : (
+                            <div className="w-full p-4 flex flex-col">Sản phẩm ngừng kinh doanh</div>
+                        )}
                     </div>
                 </div>
             </div>

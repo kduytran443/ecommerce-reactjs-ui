@@ -24,8 +24,8 @@ import { orderService } from '~/services/orderService';
 import { orderDetailsService } from '~/services/orderDetailsService';
 import OrderDialog from '~/components/OrderDialog';
 import { useUser } from '~/stores/UserStore';
-import SimpleDialog from '../SimpleDialog';
 import { validDiscount } from '~/utils';
+import SimpleDialog from '~/components/OrderDialog';
 
 const VND = new Intl.NumberFormat('vi-VN', {
     style: 'currency',
@@ -316,49 +316,51 @@ function Cart({ main = false }) {
                     </div>
                 </>
             )}
-            <OrderDialog
-                agreeAction={order}
-                agree="Đặt hàng"
-                title="Đặt hàng"
-                selectedAddress={selectedAddressIdState}
-                openButton={
-                    <div
-                        onClick={!userState.username && navigateToLogin}
-                        className="flex flex-col justify-center] items-center w-full mt-4 p-4 bg-blue-500 text-lg cursor-pointer hover:bg-blue-600 hover:shadow-lg select-none rounded shadow-md active:bg-blue-700 shadow-blue-400 text-white font-semibold"
-                    >
-                        ĐẶT HÀNG
+            {cartDataState.length > 0 && (
+                <OrderDialog
+                    agreeAction={order}
+                    agree="Đặt hàng"
+                    title="Đặt hàng"
+                    selectedAddress={selectedAddressIdState}
+                    openButton={
+                        <div
+                            onClick={!userState.username && navigateToLogin}
+                            className="flex flex-col justify-center] items-center w-full mt-4 p-4 bg-blue-500 text-lg cursor-pointer hover:bg-blue-600 hover:shadow-lg select-none rounded shadow-md active:bg-blue-700 shadow-blue-400 text-white font-semibold"
+                        >
+                            ĐẶT HÀNG
+                        </div>
+                    }
+                >
+                    <div className="p-4">
+                        <div>
+                            <FormControl>
+                                <FormLabel className="mt-4" id="address-product-order-radio-buttons-group-label">
+                                    Địa chỉ
+                                </FormLabel>
+                                <RadioGroup
+                                    value={selectedAddressIdState}
+                                    aria-labelledby="address-product-order-radio-buttons-group-label"
+                                    defaultValue="female"
+                                    name="radio-buttons-group"
+                                    onChange={checkAddress}
+                                >
+                                    {addressListState &&
+                                        addressListState.map((address, index) => {
+                                            return (
+                                                <FormControlLabel
+                                                    key={index}
+                                                    value={address.id}
+                                                    control={<Radio />}
+                                                    label={address.details}
+                                                />
+                                            );
+                                        })}
+                                </RadioGroup>
+                            </FormControl>
+                        </div>
                     </div>
-                }
-            >
-                <div className="p-4">
-                    <div>
-                        <FormControl>
-                            <FormLabel className="mt-4" id="address-product-order-radio-buttons-group-label">
-                                Địa chỉ
-                            </FormLabel>
-                            <RadioGroup
-                                value={selectedAddressIdState}
-                                aria-labelledby="address-product-order-radio-buttons-group-label"
-                                defaultValue="female"
-                                name="radio-buttons-group"
-                                onChange={checkAddress}
-                            >
-                                {addressListState &&
-                                    addressListState.map((address, index) => {
-                                        return (
-                                            <FormControlLabel
-                                                key={index}
-                                                value={address.id}
-                                                control={<Radio />}
-                                                label={address.details}
-                                            />
-                                        );
-                                    })}
-                            </RadioGroup>
-                        </FormControl>
-                    </div>
-                </div>
-            </OrderDialog>
+                </OrderDialog>
+            )}
         </div>
     );
 }

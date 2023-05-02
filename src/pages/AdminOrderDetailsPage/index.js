@@ -299,9 +299,6 @@ function AdminOrderDetailsPage() {
                                         <div className="w-full p-4 rounded-lg text-center bg-blue-500 shadow-blue-300 shadow-lg cursor-pointer select-none text-white font-bold text-xl">
                                             <FontAwesomeIcon icon={faCheck} className="mr-2" /> Đã hoàn thành
                                         </div>
-                                        <div className="w-full mt-8 p-4 rounded-lg text-center bg-red-500 shadow-red-300 shadow-lg cursor-pointer select-none text-white font-bold text-xl">
-                                            <FontAwesomeIcon icon={faMoneyBill1} className="mr-2" /> Xuất hóa đơn
-                                        </div>
                                     </div>
                                 )}
                             </>
